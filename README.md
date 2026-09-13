@@ -3,16 +3,17 @@
 Public marketing website for **Telaio Consulting**, served via GitHub Pages.
 
 - **Live:** https://telaioconsulting.github.io
-- **Stack:** static site — `index.html`, `style.css`, `script.js`. No build step, no dependencies.
+- **Stack:** static site — `index.html` (Italian), `en/index.html` (English), shared `style.css` and `script.js`. No build step, no dependencies.
+- **Languages:** Italian at `/`, English at `/en/` (switch via the IT/EN toggle in the header).
 - **Brand:** follows the Telaio Brand Book (dark-first, blue `#1307ED`, Bricolage Grotesque + IBM Plex).
 
 ## Editing
 
 Change the files and push to `main` — GitHub Pages redeploys automatically in ~1 minute.
 
-Placeholders still to replace:
-- **Phone:** `000000000` (in `index.html`, appears in the hero button, contact section and footer).
-- **VAT:** `00000000000` (P.IVA, in the footer).
+Placeholders still to fill (in both `index.html` and `en/index.html`):
+- **Founders:** the three profiles in the About section (name, role, bio) — currently "Nome Cognome" / "Name Surname".
+- **VAT:** `00000000000` (P.IVA / VAT, in the footer).
 
 ## Custom domain
 

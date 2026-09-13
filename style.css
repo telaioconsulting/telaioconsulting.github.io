@@ -137,6 +137,12 @@ strong, b { font-weight: 600; color: var(--ink); }
 .icon-btn:hover { color: var(--ink); border-color: var(--line-strong); }
 .menu-btn { display: none; }
 
+/* Selettore lingua */
+.lang { display: inline-flex; align-items: center; gap: 2px; font-family: var(--f-mono); font-size: 11px; }
+.lang-link { padding: 6px 8px; color: var(--muted); text-decoration: none; border-radius: var(--r-sm); letter-spacing: .06em; }
+.lang-link:hover { color: var(--ink); background: var(--panel); }
+.lang-link.is-active { color: var(--ink); font-weight: 600; }
+
 /* ============================================================
    BOTTONI
    ============================================================ */
@@ -230,6 +236,17 @@ strong, b { font-weight: 600; color: var(--ink); }
   font-family: var(--f-mono); font-size: 11px; letter-spacing: .1em;
   text-transform: uppercase; color: var(--weft);
 }
+
+/* Founder */
+.founders { margin-top: clamp(32px, 5vw, 56px); }
+.founders-title { font-family: var(--f-display); font-weight: 700; font-size: var(--step-2); letter-spacing: -.01em; margin-bottom: 20px; }
+.founder-grid { display: grid; gap: 16px; grid-template-columns: repeat(3, 1fr); }
+.founder { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 24px; display: flex; flex-direction: column; gap: 6px; }
+.founder .avatar { width: 60px; height: 60px; border-radius: var(--r-pill); background: var(--brand-soft); color: var(--brand); display: grid; place-items: center; margin-bottom: 8px; }
+.founder h4 { font-family: var(--f-display); font-weight: 700; font-size: var(--step-1); letter-spacing: -.01em; margin: 0; }
+.founder .role { font-family: var(--f-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--weft); }
+.founder .bio { color: var(--muted); font-size: var(--step--1); line-height: 1.55; }
+@media (max-width: 860px) { .founder-grid { grid-template-columns: 1fr; } }
 
 /* ============================================================
    CONTATTI

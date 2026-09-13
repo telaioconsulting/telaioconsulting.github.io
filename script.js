@@ -71,9 +71,10 @@
       var email = (form.email.value || "").trim();
       var messaggio = (form.messaggio.value || "").trim();
 
-      var oggetto = "Richiesta dal sito — " + (nome || "nuovo contatto");
+      var isEn = (document.documentElement.lang || "it").toLowerCase().indexOf("en") === 0;
+      var oggetto = (isEn ? "Website enquiry — " : "Richiesta dal sito — ") + (nome || (isEn ? "new contact" : "nuovo contatto"));
       var corpo =
-        "Nome: " + nome + "\n" +
+        (isEn ? "Name: " : "Nome: ") + nome + "\n" +
         "Email: " + email + "\n\n" +
         messaggio + "\n";
 
