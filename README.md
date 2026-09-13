@@ -18,7 +18,3 @@ Placeholders still to replace:
 
 To use `telaioconsulting.com`: add a `CNAME` file containing the domain, set it in
 repo Settings → Pages, and point the domain's DNS to GitHub Pages.
-
-> Note: source of truth for this public site lives in this repo, intentionally kept
-> separate from the private `telaioconsulting/telaio` hub. A pointer is recorded in
-> the hub's `TELAIO_HUB.md`.
