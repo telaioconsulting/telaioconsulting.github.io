@@ -441,6 +441,13 @@ strong, b { font-weight: 600; color: var(--ink); }
 textarea.input { resize: vertical; min-height: 120px; }
 .form-note { font-size: var(--step--1); color: var(--muted); }
 
+/* Evita che email/testi lunghi sforino il pannello su schermi stretti */
+.contact > * { min-width: 0; }
+.contact-line { min-width: 0; }
+.contact-line > span { min-width: 0; }
+.contact-line .val { overflow-wrap: anywhere; }
+@media (max-width: 520px) { .contact-line .val { font-size: .9rem; } }
+
 /* ============================================================
    FOOTER
    ============================================================ */
