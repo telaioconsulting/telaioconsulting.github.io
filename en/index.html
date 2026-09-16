@@ -31,6 +31,8 @@
     </symbol>
   </svg>
 
+  <div class="grain" aria-hidden="true"></div>
+
   <header class="top">
     <div class="wrap top-in">
       <a class="brand" href="#top" aria-label="Telaio — home">
@@ -59,70 +61,68 @@
 
     <!-- HERO -->
     <section class="hero">
-      <div class="hero-grid" aria-hidden="true"></div>
+      <canvas id="loom" aria-hidden="true"></canvas>
+      <div class="hero-veil" aria-hidden="true"></div>
       <div class="wrap">
-       <div class="hero-in">
-        <p class="eyebrow">AI Consulting · Automation · Software · Strategy</p>
-        <h1>From AI to <em>value</em>.</h1>
-        <p class="tagline">We bring artificial intelligence into your business, simply and concretely: custom tools, automation and strategy to grow.</p>
-        <div class="hero-cta">
-          <a class="btn btn-primary" href="mailto:info@telaioconsulting.com">Write to us</a>
+        <div class="hero-in" data-stagger>
+          <p class="eyebrow reveal">AI consulting for Italian SMEs</p>
+          <h1 class="reveal-h">From AI<br>to <span class="accent">value</span>.</h1>
+          <p class="tagline reveal">We bring artificial intelligence into your business, simply and concretely: custom tools, automation and strategy to grow.</p>
+          <div class="hero-cta reveal">
+            <a class="btn btn-primary" href="mailto:info@telaioconsulting.com">Write to us →</a>
+            <a class="btn btn-ghost" href="#services">What we do</a>
+          </div>
+          <div class="hero-meta reveal">
+            <span><span class="tick"></span> We reply within <b>1 business day</b></span>
+            <span><span class="tick"></span> Clear language, <b>no jargon</b></span>
+          </div>
         </div>
-        <div class="hero-meta">
-          <span>We reply within <b>1 business day</b></span>
-          <span>Clear language, <b>no jargon</b></span>
-        </div>
-       </div>
       </div>
+      <div class="scroll-cue" aria-hidden="true"><span>Scroll</span><span class="rail"></span><span class="bead"></span></div>
     </section>
-
-    <div class="wrap"><div class="weave-rule" aria-hidden="true"></div></div>
 
     <!-- ABOUT -->
     <section id="about" class="sec wrap">
-      <div class="sec-head">
+      <div class="sec-head reveal">
         <p class="eyebrow">About us</p>
         <h2>A concrete partner for AI, and beyond</h2>
       </div>
       <div class="two-col">
-        <div class="prose">
+        <div class="prose reveal">
           <p class="lede">Telaio helps small and medium Italian businesses use artificial intelligence in a simple, useful way. We start from a real problem, choose the right tools and put them to work until they deliver results.</p>
           <p>No projects that never reach production, and no complicated words. We tell you timelines, costs and limits from the start, and we stay by your side throughout.</p>
         </div>
-        <ul class="values">
-          <li><b>Clarity</b><span>We speak plainly. If it isn't clear, it isn't finished.</span></li>
-          <li><b>Concreteness</b><span>We deliver things that work, not slides.</span></li>
-          <li><b>Closeness</b><span>We work alongside you, not above you.</span></li>
-          <li><b>Transparency</b><span>Clear timelines, costs and limits from the start.</span></li>
+        <ul class="values" data-stagger>
+          <li class="reveal"><b>Clarity</b><span>We speak plainly. If it isn't clear, it isn't finished.</span></li>
+          <li class="reveal"><b>Concreteness</b><span>We deliver things that work, not slides.</span></li>
+          <li class="reveal"><b>Closeness</b><span>We work alongside you, not above you.</span></li>
+          <li class="reveal"><b>Transparency</b><span>Clear timelines, costs and limits from the start.</span></li>
         </ul>
       </div>
 
       <div class="founders">
-        <h3 class="founders-title">The founders</h3>
-        <div class="founder-grid">
-          <article class="founder">
-            <div class="avatar" aria-hidden="true">
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 4-6 8-6s8 2 8 6"></path></svg>
-            </div>
+        <h3 class="founders-title reveal">The founders</h3>
+        <div class="founder-grid" data-stagger>
+          <article class="founder reveal">
+            <div class="avatar" aria-hidden="true"><svg class="mk" viewBox="0 0 64 64"><use href="#mk"></use></svg></div>
             <h4>Name Surname</h4>
             <p class="role">Co-founder · Role</p>
             <p class="bio">Short bio to add: skills, experience and what they do at Telaio.</p>
+            <span class="chip">Profile coming soon</span>
           </article>
-          <article class="founder">
-            <div class="avatar" aria-hidden="true">
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 4-6 8-6s8 2 8 6"></path></svg>
-            </div>
+          <article class="founder reveal">
+            <div class="avatar" aria-hidden="true"><svg class="mk" viewBox="0 0 64 64"><use href="#mk"></use></svg></div>
             <h4>Name Surname</h4>
             <p class="role">Co-founder · Role</p>
             <p class="bio">Short bio to add: skills, experience and what they do at Telaio.</p>
+            <span class="chip">Profile coming soon</span>
           </article>
-          <article class="founder">
-            <div class="avatar" aria-hidden="true">
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 4-6 8-6s8 2 8 6"></path></svg>
-            </div>
+          <article class="founder reveal">
+            <div class="avatar" aria-hidden="true"><svg class="mk" viewBox="0 0 64 64"><use href="#mk"></use></svg></div>
             <h4>Name Surname</h4>
             <p class="role">Co-founder · Role</p>
             <p class="bio">Short bio to add: skills, experience and what they do at Telaio.</p>
+            <span class="chip">Profile coming soon</span>
           </article>
         </div>
       </div>
@@ -130,35 +130,39 @@
 
     <!-- SERVICES -->
     <section id="services" class="sec wrap">
-      <div class="sec-head">
+      <div class="sec-head reveal">
         <p class="eyebrow">What we do</p>
         <h2>Four ways we help you</h2>
       </div>
-      <div class="cards">
-        <article class="card">
+      <div class="cards" data-stagger>
+        <article class="card reveal">
+          <span class="num">01</span>
           <span class="ico" aria-hidden="true">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"></path><circle cx="12" cy="12" r="3.4"></circle></svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"></path><circle cx="12" cy="12" r="3.4"></circle></svg>
           </span>
           <h3>Artificial Intelligence</h3>
           <p>Custom AI solutions, easy to use and useful from day one: assistants, data analysis and content generation for your work.</p>
         </article>
-        <article class="card">
+        <article class="card reveal">
+          <span class="num">02</span>
           <span class="ico" aria-hidden="true">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"></path><path d="M18 3v3.7h-3.7M6 21v-3.7h3.7"></path></svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"></path><path d="M18 3v3.7h-3.7M6 21v-3.7h3.7"></path></svg>
           </span>
           <h3>Automation</h3>
           <p>We remove repetitive tasks and connect your tools, so work moves on its own and your business saves time.</p>
         </article>
-        <article class="card">
+        <article class="card reveal">
+          <span class="num">03</span>
           <span class="ico" aria-hidden="true">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8l-4 4 4 4M16 8l4 4-4 4M13 5l-2 14"></path></svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8l-4 4 4 4M16 8l4 4-4 4M13 5l-2 14"></path></svg>
           </span>
           <h3>Custom software</h3>
           <p>Applications and digital tools built around the way your business actually works.</p>
         </article>
-        <article class="card">
+        <article class="card reveal">
+          <span class="num">04</span>
           <span class="ico" aria-hidden="true">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V4M4 20h16"></path><path d="M8 16l3.5-4 3 2.5L20 7"></path></svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V4M4 20h16"></path><path d="M8 16l3.5-4 3 2.5L20 7"></path></svg>
           </span>
           <h3>Business strategy</h3>
           <p>We support you to grow, get organised and make better decisions, with data at hand and clear goals.</p>
@@ -168,22 +172,22 @@
 
     <!-- WHY TELAIO -->
     <section id="why" class="sec wrap">
-      <div class="sec-head">
+      <div class="sec-head reveal">
         <p class="eyebrow">Why Telaio</p>
         <h2>Why businesses choose us</h2>
       </div>
-      <div class="cards g3">
-        <article class="card">
+      <div class="cards g3" data-stagger>
+        <article class="card reveal">
           <p class="kick">01</p>
           <h3>Clear language</h3>
           <p>We explain everything simply. You always know what we're doing and why, with no acronyms or jargon.</p>
         </article>
-        <article class="card">
+        <article class="card reveal">
           <p class="kick">02</p>
           <h3>Tailored solutions</h3>
           <p>No off-the-shelf packages: we start from your real problems and build what your business needs.</p>
         </article>
-        <article class="card">
+        <article class="card reveal">
           <p class="kick">03</p>
           <h3>Close to SMEs</h3>
           <p>We know small Italian businesses and their pace. We stay by your side until the solution works.</p>
@@ -193,13 +197,13 @@
 
     <!-- CONTACT -->
     <section id="contact" class="sec wrap">
-      <div class="sec-head">
+      <div class="sec-head reveal">
         <p class="eyebrow">Contact</p>
         <h2>Let's talk</h2>
         <p class="lede" style="margin-top:12px">Tell us what you need: we'll reply clearly, no strings attached.</p>
       </div>
-      <div class="contact">
-        <div class="contact-direct">
+      <div class="contact" data-stagger>
+        <div class="contact-direct reveal">
           <a class="contact-line" href="mailto:info@telaioconsulting.com">
             <span class="ico" aria-hidden="true">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m3 7 9 6 9-6"></path></svg>
@@ -212,7 +216,7 @@
           <p class="contact-note">Write to us by email or via the form: we reply within 1 business day.</p>
         </div>
 
-        <form class="contact-form" id="contactForm" novalidate>
+        <form class="contact-form reveal" id="contactForm" novalidate>
           <div class="field">
             <label for="nome">Name</label>
             <input class="input" id="nome" name="nome" type="text" autocomplete="name" placeholder="Your name" required>
