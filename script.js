@@ -99,6 +99,26 @@
     els.forEach(function (el) { io.observe(el); });
   })();
 
+  /* ---- Voce di menu attiva in base alla sezione visibile ---- */
+  (function () {
+    if (!("IntersectionObserver" in window)) return;
+    var links = Array.prototype.slice.call(document.querySelectorAll('.nav a[href^="#"]'));
+    if (!links.length) return;
+    var map = {};
+    links.forEach(function (a) { var id = a.getAttribute("href").slice(1); if (id) map[id] = a; });
+    var secs = Object.keys(map).map(function (id) { return document.getElementById(id); }).filter(Boolean);
+    if (!secs.length) return;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          links.forEach(function (a) { a.classList.remove("active"); });
+          if (map[e.target.id]) map[e.target.id].classList.add("active");
+        }
+      });
+    }, { rootMargin: "-45% 0px -50% 0px", threshold: 0 });
+    secs.forEach(function (s) { io.observe(s); });
+  })();
+
   /* ============================================================
      LA TRAMA — visual generativo "telaio" (ordito + trama)
      · navetta di luce diagonale · reattivo al mouse (increspatura +
