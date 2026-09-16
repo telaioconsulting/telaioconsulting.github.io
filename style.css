@@ -489,3 +489,64 @@ footer { border-top: 1px solid var(--line); padding: 48px 0; background: var(--s
   .card:hover, .founder:hover, .contact-line:hover { transform: none; }
   body { transition: none; }
 }
+
+/* ============================================================
+   100X — interazioni & motion di sezione
+   ============================================================ */
+
+/* Spotlight: "la trama illuminata dal cursore" */
+.card, .founder, .values li { position: relative; }
+.founder { overflow: hidden; }
+.card::before, .founder::before, .values li::before, .contact-panel::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; z-index: 0; pointer-events: none;
+  opacity: 0; transition: opacity .3s var(--ease);
+  background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--brand) 20%, transparent), transparent 62%);
+}
+.contact-panel::after { background: radial-gradient(340px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--brand) 15%, transparent), transparent 60%); }
+.card:hover::before, .founder:hover::before, .values li:hover::before, .contact-panel:hover::after { opacity: 1; }
+.card > *, .founder > *, .values li > * { position: relative; z-index: 1; }
+
+/* Card: numero piu vivo all'hover */
+.card .num { transform-origin: top right; }
+.card:hover .num { transform: scale(1.08); }
+
+/* Titoli di sezione: filo che si disegna sotto l'h2 all'ingresso */
+.sec-head h2 { position: relative; display: inline-block; padding-bottom: 14px; }
+.sec-head h2::after {
+  content: ""; position: absolute; left: 0; bottom: 0; height: 2px; width: 0;
+  background: linear-gradient(90deg, var(--brand), transparent); transition: width .8s var(--ease) .15s;
+}
+.sec-head.in h2::after, .contact-panel.in .sec-head h2::after { width: 64px; }
+
+/* Valori: marcatore "nodo" */
+.values li b { position: relative; padding-left: 20px; }
+.values li b::before {
+  content: ""; position: absolute; left: 0; top: .55em; width: 8px; height: 8px;
+  background: var(--brand); border-radius: 2px; transform: translateY(-50%) rotate(45deg);
+}
+
+/* Perché: il filo si tesse e la navetta accende i nodi in sequenza */
+.why-row::before { transform: scaleX(0); transform-origin: left center; }
+.why-row.lit::before { animation: threadDraw .9s var(--ease) forwards; }
+@keyframes threadDraw { to { transform: scaleX(1); } }
+.why .n { position: relative; }
+.why-row.lit .why:nth-child(1) .n { animation: nodeGlow 1.1s ease .35s; }
+.why-row.lit .why:nth-child(2) .n { animation: nodeGlow 1.1s ease .65s; }
+.why-row.lit .why:nth-child(3) .n { animation: nodeGlow 1.1s ease .95s; }
+@keyframes nodeGlow {
+  0% { box-shadow: 0 0 0 0 rgba(19,7,237,0); }
+  40% { box-shadow: 0 0 0 6px rgba(19,7,237,.22), 0 0 26px rgba(19,7,237,.55); border-color: var(--brand); }
+  100% { box-shadow: 0 0 0 0 rgba(19,7,237,0); }
+}
+
+/* Contatti: la trama del pannello vive (scorre lenta) */
+@keyframes weaveShift { to { background-position: 14px 14px, 14px 14px; } }
+.contact-panel::before { animation: weaveShift 7s linear infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .why-row::before { transform: none; animation: none; }
+  .why-row.lit .why .n { animation: none; }
+  .contact-panel::before { animation: none; }
+  .sec-head h2::after { transition: none; width: 64px; }
+  .card:hover .num { transform: none; }
+}

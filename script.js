@@ -119,6 +119,27 @@
     secs.forEach(function (s) { io.observe(s); });
   })();
 
+  /* ---- Spotlight che segue il cursore + navetta del "Perché" ---- */
+  (function () {
+    var spots = document.querySelectorAll('.card, .founder, .values li, .contact-panel');
+    spots.forEach(function (el) {
+      el.addEventListener('pointermove', function (e) {
+        var r = el.getBoundingClientRect();
+        el.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+        el.style.setProperty('--my', (e.clientY - r.top) + 'px');
+      });
+    });
+    if ("IntersectionObserver" in window) {
+      var row = document.querySelector('.why-row');
+      if (row) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("lit"); io.unobserve(e.target); } });
+        }, { threshold: 0.3 });
+        io.observe(row);
+      }
+    }
+  })();
+
   /* ============================================================
      LA TRAMA — visual generativo "telaio" (ordito + trama)
      · navetta di luce diagonale · reattivo al mouse (increspatura +
