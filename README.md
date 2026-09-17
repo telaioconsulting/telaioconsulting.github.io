@@ -12,7 +12,6 @@ Public marketing website for **Telaio Consulting**, served via GitHub Pages.
 Change the files and push to `main` — GitHub Pages redeploys automatically in ~1 minute.
 
 Placeholders still to fill (in both `index.html` and `en/index.html`):
-- **Founders:** the three profiles in the About section (name, role, bio) — currently "Nome Cognome" / "Name Surname".
 - **VAT:** `00000000000` (P.IVA / VAT, in the footer).
 
 ## Custom domain
