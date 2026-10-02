@@ -268,7 +268,7 @@ html:not(.js) .no-js-only { display: block; }
   transition: transform .15s ease, background .18s ease, box-shadow .2s ease;
 }
 .btn:active { transform: translateY(0); }
-.btn-sm { padding: 9px 15px; font-size: var(--step--1); }
+.btn-sm { padding: 9px 15px; font-size: var(--step--1); white-space: nowrap; }
 .btn-primary { background: var(--brand); color: #fff; position: relative; overflow: hidden; }
 .btn-primary::after {
   content: ""; position: absolute; inset: 0; pointer-events: none; transform: translateX(-130%);
@@ -560,8 +560,8 @@ footer { border-top: 1px solid var(--line); padding: 48px 0; background: var(--s
 /* ============================================================
    RESPONSIVE
    ============================================================ */
-/* Menu a scomparsa: sotto i 900 px le voci della testata non entrano più in una riga */
-@media (max-width: 900px) {
+/* Menu a scomparsa: sotto i 1040 px le voci della testata non entrano più in una riga */
+@media (max-width: 1040px) {
   .menu-btn { display: inline-grid; }
   .top-actions { margin-left: auto; }
   .nav {

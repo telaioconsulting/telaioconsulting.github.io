@@ -49,7 +49,7 @@
     });
     nav.addEventListener("click", function (ev) { if (ev.target.tagName === "A") closeMenu(); });
   }
-  window.addEventListener("resize", function () { if (window.innerWidth > 900) closeMenu(); });
+  window.addEventListener("resize", function () { if (window.innerWidth > 1040) closeMenu(); });
 
   /* ---- Reveal allo scroll (con stagger nei gruppi) ---- */
   (function () {
