@@ -15,6 +15,7 @@ Public marketing website for **Telaio Consulting**, served via GitHub Pages.
 | AI check-up | `/check-up-ai/` | `/en/ai-check-up/` |
 | How we work | `/come-lavoriamo/` | — |
 | What we do | `/cosa-facciamo/` | — |
+| Strategy consulting | `/consulenza-strategica/` | — |
 | About us | `/chi-siamo/` | — |
 | FAQ | `/domande-frequenti/` | — |
 | Privacy | `/privacy/` | `/en/privacy/` |
