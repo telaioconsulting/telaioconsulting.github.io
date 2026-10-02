@@ -6,18 +6,24 @@
   "use strict";
   var root = document.documentElement;
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var isEn = (root.lang || "it").toLowerCase().indexOf("en") === 0;
+
+  /* Indirizzi di incorporamento del calendario Google (Calendar › pagina di
+     prenotazione › Condividi › Incorpora › "Pagina di prenotazione in linea").
+     Finché restano vuoti, il riquadro mostra l'email. */
+  var BOOKING_EMBED_URL_IT = "";
+  var BOOKING_EMBED_URL_EN = "";
 
   /* ---- Cambio tema (scuro predefinito ⇄ chiaro) ---- */
   var themeBtn = document.getElementById("themeBtn");
   var STORAGE_KEY = "telaio-theme";
-
   function applyTheme(theme) {
     if (theme === "light") {
       root.setAttribute("data-theme", "light");
-      if (themeBtn) { themeBtn.textContent = "☾"; themeBtn.setAttribute("aria-label", "Passa al tema scuro"); }
+      if (themeBtn) { themeBtn.textContent = "☾"; themeBtn.setAttribute("aria-label", isEn ? "Switch to dark theme" : "Passa al tema scuro"); }
     } else {
       root.removeAttribute("data-theme");
-      if (themeBtn) { themeBtn.textContent = "◐"; themeBtn.setAttribute("aria-label", "Passa al tema chiaro"); }
+      if (themeBtn) { themeBtn.textContent = "◐"; themeBtn.setAttribute("aria-label", isEn ? "Switch to light theme" : "Passa al tema chiaro"); }
     }
     if (typeof window.__loomRedraw === "function") window.__loomRedraw();
   }
@@ -42,25 +48,6 @@
     nav.addEventListener("click", function (ev) { if (ev.target.tagName === "A") closeMenu(); });
   }
   window.addEventListener("resize", function () { if (window.innerWidth > 720) closeMenu(); });
-
-  /* ---- Modulo contatti: apre l'email con il messaggio già pronto ---- */
-  var form = document.getElementById("contactForm");
-  if (form) {
-    form.addEventListener("submit", function (ev) {
-      ev.preventDefault();
-      var nome = (form.nome.value || "").trim();
-      var email = (form.email.value || "").trim();
-      var messaggio = (form.messaggio.value || "").trim();
-      var isEn = (document.documentElement.lang || "it").toLowerCase().indexOf("en") === 0;
-      var oggetto = (isEn ? "Website enquiry — " : "Richiesta dal sito — ") + (nome || (isEn ? "new contact" : "nuovo contatto"));
-      var corpo = (isEn ? "Name: " : "Nome: ") + nome + "\n" + "Email: " + email + "\n\n" + messaggio + "\n";
-      window.location.href = "mailto:info@telaioconsulting.com?subject=" + encodeURIComponent(oggetto) + "&body=" + encodeURIComponent(corpo);
-    });
-  }
-
-  /* ---- Anno corrente nel footer ---- */
-  var yearEl = document.getElementById("year");
-  if (yearEl) yearEl.textContent = String(new Date().getFullYear());
 
   /* ---- Reveal "tessuto" del titolo (carattere per carattere) ---- */
   (function () {
@@ -93,36 +80,15 @@
       els.forEach(function (el) { el.classList.add("in"); });
       return;
     }
-    // toggle: si ri-anima ogni volta che la sezione entra/esce dalla viewport
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) { e.target.classList.toggle("in", e.isIntersecting); });
     }, { rootMargin: "0px 0px -10% 0px", threshold: 0.12 });
     els.forEach(function (el) { io.observe(el); });
   })();
 
-  /* ---- Voce di menu attiva in base alla sezione visibile ---- */
-  (function () {
-    if (!("IntersectionObserver" in window)) return;
-    var links = Array.prototype.slice.call(document.querySelectorAll('.nav a[href^="#"]'));
-    if (!links.length) return;
-    var map = {};
-    links.forEach(function (a) { var id = a.getAttribute("href").slice(1); if (id) map[id] = a; });
-    var secs = Object.keys(map).map(function (id) { return document.getElementById(id); }).filter(Boolean);
-    if (!secs.length) return;
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) {
-          links.forEach(function (a) { a.classList.remove("active"); });
-          if (map[e.target.id]) map[e.target.id].classList.add("active");
-        }
-      });
-    }, { rootMargin: "-45% 0px -50% 0px", threshold: 0 });
-    secs.forEach(function (s) { io.observe(s); });
-  })();
-
   /* ---- Spotlight che segue il cursore + navetta del "Perché" ---- */
   (function () {
-    var spots = document.querySelectorAll('.card, .founder, .values li, .contact-panel');
+    var spots = document.querySelectorAll('.card, .founder, .values li, .contact-panel, .step, .stat, .for-col');
     spots.forEach(function (el) {
       el.addEventListener('pointermove', function (e) {
         var r = el.getBoundingClientRect();
@@ -141,10 +107,56 @@
     }
   })();
 
+  /* ---- Prenotazione: carica il calendario di Google solo al clic ---- */
+  (function () {
+    var box = document.querySelector("[data-booking]");
+    if (!box) return;
+    box.hidden = false; // visibile solo con JavaScript; senza JS vale il <noscript>
+    var url = isEn ? (BOOKING_EMBED_URL_EN || BOOKING_EMBED_URL_IT) : BOOKING_EMBED_URL_IT;
+    if (!url) {
+      box.innerHTML = isEn
+        ? '<p>Write to us at <a href="mailto:info@telaioconsulting.com" data-email-link>info@telaioconsulting.com</a> and we’ll suggest a day and time.</p>'
+        : '<p>Scrivici a <a href="mailto:info@telaioconsulting.com" data-email-link>info@telaioconsulting.com</a>: ti proponiamo noi giorno e ora.</p>';
+      return;
+    }
+    var btn = box.querySelector("[data-booking-loader]");
+    if (!btn) return;
+    btn.addEventListener("click", function () {
+      var f = document.createElement("iframe");
+      f.src = url; f.className = "booking-frame"; f.loading = "lazy";
+      f.title = isEn ? "Booking calendar" : "Calendario di prenotazione";
+      box.innerHTML = "";
+      box.appendChild(f);
+    });
+  })();
+
+  /* ---- Barra fissa su telefono col pulsante principale ---- */
+  (function () {
+    var bar = document.querySelector(".mobile-bar");
+    if (!bar) return;
+    var booking = document.querySelector("[data-booking], .booking-box");
+    var bookingInView = false;
+    function update() {
+      var past = (window.scrollY || window.pageYOffset || 0) > 300;
+      var menuOpen = nav && nav.classList.contains("open");
+      if (past && !bookingInView && !menuOpen) bar.classList.add("show");
+      else bar.classList.remove("show");
+    }
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    if (menuBtn) menuBtn.addEventListener("click", function () { setTimeout(update, 0); });
+    if (booking && "IntersectionObserver" in window) {
+      new IntersectionObserver(function (es) {
+        es.forEach(function (e) { bookingInView = e.isIntersecting; });
+        update();
+      }, { threshold: 0 }).observe(booking);
+    }
+    update();
+  })();
+
   /* ============================================================
      LA TRAMA — visual generativo "telaio" (ordito + trama)
-     · navetta di luce diagonale · reattivo al mouse (increspatura +
-       incrocio ordito/trama) · parallax · dissolvenza allo scroll
+     · navetta di luce diagonale · reattivo al mouse · parallax
      ============================================================ */
   (function () {
     var canvas = document.getElementById("loom");
@@ -192,7 +204,6 @@
       ctx.save();
       ctx.translate(parX, parY);
 
-      // bloom focale
       var fx = W * 0.72, fy = H * 0.52, fr = Math.max(W, H) * 0.5;
       var b = ctx.createRadialGradient(fx, fy, 0, fx, fy, fr);
       b.addColorStop(0, rgba(P.brand, isLight ? 0.05 : 0.09)); b.addColorStop(1, rgba(P.brand, 0));
@@ -212,7 +223,6 @@
       function diag(x, y) { return (x / W) * 0.68 + (y / H) * 0.32; }
 
       var i, j, s, u, x, y, bx, by, xx, yy;
-      // ORDITO
       for (i = 0; i < cols.length; i++) {
         bx = cols[i]; ctx.beginPath(); s = false;
         for (y = -GAP * 2; y <= H + GAP * 2; y += 6) {
@@ -221,7 +231,6 @@
         }
         ctx.strokeStyle = P.line; ctx.lineWidth = 1; ctx.stroke();
       }
-      // TRAMA
       for (j = 0; j < rows.length; j++) {
         by = rows[j]; ctx.beginPath(); s = false;
         for (x = -GAP * 2; x <= W + GAP * 2; x += 6) {
@@ -230,7 +239,6 @@
         }
         ctx.strokeStyle = P.warp; ctx.lineWidth = 1; ctx.stroke();
       }
-      // NODI
       for (i = 0; i < cols.length; i++) {
         for (j = 0; j < rows.length; j++) {
           bx = cols[i]; by = rows[j];
@@ -252,7 +260,6 @@
           }
         }
       }
-      // CROCE sotto il cursore (la navetta infila ordito + trama)
       if (!reduce && pa > 0.02) {
         var a = 0.30 * pa; ctx.lineWidth = 1.4; ctx.strokeStyle = rgba(P.weft, a);
         var ci = Math.max(0, Math.min(cols.length - 1, Math.round((pxL - cols[0]) / GAP)));

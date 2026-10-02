@@ -5,6 +5,93 @@
    Font: Bricolage Grotesque (display) · IBM Plex Sans (testo) · IBM Plex Mono (utility)
    ============================================================ */
 
+/* ---- Font ospitati nel sito (WOFF2, latin + latin-ext, solo i pesi usati).
+        Licenza SIL Open Font License: vedi assets/fonts/OFL-*.txt ---- */
+@font-face {
+  font-family: "Bricolage Grotesque";
+  font-style: normal;
+  font-weight: 500 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("/assets/fonts/bricolage-grotesque-500-700-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Bricolage Grotesque";
+  font-style: normal;
+  font-weight: 500 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("/assets/fonts/bricolage-grotesque-500-700-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/assets/fonts/ibm-plex-mono-400-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/assets/fonts/ibm-plex-mono-400-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/assets/fonts/ibm-plex-mono-500-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/assets/fonts/ibm-plex-mono-500-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/assets/fonts/ibm-plex-mono-600-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/assets/fonts/ibm-plex-mono-600-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "IBM Plex Sans";
+  font-style: normal;
+  font-weight: 400 600;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("/assets/fonts/ibm-plex-sans-400-600-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "IBM Plex Sans";
+  font-style: normal;
+  font-weight: 400 600;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("/assets/fonts/ibm-plex-sans-400-600-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 /* ---- Token: tema SCURO (predefinito) ---- */
 :root {
   color-scheme: dark;
@@ -118,6 +205,13 @@ strong, b { font-weight: 600; color: var(--ink); }
 .reveal { opacity: 0; transform: translateY(22px); transition: opacity .8s var(--ease), transform .8s var(--ease); transition-delay: var(--d, 0ms); }
 .reveal.in { opacity: 1; transform: none; }
 
+/* Senza JavaScript: tutto il contenuto visibile, niente comandi che non funzionano
+   (le pagine restano raggiungibili dai link del piè di pagina). */
+@media (scripting: none) {
+  .reveal, .reveal-h .ch { opacity: 1; transform: none; filter: none; animation: none; }
+  .menu-btn, #themeBtn, .mobile-bar, .scroll-cue { display: none !important; }
+}
+
 /* ---- Il marchio (SVG condiviso) ---- */
 .mk { color: var(--brand); flex: none; }
 
@@ -216,8 +310,8 @@ strong, b { font-weight: 600; color: var(--ink); }
   letter-spacing: -.045em; margin: 22px 0 0; text-wrap: balance; color: var(--ink);
 }
 .hero h1 .accent {
-  color: var(--brand); text-shadow: 0 0 34px rgba(19,7,237,.4);
-  background-image: linear-gradient(180deg, #5A6BFF, var(--brand));
+  color: var(--weft); text-shadow: 0 0 34px rgba(19,7,237,.4);
+  background-image: linear-gradient(180deg, var(--weft), #5A6BFF);
   -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
 }
 :root[data-theme="light"] .hero h1 .accent { text-shadow: none; background-image: linear-gradient(180deg, var(--brand-lift), var(--brand)); }
@@ -383,7 +477,7 @@ strong, b { font-weight: 600; color: var(--ink); }
           mask-image: radial-gradient(120% 120% at 30% 20%, #000, transparent 75%);
 }
 .founder .avatar .mk { width: 30px; height: 30px; position: relative; z-index: 1; }
-.founder h4 { font-family: var(--f-display); font-weight: 700; font-size: var(--step-1); letter-spacing: -.01em; margin: 0; }
+.founder h4, .founder h3 { font-family: var(--f-display); font-weight: 700; font-size: var(--step-1); letter-spacing: -.01em; margin: 0; }
 .founder .role { font-family: var(--f-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--weft); }
 .founder .bio { color: var(--muted); font-size: var(--step--1); line-height: 1.55; }
 .founder .chip {
@@ -559,3 +653,153 @@ footer { border-top: 1px solid var(--line); padding: 48px 0; background: var(--s
   .sec-head h2::after { transition: none; width: 64px; }
   .card:hover .num { transform: none; }
 }
+
+/* ============================================================
+   STRUTTURA CHECK-UP — hero testuale, briciole, barra mobile,
+   statistiche con fonte, passi, timeline, prenotazione, FAQ
+   ============================================================ */
+
+/* Titolo hero su due righe (etichetta + frase) */
+.h1-kicker {
+  display: block; font-family: var(--f-mono); font-weight: 500;
+  font-size: var(--step--1); letter-spacing: .2em; text-transform: uppercase;
+  color: var(--weft); margin-bottom: 18px;
+}
+.hero h1.h1-lead { font-size: clamp(2rem, 5.2vw, 3.6rem); line-height: 1.04; letter-spacing: -.03em; }
+.hero .trust { margin-top: 20px; font-size: var(--step--1); color: var(--muted); max-width: 52ch; }
+.hero-link { margin-top: 18px; }
+.hero-link a { color: var(--weft); font-family: var(--f-mono); font-size: var(--step--1); text-decoration: none; letter-spacing: .04em; }
+.hero-link a:hover { color: var(--ink); }
+
+/* Sottotestata pagine interne (senza canvas) */
+.subhero { position: relative; padding: clamp(32px,6vw,72px) 0 clamp(20px,3vw,32px); }
+.subhero h1 { font-family: var(--f-display); font-weight: 700; font-size: var(--step-4); letter-spacing: -.03em; margin: 14px 0 0; max-width: 22ch; }
+.subhero .lede { margin-top: 18px; max-width: 60ch; }
+.subhero .hero-cta { margin-top: 28px; }
+.subhero .hero-meta { margin-top: 22px; }
+
+/* Briciole */
+.crumbs { font-family: var(--f-mono); font-size: var(--step--1); color: var(--muted); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding-top: 10px; }
+.crumbs a { color: var(--muted); text-decoration: none; }
+.crumbs a:hover { color: var(--ink); }
+.crumbs [aria-current="page"] { color: var(--ink); }
+
+/* Barra fissa su telefono */
+.mobile-bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 90; display: none;
+  padding: 10px clamp(14px,4vw,20px); padding-bottom: calc(10px + env(safe-area-inset-bottom));
+  background: color-mix(in srgb, var(--ground) 90%, transparent);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid var(--line);
+  transform: translateY(130%); transition: transform .3s var(--ease);
+}
+.mobile-bar.show { transform: none; }
+@media (max-width: 760px) { .mobile-bar { display: block; } body { padding-bottom: 76px; } }
+@media (prefers-reduced-motion: reduce) { .mobile-bar { transition: none; } }
+
+/* Statistiche con fonte */
+.stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
+.stat { background: var(--surface); border: 1px solid var(--line); border-top: 2px solid var(--brand); border-radius: var(--r-lg); padding: 26px; display: flex; flex-direction: column; gap: 10px; }
+.stat .big { font-family: var(--f-display); font-weight: 700; font-size: clamp(2.2rem,5vw,3.2rem); letter-spacing: -.03em; color: var(--ink); line-height: 1; }
+.stat p { color: var(--muted); font-size: var(--step-0); line-height: 1.5; }
+.stat .src { font-family: var(--f-mono); font-size: 11px; color: var(--muted); margin-top: auto; line-height: 1.4; }
+.stat .src a { color: var(--weft); }
+@media (max-width: 860px) { .stats { grid-template-columns: 1fr; } }
+
+/* Passi numerati */
+.steps { display: grid; gap: 18px; }
+.steps.cols { grid-template-columns: repeat(2,1fr); }
+.step { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 26px; display: flex; flex-direction: column; gap: 8px; }
+.step .n { width: 46px; height: 46px; border-radius: var(--r-pill); display: grid; place-items: center; border: 1px solid var(--line-strong); font-family: var(--f-display); font-weight: 700; font-size: 1.2rem; color: var(--weft); margin-bottom: 6px; }
+.step h3 { font-size: var(--step-2); letter-spacing: -.02em; }
+.step p { color: var(--muted); line-height: 1.55; }
+@media (max-width: 760px) { .steps.cols { grid-template-columns: 1fr; } }
+
+/* Callout "in evidenza" */
+.callout { border-left: 2px solid var(--brand); background: color-mix(in srgb, var(--brand) 7%, var(--surface)); padding: 18px 22px; border-radius: var(--r-md); color: var(--ink); line-height: 1.55; }
+
+/* Timeline del check-up (momenti con durata) */
+.moments { display: grid; gap: 14px; }
+.moment { display: grid; grid-template-columns: 92px 1fr; gap: 20px; align-items: start; padding: 20px 22px; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface); }
+.moment .dur { font-family: var(--f-mono); font-size: var(--step--1); color: var(--weft); font-weight: 600; letter-spacing: .04em; white-space: nowrap; }
+.moment h3 { font-size: var(--step-1); letter-spacing: -.01em; margin-bottom: 6px; }
+.moment p { color: var(--muted); line-height: 1.5; }
+@media (max-width: 560px) { .moment { grid-template-columns: 1fr; gap: 6px; } }
+
+/* Elenchi con marcatore "nodo" */
+.ticks { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; max-width: 64ch; }
+.ticks li { position: relative; padding-left: 28px; color: var(--muted); line-height: 1.5; }
+.ticks li::before { content: ""; position: absolute; left: 0; top: .72em; width: 10px; height: 10px; background: var(--brand); border-radius: 2px; transform: translateY(-50%) rotate(45deg); }
+.ticks li b { color: var(--ink); }
+
+/* Per chi è / non è */
+.for-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.for-col { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 28px; }
+.for-col h2 { font-size: var(--step-2); margin-bottom: 18px; }
+.for-col ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.for-col li { position: relative; padding-left: 28px; color: var(--muted); line-height: 1.5; }
+.for-col.yes li::before { content: ""; position: absolute; left: 0; top: .1em; width: 15px; height: 9px; border-left: 2px solid var(--brand); border-bottom: 2px solid var(--brand); transform: rotate(-45deg); }
+.for-col.no li::before { content: ""; position: absolute; left: 0; top: .72em; width: 12px; height: 2px; background: var(--line-strong); }
+@media (max-width: 760px) { .for-grid { grid-template-columns: 1fr; } }
+
+/* Prenotazione */
+.booking-box { border: 1px solid var(--line-strong); border-radius: var(--r-lg); background: var(--surface); padding: clamp(22px,4vw,36px); }
+.booking-box p { color: var(--muted); line-height: 1.55; }
+.booking-box .btn { margin-top: 18px; }
+.booking-box .micro { font-family: var(--f-mono); font-size: var(--step--1); color: var(--muted); margin-top: 14px; }
+.booking-box a { color: var(--weft); }
+.booking-frame { width: 100%; border: 0; border-radius: var(--r-md); min-height: 640px; background: var(--panel); display: block; }
+.booking-meta { margin-top: 16px; font-size: var(--step--1); color: var(--muted); }
+.booking-meta a { color: var(--weft); }
+
+/* FAQ accordion */
+.qa { border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); margin-bottom: 12px; overflow: hidden; }
+.qa > summary { cursor: pointer; list-style: none; padding: 18px 22px; font-family: var(--f-display); font-weight: 600; font-size: var(--step-1); letter-spacing: -.01em; color: var(--ink); display: flex; justify-content: space-between; gap: 16px; align-items: center; }
+.qa > summary::-webkit-details-marker { display: none; }
+.qa > summary::after { content: "+"; font-family: var(--f-mono); color: var(--weft); font-size: 1.4rem; line-height: 1; flex: none; }
+.qa[open] > summary::after { content: "\2013"; }
+.qa .a { padding: 0 22px 20px; color: var(--muted); line-height: 1.6; max-width: 72ch; }
+.qa .a a { color: var(--weft); }
+.qa .a p + p { margin-top: 10px; }
+
+/* Banda CTA finale */
+.cta-band { text-align: center; }
+.cta-band h2 { font-size: var(--step-4); max-width: 26ch; margin: 0 auto; }
+.cta-band .sub { margin-top: 18px; font-family: var(--f-mono); font-size: var(--step--1); color: var(--muted); }
+.cta-band .btn { margin-top: 26px; }
+
+/* Griglia a due colonne generica */
+.grid-2 { display: grid; grid-template-columns: repeat(2,1fr); gap: 18px; align-items: start; }
+@media (max-width: 760px) { .grid-2 { grid-template-columns: 1fr; } }
+
+/* Gruppi di servizi */
+.svc-group + .svc-group { margin-top: clamp(32px,5vw,52px); }
+.svc-group h2 { font-size: var(--step-2); margin-bottom: 16px; }
+
+/* Testo lungo pagine legali */
+.legal { max-width: 74ch; }
+.legal h2 { font-size: var(--step-2); margin: 36px 0 10px; letter-spacing: -.01em; }
+.legal h3 { font-size: var(--step-1); margin: 22px 0 8px; }
+.legal p, .legal li { color: var(--muted); line-height: 1.65; }
+.legal p { margin-bottom: 12px; }
+.legal ul { padding-left: 20px; display: grid; gap: 8px; margin: 0 0 14px; }
+.legal a { color: var(--weft); }
+.legal .updated { margin-top: 32px; font-family: var(--f-mono); font-size: var(--step--1); color: var(--muted); }
+
+/* Link testuale "freccia" ricorrente */
+.arrow-link { display: inline-block; margin-top: 8px; color: var(--weft); font-family: var(--f-mono); font-size: var(--step--1); text-decoration: none; letter-spacing: .03em; }
+.arrow-link:hover { color: var(--ink); }
+
+/* Aree toccabili di almeno 44 px */
+.icon-btn { width: 44px; height: 44px; }
+.lang-link { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; }
+.brand { min-height: 44px; }
+@media (max-width: 760px), (pointer: coarse) {
+  .nav a, .hero-link a, .arrow-link, .crumbs a, .foot-col a { display: inline-flex; align-items: center; min-height: 44px; }
+  .crumbs a { min-width: 44px; }
+  .foot-col { gap: 2px; }
+}
+
+/* Footer: niente margine-auto forzato sulla terza colonna multi-pagina */
+.foot-in.foot-grid { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 28px; }
+@media (max-width: 760px) { .foot-in.foot-grid { grid-template-columns: 1fr; } }

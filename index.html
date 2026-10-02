@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Telaio — Consulenza AI per PMI | Automazione, Software, Strategia</title>
-  <meta name="description" content="Telaio aiuta le piccole e medie imprese italiane a usare l'intelligenza artificiale in modo semplice e concreto: AI, automazione, software su misura e strategia aziendale.">
+  <title>Consulenza AI per PMI: il primo strumento in 4 settimane</title>
+  <meta name="description" content="Telaio aiuta le piccole e medie imprese a usare l'AI: partiamo da un problema reale e in 4 settimane hai il primo strumento in uso. Prenota il check-up.">
   <meta name="theme-color" content="#090C08">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://telaioconsulting.github.io/">
@@ -12,39 +12,65 @@
   <link rel="alternate" hreflang="en" href="https://telaioconsulting.github.io/en/">
   <link rel="alternate" hreflang="x-default" href="https://telaioconsulting.github.io/">
 
-  <!-- Open Graph (anteprima quando il link viene condiviso) -->
-  <meta property="og:title" content="Telaio — Dall'AI al valore">
-  <meta property="og:description" content="Portiamo l'intelligenza artificiale nella tua impresa in modo semplice: strumenti su misura, automazioni e strategia per crescere.">
+  <!-- Open Graph / Twitter -->
+  <meta property="og:title" content="Consulenza AI per PMI: il primo strumento in 4 settimane">
+  <meta property="og:description" content="Telaio aiuta le piccole e medie imprese a usare l'AI: partiamo da un problema reale e in 4 settimane hai il primo strumento in uso.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://telaioconsulting.github.io/">
-  <meta property="og:site_name" content="Telaio">
   <meta property="og:locale" content="it_IT">
-  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:site_name" content="Telaio">
+  <meta property="og:image" content="https://telaioconsulting.github.io/assets/og-telaio.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Telaio — Dall'AI al valore">
-  <meta name="twitter:description" content="Consulenza AI, automazione, software su misura e strategia per le PMI italiane.">
+  <meta name="twitter:title" content="Consulenza AI per PMI: il primo strumento in 4 settimane">
+  <meta name="twitter:description" content="Partiamo da un problema reale e in 4 settimane hai il primo strumento AI in uso.">
+  <meta name="twitter:image" content="https://telaioconsulting.github.io/assets/og-telaio.png">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link rel="preload" href="/assets/fonts/bricolage-grotesque-500-700-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/ibm-plex-sans-400-600-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/style.css">
 
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "ProfessionalService",
-    "name": "Telaio Consulting",
-    "url": "https://telaioconsulting.github.io/",
-    "email": "info@telaioconsulting.com",
-    "description": "Telaio aiuta le piccole e medie imprese italiane a usare l'intelligenza artificiale in modo semplice e concreto: AI, automazione, software su misura e strategia aziendale.",
-    "areaServed": "IT",
-    "availableLanguage": ["it", "en"],
-    "slogan": "Dall'AI al valore",
-    "serviceType": ["Consulenza AI", "Automazione", "Sviluppo software su misura", "Strategia aziendale"]
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://telaioconsulting.github.io/#website",
+        "url": "https://telaioconsulting.github.io/",
+        "name": "Telaio",
+        "alternateName": "Telaio Consulting",
+        "inLanguage": ["it", "en"],
+        "publisher": { "@id": "https://telaioconsulting.github.io/#organization" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://telaioconsulting.github.io/#organization",
+        "name": "Telaio",
+        "alternateName": "Telaio Consulting",
+        "url": "https://telaioconsulting.github.io/",
+        "logo": "https://telaioconsulting.github.io/assets/telaio-logo-512.png",
+        "description": "Telaio è un team di consulenza che aiuta le piccole e medie imprese a mettere l'intelligenza artificiale al lavoro: parte da un problema reale e porta il primo strumento AI in uso in 4 settimane.",
+        "slogan": "Dall'AI al valore",
+        "email": "info@telaioconsulting.com",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "customer service",
+          "email": "info@telaioconsulting.com",
+          "availableLanguage": ["it", "en"]
+        },
+        "areaServed": "IT",
+        "knowsAbout": ["Intelligenza artificiale", "Automazione dei processi aziendali", "AI generativa", "Consulenza AI per PMI"],
+        "founder": [
+          { "@id": "https://telaioconsulting.github.io/chi-siamo/#dan-alessandro-podasca" },
+          { "@id": "https://telaioconsulting.github.io/chi-siamo/#pasquale-silvestre" },
+          { "@id": "https://telaioconsulting.github.io/chi-siamo/#rod-lonardo" }
+        ]
+      }
+    ]
   }
   </script>
 </head>
-<body>
+<body data-page-type="home">
 
   <!-- Marchio Telaio: nodo di tessitura (ordito + trama) -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -62,23 +88,23 @@
 
   <header class="top">
     <div class="wrap top-in">
-      <a class="brand" href="#top" aria-label="Telaio — home">
+      <a class="brand" href="/" aria-label="Telaio — home">
         <svg class="mk" viewBox="0 0 64 64" aria-hidden="true"><use href="#mk"></use></svg>
         <span class="wm">Telaio</span>
       </a>
       <nav class="nav" id="nav" aria-label="Navigazione principale">
-        <a href="#chi-siamo">Chi siamo</a>
-        <a href="#cosa-facciamo">Cosa facciamo</a>
-        <a href="#perche">Perché Telaio</a>
-        <a href="#contatti">Contatti</a>
+        <a href="/come-lavoriamo/">Come lavoriamo</a>
+        <a href="/cosa-facciamo/">Cosa facciamo</a>
+        <a href="/chi-siamo/">Chi siamo</a>
+        <a href="/domande-frequenti/">Domande frequenti</a>
       </nav>
       <div class="top-actions">
-        <div class="lang" aria-label="Lingua">
+        <div class="lang" aria-label="Lingua" data-lang-switch>
           <a href="/" class="lang-link is-active" aria-current="page">IT</a>
           <a href="/en/" class="lang-link">EN</a>
         </div>
-        <a class="btn btn-primary btn-sm" href="#contatti">Contattaci</a>
         <button class="icon-btn" id="themeBtn" type="button" aria-label="Passa al tema chiaro">◐</button>
+        <a class="btn btn-primary btn-sm" href="/check-up-ai/" data-cta="checkup" data-placement="nav">Prenota il check-up AI</a>
         <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Apri il menu" aria-expanded="false" aria-controls="nav">≡</button>
       </div>
     </div>
@@ -86,202 +112,216 @@
 
   <main id="top">
 
-    <!-- HERO -->
+    <!-- 1 · APERTURA -->
     <section class="hero">
       <canvas id="loom" aria-hidden="true"></canvas>
       <div class="hero-veil" aria-hidden="true"></div>
       <div class="wrap">
         <div class="hero-in" data-stagger>
-          <p class="eyebrow reveal">Consulenza AI per le PMI italiane</p>
-          <h1 class="reveal-h">Dall&rsquo;AI<br>al <span class="accent">valore</span>.</h1>
-          <p class="tagline reveal">Portiamo l'intelligenza artificiale nella tua impresa in modo semplice e concreto: strumenti su misura, automazioni e strategia per crescere.</p>
+          <h1 class="h1-lead reveal"><span class="h1-kicker">Consulenza AI per piccole e medie imprese</span>Il primo strumento AI al lavoro nella tua impresa, in <span class="accent">4&nbsp;settimane</span>.</h1>
+          <p class="tagline reveal">Partiamo da un problema reale, scegliamo lo strumento giusto e lo mettiamo al lavoro con te. Poi restiamo finché produce risultati.</p>
           <div class="hero-cta reveal">
-            <a class="btn btn-primary" href="mailto:info@telaioconsulting.com">Scrivici →</a>
-            <a class="btn btn-ghost" href="#cosa-facciamo">Cosa facciamo</a>
+            <a class="btn btn-primary" href="/check-up-ai/" data-cta="checkup" data-placement="hero">Prenota il check-up AI</a>
           </div>
-          <div class="hero-meta reveal">
-            <span><span class="tick"></span> Rispondiamo entro <b>1 giorno lavorativo</b></span>
-            <span><span class="tick"></span> Linguaggio chiaro, <b>senza tecnicismi</b></span>
-          </div>
+          <p class="hero-meta reveal"><span>30 minuti in videochiamata · Gratuito · Scegli tu giorno e ora</span></p>
+          <p class="hero-link reveal"><a href="#come-lavoriamo">Come lavoriamo ↓</a></p>
+          <p class="trust reveal">Un solo referente, dall'analisi alla soluzione che funziona. E anche dopo.</p>
         </div>
       </div>
       <div class="scroll-cue" aria-hidden="true"><span>Scorri</span><span class="rail"></span><span class="bead"></span></div>
     </section>
 
-    <!-- CHI SIAMO -->
+    <!-- 2 · COSA STA CAMBIANDO -->
+    <section class="sec wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">Cosa sta cambiando</p>
+        <h2>L'AI sta cambiando il modo di lavorare. Anche nel tuo settore.</h2>
+      </div>
+      <div class="stats" data-stagger>
+        <div class="stat reveal">
+          <span class="big">16,4%</span>
+          <p>Le imprese italiane che usano l'AI sono raddoppiate in un anno: dall'8,2% al 16,4%.</p>
+          <p class="src">Fonte: <a href="https://www.istat.it/comunicato-stampa/imprese-e-ict-anno-2025/" target="_blank" rel="noopener">Istat, Imprese e ICT 2025</a> · imprese con almeno 10 addetti</p>
+        </div>
+        <div class="stat reveal">
+          <span class="big">37 punti</span>
+          <p>La distanza tra grandi imprese e PMI: 53,1% contro 15,7%. Nel 2023 erano 20.</p>
+          <p class="src">Fonte: <a href="https://www.istat.it/comunicato-stampa/imprese-e-ict-anno-2025/" target="_blank" rel="noopener">Istat, Imprese e ICT 2025</a></p>
+        </div>
+        <div class="stat reveal">
+          <span class="big">1 su 3</span>
+          <p>Tra le imprese che usano l'AI, una su tre non indica per quale scopo aziendale la usa.</p>
+          <p class="src">Fonte: <a href="https://www.istat.it/wp-content/uploads/2025/12/Statreport_ICT2025.pdf" target="_blank" rel="noopener">Istat, Imprese e ICT 2025</a></p>
+        </div>
+      </div>
+      <p class="lede reveal" style="margin-top:28px; max-width:62ch">Per partire non serve un grande progetto. Serve un problema concreto e qualcuno che ti accompagni fino al risultato.</p>
+      <div class="reveal" style="margin-top:32px">
+        <h3 style="font-size:var(--step-3); max-width:30ch">Scopri come l'AI sta cambiando il tuo settore e cosa puoi fare tu, da subito.</h3>
+        <a class="btn btn-primary" href="/check-up-ai/" data-cta="checkup" data-placement="stats" style="margin-top:22px">Prenota il check-up AI</a>
+      </div>
+    </section>
+
+    <!-- 3 · DA DOVE SI PARTE -->
+    <section id="cosa-facciamo" class="sec wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">Da dove si parte</p>
+        <h2>Le attività che l'AI può togliere dalla tua settimana</h2>
+      </div>
+      <p class="lede reveal" style="max-width:62ch">Ogni impresa è diversa, ma i punti di partenza si somigliano. Qualche esempio.</p>
+      <div class="cards g3" data-stagger style="margin-top:28px">
+        <article class="card reveal"><h3>Schede prodotto</h3><p>Dal link della pagina di origine alla scheda pubblicata sul tuo negozio online. L'AI compila i campi e li controlla. Tu approvi con un clic.</p></article>
+        <article class="card reveal"><h3>Ordini e documenti</h3><p>Arriva un ordine e il resto parte da solo: contratto, fattura elettronica, spedizione.</p></article>
+        <article class="card reveal"><h3>Richieste dei clienti</h3><p>Le domande che ricevi ogni giorno trovano una bozza di risposta già pronta, con le informazioni giuste. Tu controlli e invii.</p></article>
+        <article class="card reveal"><h3>Preventivi</h3><p>Dalla richiesta del cliente alla bozza di preventivo, con i tuoi listini e le tue condizioni.</p></article>
+        <article class="card reveal"><h3>Procedure e archivio</h3><p>Fai una domanda, come la faresti a un collega, e trovi la risposta tra contratti, manuali e procedure.</p></article>
+        <article class="card reveal"><h3>I numeri della settimana</h3><p>Vendite, acquisti e magazzino in un riepilogo chiaro, ogni lunedì. Senza copiare e incollare.</p></article>
+      </div>
+      <p class="reveal" style="margin-top:22px"><a class="arrow-link" href="/check-up-ai/">Non vedi la tua attività? Raccontacela nel check-up. →</a></p>
+    </section>
+
+    <!-- 4 · COME LAVORIAMO -->
+    <section id="come-lavoriamo" class="sec wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">Come lavoriamo</p>
+        <h2>Quattro passi. Alla fine, uno strumento che lavora per te.</h2>
+      </div>
+      <div class="steps cols" data-stagger>
+        <div class="step reveal"><span class="n">1</span><h3>Partiamo da un problema reale</h3><p>Capiamo dove perdi tempo, soldi o occasioni. Scegliamo insieme il problema da risolvere per primo.</p></div>
+        <div class="step reveal"><span class="n">2</span><h3>Scegliamo gli strumenti giusti</h3><p>Ti proponiamo tre strade. Ti diciamo quale sceglieremmo e perché, con tempi, costi e limiti scritti prima di iniziare.</p></div>
+        <div class="step reveal"><span class="n">3</span><h3>Li mettiamo al lavoro</h3><p>Prepariamo lo strumento, lo colleghiamo a quello che usi già e lo proviamo sul campo con le tue persone. In 4 settimane hai il primo strumento AI in uso.</p></div>
+        <div class="step reveal"><span class="n">4</span><h3>Restiamo finché producono risultati</h3><p>Guardiamo insieme cosa cambia, sistemiamo quello che non va e decidiamo il passo successivo.</p></div>
+      </div>
+      <div class="callout reveal" style="margin-top:22px">Hai un solo referente: Telaio. Rispondiamo del risultato, dall'analisi alla soluzione che funziona, e anche dopo.</div>
+      <p class="reveal" style="margin-top:18px"><a class="arrow-link" href="/come-lavoriamo/">Come lavoriamo, nel dettaglio →</a></p>
+      <div class="reveal" style="margin-top:28px"><a class="btn btn-primary" href="/check-up-ai/" data-cta="checkup" data-placement="method">Prenota il check-up AI</a></div>
+    </section>
+
+    <!-- 5 · PERCHÉ TELAIO -->
+    <section id="perche" class="sec wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">Perché Telaio</p>
+        <h2>Cosa cambia quando lavori con noi</h2>
+      </div>
+      <div class="cards g3" data-stagger>
+        <article class="card reveal"><h3>Vedi un risultato presto</h3><p>In 4 settimane hai il primo strumento AI in uso. Si parte da un problema alla volta, non da un progetto che dura un anno.</p></article>
+        <article class="card reveal"><h3>Hai un solo referente</h3><p>Dalla prima call a dopo il lancio parli con le stesse persone. Del risultato rispondiamo noi.</p></article>
+        <article class="card reveal"><h3>Sai sempre a cosa vai incontro</h3><p>Tempi, costi e limiti chiari dall'inizio, per iscritto. Se c'è un rischio, te lo diciamo ora, non a lavori finiti.</p></article>
+      </div>
+      <ul class="values" data-stagger style="margin-top:22px">
+        <li class="reveal"><b>Chiarezza</b><span>Se non si capisce, non è finito.</span></li>
+        <li class="reveal"><b>Concretezza</b><span>Cose che funzionano, non slide.</span></li>
+        <li class="reveal"><b>Vicinanza</b><span>Accanto a te, non sopra di te.</span></li>
+        <li class="reveal"><b>Trasparenza</b><span>Tempi, costi e limiti chiari dall'inizio.</span></li>
+      </ul>
+    </section>
+
+    <!-- 6 · CHI SIAMO -->
     <section id="chi-siamo" class="sec wrap">
       <div class="sec-head reveal">
-        <p class="sec-kicker"><span class="n">01</span><span class="l">Chi siamo</span></p>
-        <h2>Un partner concreto per l'AI, e non solo</h2>
+        <p class="eyebrow">Chi siamo</p>
+        <h2>Tre fondatori. Parli direttamente con noi.</h2>
+      </div>
+      <div class="founder-grid" data-stagger>
+        <article class="founder reveal">
+          <div class="avatar" aria-hidden="true"><svg class="mk" viewBox="0 0 64 64"><use href="#mk"></use></svg></div>
+          <h3>Dan Alessandro Podasca</h3>
+          <p class="role">AI e prodotto</p>
+          <p class="bio">Formazione al Politecnico di Milano. Analisi dei dati, prodotto digitale e mondi virtuali, al fianco di brand internazionali.</p>
+        </article>
+        <article class="founder reveal">
+          <div class="avatar" aria-hidden="true"><svg class="mk" viewBox="0 0 64 64"><use href="#mk"></use></svg></div>
+          <h3>Pasquale Silvestre</h3>
+          <p class="role">Strategia e sviluppo</p>
+          <p class="bio">Laurea in Innovation Management. Sviluppo d'impresa, digitalizzazione ed efficienza dei processi, con un passato nel private equity.</p>
+        </article>
+        <article class="founder reveal">
+          <div class="avatar" aria-hidden="true"><svg class="mk" viewBox="0 0 64 64"><use href="#mk"></use></svg></div>
+          <h3>Rod Lonardo</h3>
+          <p class="role">Business e crescita</p>
+          <p class="bio">Finanza alla Bocconi. Nel fintech internazionale ha seguito sviluppo commerciale, partnership e lancio di prodotti.</p>
+        </article>
+      </div>
+      <p class="reveal" style="margin-top:22px"><a class="arrow-link" href="/chi-siamo/">Conosci la squadra →</a></p>
+    </section>
+
+    <!-- 7 · IL CHECK-UP AI -->
+    <section id="contatti" class="sec wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">Il primo passo</p>
+        <h2>Check-up AI: 30 minuti per capire da dove partire</h2>
       </div>
       <div class="two-col">
         <div class="prose reveal">
-          <p class="lede">Telaio aiuta le piccole e medie imprese italiane a usare l'intelligenza artificiale in modo semplice e utile. Partiamo da un problema reale, scegliamo gli strumenti giusti e li mettiamo al lavoro finché producono risultati.</p>
-          <p>Niente progetti che non arrivano mai in produzione e niente parole difficili. Ti diciamo tempi, costi e limiti fin dall'inizio, e restiamo al tuo fianco per tutto il percorso.</p>
+          <p class="lede">Una videochiamata con uno dei fondatori. Ti raccontiamo cosa sta cambiando nel tuo settore, guardiamo insieme la tua impresa e ti diciamo da dove partiremmo.</p>
+          <div style="margin-top:26px"><a class="btn btn-primary" href="/check-up-ai/" data-cta="checkup" data-placement="checkup_section">Prenota il check-up AI</a></div>
+          <p class="hero-meta" style="margin-top:16px"><span>Gratuito. Ti chiediamo poche informazioni per prepararci.</span></p>
         </div>
-        <ul class="values" data-stagger>
-          <li class="reveal"><b>Chiarezza</b><span>Parliamo semplice. Se non si capisce, non è finito.</span></li>
-          <li class="reveal"><b>Concretezza</b><span>Consegniamo cose che funzionano, non slide.</span></li>
-          <li class="reveal"><b>Vicinanza</b><span>Lavoriamo accanto a te, non sopra di te.</span></li>
-          <li class="reveal"><b>Trasparenza</b><span>Tempi, costi e limiti chiari dall'inizio.</span></li>
-        </ul>
-      </div>
-
-      <div class="founders">
-        <h3 class="founders-title reveal">I founder</h3>
-        <div class="founder-grid" data-stagger>
-          <article class="founder reveal">
-            <div class="avatar" aria-hidden="true"><svg class="mk" viewBox="0 0 64 64"><use href="#mk"></use></svg></div>
-            <h4>Dan Alessandro Podasca</h4>
-            <p class="role">Co-founder · AI e prodotto</p>
-            <p class="bio">Formatosi al Politecnico di Milano, ha maturato esperienza tra analisi dei dati, prodotto digitale e mondi virtuali, affiancando brand internazionali su strategie guidate da dati e tecnologia. In Telaio trasforma l'intelligenza artificiale in strumenti concreti e semplici da usare.</p>
-          </article>
-          <article class="founder reveal">
-            <div class="avatar" aria-hidden="true"><svg class="mk" viewBox="0 0 64 64"><use href="#mk"></use></svg></div>
-            <h4>Pasquale Silvestre</h4>
-            <p class="role">Co-founder · Strategia e sviluppo</p>
-            <p class="bio">Laurea in Innovation Management, si occupa di sviluppo d'impresa, digitalizzazione ed efficienza dei processi, con un background nel private equity. In Telaio segue strategia e rapporto con i clienti, con attenzione a obiettivi chiari e risultati misurabili.</p>
-          </article>
-          <article class="founder reveal">
-            <div class="avatar" aria-hidden="true"><svg class="mk" viewBox="0 0 64 64"><use href="#mk"></use></svg></div>
-            <h4>Rod Lonardo</h4>
-            <p class="role">Co-founder · Business e crescita</p>
-            <p class="bio">Laureato in Finanza alla Bocconi, ha lavorato nel fintech internazionale tra sviluppo commerciale, partnership e lancio di nuovi prodotti. In Telaio porta visione di crescita e disciplina nei numeri, per scelte solide e sostenibili.</p>
-          </article>
+        <div class="reveal">
+          <p class="eyebrow" style="margin-bottom:16px">Cosa ti porti a casa</p>
+          <ul class="ticks">
+            <li>Un quadro chiaro di come l'AI sta cambiando il tuo settore.</li>
+            <li>Due o tre attività della tua impresa dove l'AI può far risparmiare tempo o errori.</li>
+            <li>Una risposta franca: conviene partire adesso? Se no, cosa fare prima.</li>
+          </ul>
         </div>
       </div>
     </section>
 
-    <!-- COSA FACCIAMO -->
-    <section id="cosa-facciamo" class="sec wrap">
+    <!-- 8 · DOMANDE FREQUENTI -->
+    <section id="faq" class="sec wrap">
       <div class="sec-head reveal">
-        <p class="sec-kicker"><span class="n">02</span><span class="l">Cosa facciamo</span></p>
-        <h2>Quattro modi in cui ti aiutiamo</h2>
+        <p class="eyebrow">FAQ</p>
+        <h2>Le domande che ci fanno più spesso</h2>
       </div>
-      <div class="cards" data-stagger>
-        <article class="card reveal">
-          <span class="num">01</span>
-          <span class="ico" aria-hidden="true">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"></path><circle cx="12" cy="12" r="3.4"></circle></svg>
-          </span>
-          <h3>Intelligenza Artificiale</h3>
-          <p>Soluzioni AI su misura, semplici da usare e utili da subito: assistenti, analisi dei dati e generazione di contenuti al servizio del tuo lavoro.</p>
-        </article>
-        <article class="card reveal">
-          <span class="num">02</span>
-          <span class="ico" aria-hidden="true">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"></path><path d="M18 3v3.7h-3.7M6 21v-3.7h3.7"></path></svg>
-          </span>
-          <h3>Automazione</h3>
-          <p>Eliminiamo le attività ripetitive e colleghiamo i tuoi strumenti, così il lavoro va avanti da solo e la tua azienda risparmia tempo.</p>
-        </article>
-        <article class="card reveal">
-          <span class="num">03</span>
-          <span class="ico" aria-hidden="true">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8l-4 4 4 4M16 8l4 4-4 4M13 5l-2 14"></path></svg>
-          </span>
-          <h3>Creazione di software</h3>
-          <p>Applicazioni e strumenti digitali costruiti su misura per il modo in cui lavora davvero la tua impresa.</p>
-        </article>
-        <article class="card reveal">
-          <span class="num">04</span>
-          <span class="ico" aria-hidden="true">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V4M4 20h16"></path><path d="M8 16l3.5-4 3 2.5L20 7"></path></svg>
-          </span>
-          <h3>Strategia aziendale</h3>
-          <p>Ti affianchiamo per crescere, organizzarti e prendere decisioni migliori, con i dati alla mano e obiettivi chiari.</p>
-        </article>
+      <div class="reveal">
+        <details class="qa" data-question-id="what"><summary>Cosa fa Telaio?</summary><div class="a"><p>Telaio aiuta le piccole e medie imprese a usare l'intelligenza artificiale dove crea valore. Partiamo da un problema reale, scegliamo lo strumento giusto, lo mettiamo al lavoro e restiamo finché produce risultati. Hai un solo referente, dall'analisi alla soluzione che funziona.</p></div></details>
+        <details class="qa" data-question-id="checkup"><summary>Cos'è il check-up AI?</summary><div class="a"><p>È una videochiamata gratuita di 30 minuti con uno dei fondatori. Ti raccontiamo come l'AI sta cambiando il tuo settore, troviamo due o tre attività da cui partire e ti diciamo con franchezza se conviene.</p></div></details>
+        <details class="qa" data-question-id="timeline"><summary>In quanto tempo vedo un risultato?</summary><div class="a"><!-- TODO(conferma): definizione delle 4 settimane (da quando partono, cosa vuol dire "in uso") --><p>In 4 settimane hai il primo strumento AI in uso. Le settimane partono quando hai approvato la proposta e abbiamo gli accessi che servono.</p></div></details>
+        <details class="qa" data-question-id="cost"><summary>Quanto costa lavorare con Telaio?</summary><div class="a"><p>Dipende dal problema da risolvere e dalla soluzione. Prima di iniziare ricevi una proposta scritta con tempi, costi e limiti, così sai a cosa vai incontro. Il check-up è gratuito.</p></div></details>
+        <details class="qa" data-question-id="size"><summary>La mia impresa è troppo piccola per l'AI?</summary><div class="a"><p>Di solito no. Molti strumenti di AI costano poco e si adattano anche a chi ha pochi collaboratori, e in un'impresa piccola il tempo risparmiato si sente subito. Nel check-up ti diciamo se conviene partire adesso.</p></div></details>
+        <details class="qa" data-question-id="data"><summary>I miei dati sono al sicuro?</summary><div class="a"><p>Prima di iniziare ti diciamo quali dati usa lo strumento, dove vengono conservati e chi può vederli. Scegliamo con te soluzioni coerenti con il GDPR e con le regole della tua azienda, e ti diciamo subito i limiti.</p></div></details>
       </div>
+      <p class="reveal" style="margin-top:14px"><a class="arrow-link" href="/domande-frequenti/">Tutte le domande →</a></p>
     </section>
 
-    <!-- PERCHÉ TELAIO -->
-    <section id="perche" class="sec wrap">
-      <div class="sec-head reveal">
-        <p class="sec-kicker"><span class="n">03</span><span class="l">Perché Telaio</span></p>
-        <h2>Perché le imprese ci scelgono</h2>
-      </div>
-      <div class="why-row" data-stagger>
-        <article class="why reveal">
-          <span class="n"><span>01</span></span>
-          <h3>Linguaggio chiaro</h3>
-          <p>Spieghiamo tutto in modo semplice. Capisci sempre cosa stiamo facendo e perché, senza sigle né tecnicismi.</p>
-        </article>
-        <article class="why reveal">
-          <span class="n"><span>02</span></span>
-          <h3>Soluzioni su misura</h3>
-          <p>Niente pacchetti preconfezionati: partiamo dai tuoi problemi reali e costruiamo ciò che serve alla tua azienda.</p>
-        </article>
-        <article class="why reveal">
-          <span class="n"><span>03</span></span>
-          <h3>Vicinanza alle PMI</h3>
-          <p>Conosciamo le piccole imprese italiane e i loro tempi. Restiamo al tuo fianco finché la soluzione funziona.</p>
-        </article>
-      </div>
-    </section>
-
-    <!-- CONTATTI -->
-    <section id="contatti" class="sec wrap">
-      <div class="contact-panel reveal">
-      <div class="sec-head">
-        <p class="sec-kicker"><span class="n">04</span><span class="l">Contatti</span></p>
-        <h2>Parliamone</h2>
-        <p class="sec-lead">Raccontaci la tua esigenza: ti rispondiamo in modo chiaro, senza impegno.</p>
-      </div>
-      <div class="contact" data-stagger>
-        <div class="contact-direct reveal">
-          <a class="contact-line" href="mailto:info@telaioconsulting.com">
-            <span class="ico" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m3 7 9 6 9-6"></path></svg>
-            </span>
-            <span>
-              <span class="lab">Email</span><br>
-              <span class="val">info@telaioconsulting.com</span>
-            </span>
-          </a>
-          <p class="contact-note">Scrivici via email o con il modulo: ti rispondiamo entro 1 giorno lavorativo.</p>
-        </div>
-
-        <form class="contact-form reveal" id="contactForm" novalidate>
-          <div class="field">
-            <label for="nome">Nome</label>
-            <input class="input" id="nome" name="nome" type="text" autocomplete="name" placeholder="Come ti chiami" required>
-          </div>
-          <div class="field">
-            <label for="email">Email</label>
-            <input class="input" id="email" name="email" type="email" autocomplete="email" placeholder="La tua email" required>
-          </div>
-          <div class="field">
-            <label for="messaggio">Messaggio</label>
-            <textarea class="input" id="messaggio" name="messaggio" placeholder="Di cosa hai bisogno?" required></textarea>
-          </div>
-          <button class="btn btn-primary btn-block" type="submit">Invia messaggio</button>
-          <p class="form-note">Il modulo apre la tua email con il messaggio già pronto. I tuoi dati non vengono raccolti da questo sito.</p>
-        </form>
-      </div>
+    <!-- 9 · CHIUSURA -->
+    <section class="sec wrap">
+      <div class="cta-band reveal">
+        <h2>Scopri come l'AI sta cambiando il tuo settore e cosa puoi fare tu, da subito.</h2>
+        <a class="btn btn-primary" href="/check-up-ai/" data-cta="checkup" data-placement="final">Prenota il check-up AI</a>
+        <p class="sub">30 minuti · Gratuito · Con uno dei fondatori</p>
       </div>
     </section>
   </main>
 
+  <div class="mobile-bar"><a class="btn btn-primary btn-block" href="/check-up-ai/" data-cta="checkup" data-placement="mobile_bar">Prenota il check-up AI</a></div>
+
   <footer>
-    <div class="wrap foot-in">
+    <div class="wrap foot-in foot-grid">
       <div class="foot-col">
         <div class="foot-brand">
           <svg class="mk" viewBox="0 0 64 64" aria-hidden="true"><use href="#mk"></use></svg>
           <span class="wm">Telaio</span>
         </div>
-        <span class="foot-pay">Telaio Consulting · P.IVA 00000000000</span>
-        <span>© <span id="year">2026</span> Telaio. Tutti i diritti riservati.</span>
-      </div>
-      <div class="foot-col">
-        <a href="mailto:info@telaioconsulting.com">info@telaioconsulting.com</a>
-        <span>Nessun cookie di tracciamento.</span>
-      </div>
-      <div class="foot-col foot-right">
         <span class="foot-tag">Dall'AI al valore.</span>
+        <span>Consulenza AI per piccole e medie imprese.</span>
+      </div>
+      <nav class="foot-col" aria-label="Pagine">
+        <a href="/come-lavoriamo/">Come lavoriamo</a>
+        <a href="/cosa-facciamo/">Cosa facciamo</a>
+        <a href="/chi-siamo/">Chi siamo</a>
+        <a href="/domande-frequenti/">Domande frequenti</a>
+        <a href="/check-up-ai/">Check-up AI</a>
+      </nav>
+      <div class="foot-col">
+        <a href="mailto:info@telaioconsulting.com" data-email-link>info@telaioconsulting.com</a>
+        <a href="/privacy/">Informativa privacy</a>
+        <a href="/cookie/">Cookie</a>
+        <span>© 2026 Telaio</span>
       </div>
     </div>
   </footer>
 
-  <script src="script.js"></script>
+  <script src="/script.js"></script>
 </body>
 </html>
