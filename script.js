@@ -4,7 +4,9 @@
    ============================================================ */
 (function () {
   "use strict";
+  window.__telaio = true; // lo script è partito: lo snippet nell'<head> lascia la classe .js
   var root = document.documentElement;
+  root.classList.add("js"); // se lo script è arrivato tardi, ripristina la classe
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var isEn = (root.lang || "it").toLowerCase().indexOf("en") === 0;
 
@@ -47,26 +49,7 @@
     });
     nav.addEventListener("click", function (ev) { if (ev.target.tagName === "A") closeMenu(); });
   }
-  window.addEventListener("resize", function () { if (window.innerWidth > 720) closeMenu(); });
-
-  /* ---- Reveal "tessuto" del titolo (carattere per carattere) ---- */
-  (function () {
-    var h = document.querySelector(".reveal-h");
-    if (!h) return;
-    var i = 0, kids = Array.prototype.slice.call(h.childNodes);
-    h.innerHTML = "";
-    kids.forEach(function (node) {
-      if (node.nodeType === 3) {
-        Array.prototype.forEach.call(node.textContent, function (chr) {
-          var s = document.createElement("span"); s.className = "ch"; s.style.setProperty("--i", i++); s.textContent = chr; h.appendChild(s);
-        });
-      } else if (node.nodeName === "BR") {
-        h.appendChild(document.createElement("br"));
-      } else {
-        node.classList.add("ch"); node.style.setProperty("--i", i++); h.appendChild(node);
-      }
-    });
-  })();
+  window.addEventListener("resize", function () { if (window.innerWidth > 900) closeMenu(); });
 
   /* ---- Reveal allo scroll (con stagger nei gruppi) ---- */
   (function () {
@@ -86,26 +69,14 @@
     els.forEach(function (el) { io.observe(el); });
   })();
 
-  /* ---- Spotlight che segue il cursore + navetta del "Perché" ---- */
-  (function () {
-    var spots = document.querySelectorAll('.card, .founder, .values li, .contact-panel, .step, .stat, .for-col');
-    spots.forEach(function (el) {
-      el.addEventListener('pointermove', function (e) {
-        var r = el.getBoundingClientRect();
-        el.style.setProperty('--mx', (e.clientX - r.left) + 'px');
-        el.style.setProperty('--my', (e.clientY - r.top) + 'px');
-      });
+  /* ---- Spotlight che segue il cursore (card, fondatori, valori) ---- */
+  document.querySelectorAll(".card, .founder, .values li").forEach(function (el) {
+    el.addEventListener("pointermove", function (e) {
+      var r = el.getBoundingClientRect();
+      el.style.setProperty("--mx", (e.clientX - r.left) + "px");
+      el.style.setProperty("--my", (e.clientY - r.top) + "px");
     });
-    if ("IntersectionObserver" in window) {
-      var row = document.querySelector('.why-row');
-      if (row) {
-        var io = new IntersectionObserver(function (entries) {
-          entries.forEach(function (e) { e.target.classList.toggle("lit", e.isIntersecting); });
-        }, { threshold: 0.3 });
-        io.observe(row);
-      }
-    }
-  })();
+  });
 
   /* ---- Prenotazione: carica il calendario di Google solo al clic ---- */
   (function () {
@@ -283,8 +254,16 @@
       canvas.style.transform = "translate3d(0," + (scrollY * 0.28).toFixed(2) + "px,0)";
     }
 
-    var last = performance.now();
-    function loop(now) { t += (now - last) / 1000; last = now; draw(); applyParallaxDOM(); requestAnimationFrame(loop); }
+    // L'animazione gira solo mentre la hero è sullo schermo.
+    var last = performance.now(), running = false, rafId = 0;
+    function loop(now) {
+      if (!running) return;
+      t += (now - last) / 1000; last = now;
+      draw(); applyParallaxDOM();
+      rafId = requestAnimationFrame(loop);
+    }
+    function start() { if (running) return; running = true; last = performance.now(); rafId = requestAnimationFrame(loop); }
+    function stop() { running = false; cancelAnimationFrame(rafId); }
 
     if (hero) {
       hero.addEventListener("pointermove", function (e) { var r = canvas.getBoundingClientRect(); tx = e.clientX - r.left; ty = e.clientY - r.top; pointerOn = true; });
@@ -294,6 +273,11 @@
     window.addEventListener("resize", function () { resize(); if (reduce) draw(); });
 
     resize();
-    if (reduce) { draw(); } else { last = performance.now(); requestAnimationFrame(loop); }
+    if (reduce) { draw(); }
+    else if (hero && "IntersectionObserver" in window) {
+      new IntersectionObserver(function (es) {
+        es.forEach(function (e) { if (e.isIntersecting) start(); else stop(); });
+      }).observe(hero);
+    } else { start(); }
   })();
 })();

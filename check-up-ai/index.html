@@ -26,6 +26,7 @@
 
   <link rel="preload" href="/assets/fonts/bricolage-grotesque-500-700-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/ibm-plex-sans-400-600-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <script>document.documentElement.classList.add("js");setTimeout(function(){if(!window.__telaio)document.documentElement.classList.remove("js")},4000)</script>
   <link rel="stylesheet" href="/style.css">
 
   <script type="application/ld+json">
@@ -173,15 +174,13 @@
     <section id="prenota" class="sec wrap">
       <div class="sec-head reveal"><h2>Scegli giorno e ora</h2></div>
       <p class="lede reveal" style="max-width:62ch">Ti chiediamo poche informazioni. Servono a prepararci, così la call parte dal tuo caso.</p>
-      <!-- TODO(conferma): link di incorporamento della pagina di prenotazione Google da inserire in BOOKING_EMBED_URL_IT (script.js); finché manca, il riquadro mostra l'email -->
+      <!-- TODO(conferma): link della pagina di prenotazione Google, da mettere in due punti: il link di incorporamento in BOOKING_EMBED_URL_IT (script.js) e, qui sotto, al posto del testo con l'email per chi non ha JavaScript, il link «Apri il calendario» alla stessa pagina, in una scheda nuova. Finché manca, il riquadro mostra l'email. -->
       <div class="booking-box reveal" style="margin-top:22px">
         <div data-booking hidden>
           <button class="btn btn-primary" type="button" data-booking-loader>Mostra i giorni disponibili</button>
           <p class="micro">Il calendario è di Google: si carica solo quando lo apri.</p>
         </div>
-        <noscript>
-          <p>Scrivici a <a href="mailto:info@telaioconsulting.com" data-email-link>info@telaioconsulting.com</a>: ti proponiamo noi giorno e ora.</p>
-        </noscript>
+        <p class="no-js-only">Scrivici a <a href="mailto:info@telaioconsulting.com" data-email-link>info@telaioconsulting.com</a>: ti proponiamo noi giorno e ora.</p>
       </div>
       <p class="booking-meta reveal">Usiamo questi dati solo per organizzare e preparare la call. <a href="/privacy/">Leggi l'informativa privacy.</a></p>
       <p class="booking-meta reveal">Preferisci scriverci? <a href="mailto:info@telaioconsulting.com" data-email-link>info@telaioconsulting.com</a></p>
@@ -223,6 +222,7 @@
         <a href="mailto:info@telaioconsulting.com" data-email-link>info@telaioconsulting.com</a>
         <a href="/privacy/">Informativa privacy</a>
         <a href="/cookie/">Cookie</a>
+        <!-- TODO(conferma): link a LinkedIn e Instagram di Telaio quando esistono (e "sameAs" nell'Organization dei dati strutturati) -->
         <span>© 2026 Telaio</span>
       </div>
     </div>
