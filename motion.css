@@ -158,6 +158,33 @@ html:not(.motion) .p-progress { display: none; }
 }
 .p-h2 .p-line { padding-bottom: .05em; }
 
+/* ---- Trama delle sezioni: la griglia del tessuto, appena accennata, si accende attorno al mouse.
+   Il livello lo aggiunge motion.js (solo con motion); --tx e --ty sono il punto luce dentro la sezione.
+   Sul telefono la luce è una fascia a metà schermo e la trama ci scorre sotto. ---- */
+.p-has-trama { isolation: isolate; }
+.p-trama {
+  --tx: -999px; --ty: -999px; --spot: 360px circle; --glow: 260px circle;
+  position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background-image:
+    radial-gradient(var(--glow) at var(--tx) var(--ty), color-mix(in srgb, var(--brand) 18%, transparent), transparent 70%),
+    radial-gradient(circle, var(--weft) 0 1.7px, transparent 2.3px),
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--ink) 34%, transparent) 0 1px, transparent 1px 44px),
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--weft) 60%, transparent) 0 1px, transparent 1px 44px);
+  background-size: auto, 44px 44px, auto, auto;
+  background-position: 0 0, -22px -22px, 0 0, 0 0;
+  -webkit-mask-image: radial-gradient(var(--spot) at var(--tx) var(--ty), #000 0%, rgba(0, 0, 0, .5) 45%, rgba(0, 0, 0, .12) 100%);
+          mask-image: radial-gradient(var(--spot) at var(--tx) var(--ty), #000 0%, rgba(0, 0, 0, .5) 45%, rgba(0, 0, 0, .12) 100%);
+}
+.p-trama-touch .p-trama { --spot: 120% 260px; --glow: 90% 200px; }
+/* sul blocco blu del check-up i fili sono chiari */
+.p-checkup .p-trama {
+  background-image:
+    radial-gradient(var(--glow) at var(--tx) var(--ty), rgba(255, 255, 255, .14), transparent 70%),
+    radial-gradient(circle, #fff 0 1.7px, transparent 2.3px),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, .28) 0 1px, transparent 1px 44px),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, .36) 0 1px, transparent 1px 44px);
+}
+
 /* ---- Numeri ---- */
 .p-stat-list { border-top: 1px solid var(--line); }
 .p-stat {

@@ -444,6 +444,44 @@
       });
     }
 
+    /* ---- Sezioni: la trama del tessuto, appena accennata, si accende attorno al mouse ----
+       Col mouse la luce lo segue con un po' di ritardo; sul telefono è una fascia a metà schermo.
+       Si aggiorna solo quando il mouse o la pagina si muovono, e solo nelle sezioni vicine allo schermo. */
+    (function () {
+      var layers = gsap.utils.toArray("main > section:not(.p-hero)").filter(function (s) {
+        return getComputedStyle(s).position !== "static";
+      }).map(function (s) {
+        var l = document.createElement("div");
+        l.className = "p-trama"; l.setAttribute("aria-hidden", "true");
+        s.classList.add("p-has-trama"); s.appendChild(l);
+        return { s: s, l: l };
+      });
+      if (!layers.length) return;
+      var px = -9999, py = -9999, cx = px, cy = py, lastY = -1, lastX = cx, lastYc = cy;
+      if (finePointer) {
+        window.addEventListener("pointermove", function (e) {
+          px = e.clientX; py = e.clientY;
+          if (cx < -9000) { cx = px; cy = py; } // la prima volta la luce compare lì, senza attraversare la pagina
+        }, { passive: true });
+      }
+      else root.classList.add("p-trama-touch");
+      window.addEventListener("resize", function () { lastY = -1; });
+      gsap.ticker.add(function () {
+        if (finePointer) { cx += (px - cx) * 0.18; cy += (py - cy) * 0.18; }
+        else { cx = window.innerWidth / 2; cy = window.innerHeight / 2; }
+        var y = window.scrollY;
+        if (y === lastY && Math.abs(cx - lastX) < 0.5 && Math.abs(cy - lastYc) < 0.5) return;
+        lastY = y; lastX = cx; lastYc = cy;
+        var vh = window.innerHeight;
+        layers.forEach(function (o) {
+          var r = o.s.getBoundingClientRect();
+          if (r.bottom < -400 || r.top > vh + 400) return;
+          o.l.style.setProperty("--tx", Math.round(cx - r.left) + "px");
+          o.l.style.setProperty("--ty", Math.round(cy - r.top) + "px");
+        });
+      });
+    })();
+
     // Arrivo su una sezione: si scorre lì a posizioni ricalcolate (le sezioni bloccate allungano la pagina)
     if (deepLink) {
       ST.refresh();
