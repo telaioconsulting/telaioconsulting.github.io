@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prova apertura · Telaio</title>
+  <!-- Pagina di prova, solo in locale: non indicizzare, non pubblicare -->
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preload" href="/assets/fonts/bricolage-grotesque-500-700-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    html, body { height: 100%; }
+    body { overflow: hidden; }
+    .stage { position: fixed; inset: 0; overflow: hidden; background: var(--ground); }
+
+    /* ---- Hero semplificata (testi veri della home) ---- */
+    .hero { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 clamp(20px, 6vw, 88px) clamp(120px, 17vh, 170px); }
+    /* le righe del tessuto: disegnate in SVG con la stessa geometria delle linee animate (varianti B) */
+    .hero-grid { position: absolute; inset: 0; pointer-events: none; }
+    .hero-grid svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .hero-grid::after { content: ""; position: absolute; inset: 0; background: radial-gradient(55% 50% at 64% 62%, rgba(19, 7, 237, .30), transparent 70%); }
+    .hero-veil { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, var(--ground) 0%, rgba(9, 12, 8, .65) 34%, transparent 66%); }
+    .hero-in { position: relative; z-index: 2; max-width: 74rem; }
+    .kicker {
+      display: inline-flex; align-items: center; gap: 12px; padding: 8px 16px 8px 12px; border-radius: 999px;
+      border: 1px solid rgba(142, 157, 255, .28); background: rgba(9, 12, 8, .5);
+      font-family: var(--f-mono); font-size: var(--step--1); letter-spacing: .16em; text-transform: uppercase; color: var(--weft);
+    }
+    .kicker::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--brand); }
+    .h1 { --mark: 0; position: relative; isolation: isolate; margin-top: 26px; max-width: 17ch; font-size: clamp(2.5rem, 6.2vw, 6rem); line-height: .98; letter-spacing: -.045em; }
+    .accent { position: relative; display: inline-block; color: #fff; padding: 0 .08em; margin: 0 -.04em; }
+    .accent::before {
+      content: ""; position: absolute; z-index: -1; left: 0; right: 0; top: .12em; bottom: .02em;
+      background: var(--brand); border-radius: 4px; transform: scaleX(var(--mark, 1)); transform-origin: 0 50%;
+      box-shadow: 0 18px 50px -14px rgba(19, 7, 237, .9);
+    }
+    .tagline { margin-top: 28px; max-width: 42ch; font-family: var(--f-display); font-weight: 500; font-size: clamp(1.1rem, 1.6vw, 1.4rem); line-height: 1.38; color: var(--muted); }
+    .cta { margin-top: 26px; }
+
+    /* ---- Apertura ---- */
+    .intro { position: absolute; inset: 0; z-index: 5; display: grid; place-items: center; background-color: #090C08; }
+    .intro-in { display: flex; align-items: center; gap: clamp(14px, 2vw, 24px); }
+    .intro .mk { width: clamp(56px, 8vw, 92px); height: auto; color: var(--brand); overflow: visible; }
+    .wm {
+      display: flex; overflow: hidden; padding: .04em 0 .1em;
+      font-family: var(--f-display); font-weight: 700; font-size: clamp(3.2rem, 11vw, 8rem); line-height: 1; letter-spacing: -.045em; color: var(--ink);
+    }
+    .ch { position: relative; display: inline-block; }
+    .g { display: inline-block; }
+    .shard { position: absolute; left: 0; top: 0; color: var(--ink); will-change: transform; }
+    .tag { position: absolute; left: 0; right: 0; bottom: clamp(28px, 6vh, 56px); text-align: center; font-family: var(--f-mono); font-size: var(--step--1); letter-spacing: .3em; text-transform: uppercase; color: var(--muted); opacity: 0; }
+    .ring {
+      position: absolute; left: 50%; top: 50%; width: 140px; height: 140px; margin: -70px 0 0 -70px; border-radius: 50%;
+      border: 2px solid var(--weft); box-shadow: 0 0 40px rgba(19, 7, 237, .9), inset 0 0 30px rgba(142, 157, 255, .5);
+      opacity: 0; pointer-events: none;
+    }
+    .flash { position: absolute; inset: 0; pointer-events: none; opacity: 0; background: radial-gradient(circle at 50% 50%, rgba(180, 190, 255, .85), rgba(19, 7, 237, .25) 30%, transparent 60%); }
+    .fx { position: absolute; inset: 0; z-index: 6; width: 100%; height: 100%; pointer-events: none; }
+    /* linee del marchio che diventano il tessuto (varianti B) */
+    .loom { position: fixed; inset: 0; z-index: 7; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+    .loom line { stroke-linecap: round; fill: none; }
+    .portal { position: fixed; z-index: 8; display: none; background: var(--brand); box-shadow: 0 18px 50px -14px rgba(19, 7, 237, .9); pointer-events: none; }
+
+    /* ---- Comandi della prova ---- */
+    .label { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 20; font-family: var(--f-mono); font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+    .bar {
+      position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 20;
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding: 8px; max-width: calc(100vw - 24px);
+      background: rgba(9, 12, 8, .78); border: 1px solid var(--line); border-radius: 12px; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    }
+    .bar button { min-height: 40px; padding: 8px 14px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font-family: var(--f-mono); font-size: 12px; cursor: pointer; }
+    .bar button:hover { border-color: var(--weft); }
+    .bar button.on { background: var(--brand); border-color: var(--brand); color: #fff; }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <section class="hero">
+      <div class="hero-grid" aria-hidden="true"></div>
+      <div class="hero-veil" aria-hidden="true"></div>
+      <div class="hero-in">
+        <p class="kicker">Consulenza AI per piccole e medie imprese</p>
+        <h1 class="h1">Il primo strumento AI al lavoro nella tua impresa, in <span class="accent">4&nbsp;settimane</span>.</h1>
+        <p class="tagline">Partiamo da un problema reale, scegliamo lo strumento giusto e lo mettiamo al lavoro con te. Poi restiamo finché produce risultati.</p>
+        <a class="btn btn-primary cta" href="#" onclick="return false">Prenota il check-up AI →</a>
+      </div>
+    </section>
+
+    <div class="intro" aria-hidden="true">
+      <div class="intro-in">
+        <svg class="mk" viewBox="0 0 64 64">
+          <g fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round">
+            <path d="M24 10 V32 M24 48 V54"></path>
+            <path d="M40 10 V16 M40 32 V54"></path>
+            <path d="M10 24 H16 M32 24 H54"></path>
+            <path d="M10 40 H32 M48 40 H54"></path>
+          </g>
+        </svg>
+        <div class="wm"><span class="ch"><span class="g">T</span></span><span class="ch"><span class="g">e</span></span><span class="ch"><span class="g">l</span></span><span class="ch"><span class="g">a</span></span><span class="ch"><span class="g">i</span></span><span class="ch"><span class="g">o</span></span></div>
+      </div>
+      <p class="tag">Dall'AI al valore</p>
+      <div class="ring"></div>
+      <div class="flash"></div>
+    </div>
+
+    <canvas class="fx" aria-hidden="true"></canvas>
+  </div>
+
+  <p class="label"></p>
+  <div class="bar">
+    <button type="button" data-v="A">A · Esplosione</button>
+    <button type="button" data-v="B1">B1 · Ordito e trama</button>
+    <button type="button" data-v="B2">B2 · Fili tirati</button>
+    <button type="button" data-v="C">C · Particelle</button>
+    <button type="button" data-v="D">D · Tuffo nella «ai»</button>
+    <button type="button" data-v="now">Attuale</button>
+  </div>
+
+  <script src="/assets/vendor/gsap.min.js"></script>
+  <script src="/assets/vendor/SplitText.min.js"></script>
+  <script>
+  /* Prova: aperture alternative, più quella di oggi per confronto. */
+  (function () {
+    "use strict";
+    gsap.registerPlugin(SplitText);
+    var $ = function (s) { return document.querySelector(s); };
+    var NS = "http://www.w3.org/2000/svg";
+    var stage = $(".stage"), intro = $(".intro"), introTpl = intro.innerHTML;
+    var hero = $(".hero"), h1 = $(".h1"), label = $(".label");
+    var fx = $(".fx"), ctx = fx.getContext("2d");
+    var tl = null, split = null, extra = [], band = null, geo = null;
+    var NAMES = { A: "A · Esplosione", B1: "B1 · Ordito e trama", B2: "B2 · Fili tirati", C: "C · Particelle", D: "D · Tuffo nella «ai»", now: "Apertura attuale" };
+    // quando entra la hero, in secondi dall'inizio dell'effetto
+    var HERO_AT = { A: 1.75, B1: 1.9, B2: 1.6, C: 1.2, D: 2.0, now: 0.7 };
+    var WARP = "rgba(155,160,147,0.30)", WEFT = "rgba(142,157,255,0.42)";
+    var rnd = gsap.utils.random;
+
+    function sizeCanvas() {
+      var d = Math.min(window.devicePixelRatio || 1, 2);
+      fx.width = Math.round(innerWidth * d); fx.height = Math.round(innerHeight * d);
+      ctx.setTransform(d, 0, 0, d, 0, 0);
+    }
+    sizeCanvas();
+    window.addEventListener("resize", sizeCanvas);
+
+    /* ---- Le righe del tessuto della hero: ordito che converge in prospettiva, trama sempre più larga ---- */
+    function gridGeometry() {
+      var W = innerWidth, H = innerHeight, vp = { x: W * 0.6, y: H * 0.14 }, yh = H * 0.34, yb = H + 40;
+      var k = (yh - vp.y) / (yb - vp.y), warp = [], weft = [], nW = 19, nR = 9;
+      for (var i = 0; i < nW; i++) {
+        var xb = -0.7 * W + i * (2.4 * W / (nW - 1));
+        warp.push({ x1: vp.x + (xb - vp.x) * k, y1: yh, x2: xb, y2: yb });
+      }
+      for (var j = 0; j < nR; j++) {
+        var y = yh + (yb - yh) * Math.pow((j + 1) / nR, 1.7);
+        weft.push({ x1: -30, y1: y, x2: W + 30, y2: y });
+      }
+      return { warp: warp, weft: weft, yh: yh };
+    }
+    function maskDefs(id, extraRect) {
+      var W = innerWidth, H = innerHeight;
+      return '<defs><linearGradient id="' + id + 'g" gradientUnits="userSpaceOnUse" x1="0" y1="' + geo.yh + '" x2="0" y2="' + (geo.yh + H * 0.24) + '">' +
+        '<stop offset="0" stop-color="#000"/><stop offset="1" stop-color="#fff"/></linearGradient>' +
+        '<mask id="' + id + '" maskUnits="userSpaceOnUse" x="0" y="0" width="' + W + '" height="' + H + '">' +
+        '<rect width="' + W + '" height="' + H + '" fill="url(#' + id + 'g)"/>' + (extraRect || "") + '</mask></defs>';
+    }
+    function buildHeroLines() {
+      geo = gridGeometry();
+      var W = innerWidth, H = innerHeight, s = '<svg viewBox="0 0 ' + W + ' ' + H + '">' + maskDefs("hm") + '<g mask="url(#hm)" fill="none" stroke-width="1">';
+      geo.warp.forEach(function (l) { s += '<line x1="' + l.x1 + '" y1="' + l.y1 + '" x2="' + l.x2 + '" y2="' + l.y2 + '" stroke="' + WARP + '"/>'; });
+      geo.weft.forEach(function (l) { s += '<line x1="' + l.x1 + '" y1="' + l.y1 + '" x2="' + l.x2 + '" y2="' + l.y2 + '" stroke="' + WEFT + '"/>'; });
+      $(".hero-grid").innerHTML = s + "</g></svg>";
+    }
+
+    /* ---- Stato di partenza ---- */
+    function reset() {
+      gsap.globalTimeline.getChildren(true, true, true).forEach(function (t) { t.kill(); });
+      extra.forEach(function (e) { e.remove(); }); extra = [];
+      ctx.clearRect(0, 0, innerWidth, innerHeight);
+      if (split) { split.revert(); split = null; }
+      intro.innerHTML = introTpl;
+      gsap.set(intro, { clearProps: "all" });
+      gsap.set([stage, hero, ".hero-grid", ".kicker", ".tagline", ".cta"], { clearProps: "all" });
+      buildHeroLines();
+      h1.style.setProperty("--mark", 0);
+      gsap.set([".kicker", ".tagline", ".cta"], { opacity: 0, y: 24 });
+      gsap.set(".hero-grid", { opacity: 0 });
+      split = SplitText.create(h1, { type: "lines", mask: "lines" });
+      // dove starà la fascia blu di «4 settimane» (serve alla variante D)
+      var ar = h1.querySelector(".accent").getBoundingClientRect(), fs = parseFloat(getComputedStyle(h1).fontSize);
+      band = { left: ar.left, top: ar.top + 0.12 * fs, width: ar.width, height: ar.height - 0.14 * fs };
+      gsap.set(split.lines, { yPercent: 112 });
+    }
+
+    /* ---- Comune: il marchio si disegna, «Telaio» sale ---- */
+    function introIn() {
+      return gsap.timeline()
+        .fromTo(".intro .mk path", { strokeDasharray: 40, strokeDashoffset: 40 }, { strokeDashoffset: 0, duration: 0.7, stagger: 0.06, ease: "power3.inOut" }, 0)
+        .fromTo(".intro .ch", { yPercent: 115 }, { yPercent: 0, duration: 0.85, stagger: 0.045, ease: "expo.out" }, 0.2)
+        .to(".intro .tag", { opacity: 1, duration: 0.5, ease: "power2.out" }, 0.45);
+    }
+
+    /* ---- Comune: entra la hero ---- */
+    function heroIn(opt) {
+      opt = opt || {};
+      var t = gsap.timeline()
+        .to(".kicker", { opacity: 1, y: 0, duration: 0.9, ease: "expo.out" }, 0.05)
+        .to(split.lines, { yPercent: 0, duration: 1.15, stagger: 0.08, ease: "expo.out" }, 0.1)
+        .to([".tagline", ".cta"], { opacity: 1, y: 0, duration: 0.9, stagger: 0.08, ease: "expo.out" }, 0.4);
+      if (opt.grid !== false) {
+        t.to(".hero-grid", { opacity: 1, duration: 1.2, ease: "power2.out" }, 0)
+          .fromTo(".hero-grid", { scale: 1.18 }, { scale: 1, duration: 1.8, ease: "expo.out" }, 0);
+      }
+      if (opt.mark !== false) t.to(h1, { "--mark": 1, duration: 0.9, ease: "expo.inOut" }, 0.6);
+      return t;
+    }
+
+    /* ============ A · ESPLOSIONE: le lettere scoppiano in schegge 3D ============ */
+    var SHARDS = [
+      "polygon(0 0, 55% 0, 42% 46%)", "polygon(55% 0, 100% 0, 100% 38%, 42% 46%)",
+      "polygon(100% 38%, 100% 100%, 58% 100%, 42% 46%)", "polygon(58% 100%, 0 100%, 0 62%, 42% 46%)",
+      "polygon(0 62%, 0 0, 42% 46%)"
+    ];
+    function prepA() {
+      intro.querySelectorAll(".ch").forEach(function (ch) {
+        var g = ch.querySelector(".g");
+        SHARDS.forEach(function (p) {
+          var s = document.createElement("span");
+          s.className = "shard"; s.textContent = g.textContent; s.style.clipPath = p;
+          ch.appendChild(s);
+        });
+        g.style.visibility = "hidden";
+      });
+    }
+    function explode() {
+      var t = gsap.timeline(), W = innerWidth;
+      var chars = gsap.utils.toArray(".intro .ch"), n = chars.length;
+      var wm = intro.querySelector(".wm"), mk = intro.querySelector(".mk");
+      // carica: le lettere si stringono e si accendono di blu, poco a poco
+      t.set(wm, { overflow: "visible" }, 0)
+        .to(chars, { scale: 0.86, duration: 0.55, ease: "power2.in", stagger: { each: 0.02, from: "center" } }, 0)
+        .to(".intro .shard", { textShadow: "0 0 26px rgba(63,54,245,.95)", color: "#C9CFFF", duration: 0.55, ease: "power2.in" }, 0)
+        .to(mk, { rotation: -30, scale: 0.85, duration: 0.55, ease: "power2.in" }, 0)
+        .to(".intro .tag", { opacity: 0, duration: 0.3 }, 0)
+        .add("bang", 0.6);
+      // scoppio: le schegge partono veloci e rallentano a lungo, poi svaniscono
+      gsap.utils.toArray(".intro .shard").forEach(function (s) {
+        var k = chars.indexOf(s.parentNode), side = (k - (n - 1) / 2) / ((n - 1) / 2);
+        var ang = rnd(0, Math.PI * 2), dist = rnd(W * 0.3, W * 0.8), dur = rnd(2.2, 3);
+        t.to(s, {
+          x: Math.cos(ang) * dist * 0.55 + side * W * 0.35, y: Math.sin(ang) * dist * 0.5,
+          z: rnd(150, 700), transformPerspective: 800,
+          rotationX: rnd(-360, 360), rotationY: rnd(-360, 360), rotation: rnd(-200, 200),
+          duration: dur, ease: "power3.out"
+        }, "bang")
+          .to(s, { opacity: 0, filter: "blur(4px)", duration: dur * 0.6, ease: "power1.in" }, "bang+=" + (dur * 0.35));
+      });
+      t.to(chars, { scale: 1, duration: 0.01 }, "bang")
+        .to(mk, { scale: 3.4, rotation: 210, opacity: 0, duration: 1.8, ease: "power3.out" }, "bang")
+        .fromTo(".intro .ring", { scale: 0, opacity: 1 }, { scale: 15, opacity: 0, duration: 2, ease: "power3.out", immediateRender: false }, "bang")
+        .fromTo(".intro .flash", { opacity: 0.6 }, { opacity: 0, duration: 0.9, ease: "power2.out", immediateRender: false }, "bang")
+        .to(intro, { backgroundColor: "rgba(9,12,8,0)", duration: 1.3, ease: "power2.inOut" }, "bang+=0.35")
+        .fromTo(stage, { x: -12, y: 6 }, { x: 0, y: 0, duration: 0.8, ease: "elastic.out(1, 0.3)", immediateRender: false }, "bang");
+      return t;
+    }
+
+    /* ============ B · LE LINEE DEL MARCHIO DIVENTANO IL TESSUTO ============
+       Comune a B1 e B2: tante linee in un SVG sopra tutto; al momento giusto
+       prendono il posto dei quattro tratti del marchio (due verticali, due orizzontali),
+       poi ognuna va a occupare una riga del tessuto della hero. */
+    var loom = null, warpL = [], weftL = [];
+    function prepLoom() {
+      var W = innerWidth, H = innerHeight;
+      loom = document.createElementNS(NS, "svg");
+      loom.setAttribute("class", "loom"); loom.setAttribute("viewBox", "0 0 " + W + " " + H);
+      // maschera: all'inizio tutto visibile (il rettangolo bianco), alla fine la stessa sfumatura della hero
+      loom.innerHTML = maskDefs("lm", '<rect class="lm-full" width="' + W + '" height="' + H + '" fill="#fff"/>') + '<g mask="url(#lm)"></g>';
+      var g = loom.querySelector("g");
+      function line() { var l = document.createElementNS(NS, "line"); g.appendChild(l); return l; }
+      warpL = geo.warp.map(line); weftL = geo.weft.map(line);
+      gsap.set(warpL.concat(weftL), { opacity: 0 });
+      stage.appendChild(loom); extra.push(loom);
+    }
+    function markLines() {
+      var r = intro.querySelector(".mk").getBoundingClientRect(), s = r.width / 64;
+      return {
+        s: s,
+        v: [{ x: r.left + 24 * s, y1: r.top + 10 * s, y2: r.top + 54 * s }, { x: r.left + 40 * s, y1: r.top + 10 * s, y2: r.top + 54 * s }],
+        h: [{ y: r.top + 24 * s, x1: r.left + 10 * s, x2: r.left + 54 * s }, { y: r.top + 40 * s, x1: r.left + 10 * s, x2: r.left + 54 * s }]
+      };
+    }
+    function swapToLines() {
+      var m = markLines();
+      warpL.forEach(function (l, i) {
+        var v = m.v[i < warpL.length / 2 ? 0 : 1];
+        gsap.set(l, { attr: { x1: v.x, y1: v.y1, x2: v.x, y2: v.y2 }, strokeWidth: 7 * m.s, stroke: "#1307ED", opacity: 1 });
+      });
+      weftL.forEach(function (l, j) {
+        var h = m.h[j < weftL.length / 2 ? 0 : 1];
+        gsap.set(l, { attr: { x1: h.x1, y1: h.y, x2: h.x2, y2: h.y }, strokeWidth: 7 * m.s, stroke: "#1307ED", opacity: 1 });
+      });
+      gsap.set(".intro .mk", { opacity: 0 });
+      gsap.set(loom, { filter: "drop-shadow(0 0 14px rgba(19,7,237,0.9))" });
+    }
+    // ogni linea va alla sua riga del tessuto, si assottiglia e prende il colore della hero
+    function toFabric(t, at, warpStagger, weftStagger, dur) {
+      var cw = (warpL.length - 1) / 2;
+      warpL.forEach(function (l, i) {
+        var d = geo.warp[i];
+        t.to(l, { attr: { x1: d.x1, y1: d.y1, x2: d.x2, y2: d.y2 }, strokeWidth: 1, stroke: WARP, duration: dur, ease: "expo.inOut" }, at + Math.abs(i - cw) * warpStagger);
+      });
+      weftL.forEach(function (l, j) {
+        var d = geo.weft[j];
+        t.to(l, { attr: { x1: d.x1, y1: d.y1, x2: d.x2, y2: d.y2 }, strokeWidth: 1, stroke: WEFT, duration: dur * 0.85, ease: "power3.inOut" }, at + 0.1 + j * weftStagger);
+      });
+      t.to(loom.querySelector(".lm-full"), { opacity: 0, duration: dur, ease: "power2.inOut" }, at)
+        .to(loom, { filter: "drop-shadow(0 0 0px rgba(19,7,237,0))", duration: dur * 0.8 }, at);
+      // passaggio: le linee sono già esattamente le righe della hero
+      var end = at + Math.max(cw * warpStagger + dur, 0.1 + (weftL.length - 1) * weftStagger + dur * 0.85) + 0.05;
+      t.set(".hero-grid", { opacity: 1 }, end).set(loom, { display: "none" }, end);
+    }
+
+    /* B1 · ORDITO E TRAMA: il marchio va al centro e si ingrandisce, le sue linee
+       si allungano fino ai bordi, poi si moltiplicano e si inclinano nel tessuto */
+    function weaveB1() {
+      var t = gsap.timeline(), W = innerWidth, H = innerHeight, mk = intro.querySelector(".mk");
+      t.to(".intro .ch", { x: 90, opacity: 0, filter: "blur(4px)", stagger: 0.05, duration: 0.5, ease: "power2.in" }, 0)
+        .to(".intro .tag", { opacity: 0, duration: 0.25 }, 0)
+        .to(mk, {
+          x: function () { var r = mk.getBoundingClientRect(); return W / 2 - (r.left + r.width / 2); },
+          y: function () { var r = mk.getBoundingClientRect(); return H / 2 - (r.top + r.height / 2); },
+          scale: 2.6, duration: 0.85, ease: "expo.inOut"
+        }, 0)
+        .call(swapToLines, null, 0.9);
+      // le quattro linee, grosse e blu, si allungano fino ai bordi
+      warpL.forEach(function (l) { t.to(l, { attr: { y1: -30, y2: H + 30 }, stroke: "#3F36F5", duration: 0.6, ease: "expo.inOut" }, 0.92); });
+      weftL.forEach(function (l) { t.to(l, { attr: { x1: -30, x2: W + 30 }, stroke: "#8E9DFF", duration: 0.6, ease: "expo.inOut" }, 0.92); });
+      t.to(intro, { backgroundColor: "rgba(9,12,8,0)", duration: 0.7, ease: "power2.inOut" }, 1.1);
+      // si moltiplicano e diventano il tessuto
+      toFabric(t, 1.6, 0.025, 0.04, 1.1);
+      return t;
+    }
+
+    /* B2 · FILI TIRATI: il marchio resta al suo posto; le linee orizzontali vengono
+       tirate attraverso la scritta e la tagliano, poi tutto si apre a ventaglio nel tessuto */
+    function weaveB2() {
+      var t = gsap.timeline(), W = innerWidth, H = innerHeight, chars = gsap.utils.toArray(".intro .ch");
+      t.call(swapToLines, null, 0).to(".intro .tag", { opacity: 0, duration: 0.25 }, 0);
+      warpL.forEach(function (l) { t.to(l, { attr: { y1: -30, y2: H + 30 }, strokeWidth: 18, stroke: "#3F36F5", duration: 0.9, ease: "power3.inOut" }, 0.05); });
+      weftL.forEach(function (l) {
+        t.to(l, { attr: { x2: W + 30 }, strokeWidth: 18, stroke: "#8E9DFF", duration: 0.9, ease: "power3.inOut" }, 0.05)
+          .to(l, { attr: { x1: -30 }, duration: 0.7, ease: "power3.inOut" }, 0.5);
+      });
+      // le lettere, tagliate dai fili che passano, saltano via una dopo l'altra
+      chars.forEach(function (c, k) {
+        t.to(c, { y: (k % 2 ? 1 : -1) * 70, rotation: k % 2 ? 9 : -9, opacity: 0, filter: "blur(5px)", duration: 0.5, ease: "power2.in" }, 0.22 + k * 0.07);
+      });
+      t.to(intro, { backgroundColor: "rgba(9,12,8,0)", duration: 0.7, ease: "power2.inOut" }, 0.65);
+      // l'ordito si apre a ventaglio in prospettiva, la trama si stacca riga per riga
+      toFabric(t, 1.0, 0.03, 0.07, 1.2);
+      return t;
+    }
+
+    /* ============ C · PARTICELLE: le lettere diventano i nodi del tessuto ============ */
+    var easeOut = gsap.parseEase("expo.out"), easeIO = gsap.parseEase("power3.inOut");
+    function sample() {
+      var W = innerWidth, H = innerHeight, c = document.createElement("canvas"); c.width = W; c.height = H;
+      var x = c.getContext("2d"); x.fillStyle = "#fff"; x.textAlign = "center"; x.textBaseline = "alphabetic";
+      intro.querySelectorAll(".g").forEach(function (g) {
+        var r = g.getBoundingClientRect(), cs = getComputedStyle(g), fs = parseFloat(cs.fontSize);
+        x.font = cs.fontWeight + " " + cs.fontSize + " " + cs.fontFamily;
+        x.fillText(g.textContent, r.left + r.width / 2, r.top + fs * 0.8);
+      });
+      var data = x.getImageData(0, 0, W, H).data, pts = [], step = W < 700 ? 3 : 4;
+      var ir = intro.querySelector(".wm").getBoundingClientRect(), cx = ir.left + ir.width / 2, cy = ir.top + ir.height / 2;
+      for (var yy = 0; yy < H; yy += step) for (var xx = 0; xx < W; xx += step) {
+        if (data[(yy * W + xx) * 4 + 3] < 128) continue;
+        var ang = Math.atan2(yy - cy, xx - cx) + rnd(-0.7, 0.7), dist = rnd(80, 460);
+        pts.push({
+          sx: xx, sy: yy, mx: xx + Math.cos(ang) * dist, my: yy + Math.sin(ang) * dist * 0.8,
+          ex: Math.round(rnd(0, W / 44)) * 44, ey: H * 0.42 + Math.round(rnd(0, H * 0.58 / 36)) * 36,
+          c: Math.random() < 0.35 ? "#8E9DFF" : "#F5F7F1"
+        });
+      }
+      return pts;
+    }
+    function draw(pts, p) {
+      ctx.clearRect(0, 0, innerWidth, innerHeight);
+      var a = p < 0.72 ? 1 : Math.max(0, 1 - (p - 0.72) / 0.28);
+      ["#F5F7F1", "#8E9DFF"].forEach(function (col) {
+        ctx.fillStyle = col; ctx.globalAlpha = a;
+        for (var i = 0; i < pts.length; i++) {
+          var q = pts[i]; if (q.c !== col) continue;
+          var x, y, k;
+          if (p < 0.3) { k = easeOut(p / 0.3); x = q.sx + (q.mx - q.sx) * k; y = q.sy + (q.my - q.sy) * k; }
+          else { k = easeIO((p - 0.3) / 0.7); x = q.mx + (q.ex - q.mx) * k; y = q.my + (q.ey - q.my) * k; }
+          ctx.fillRect(x, y, 1.8, 1.8);
+        }
+      });
+      ctx.globalAlpha = 1;
+    }
+    function particles() {
+      var t = gsap.timeline(), st = { p: 0 }, pts = [];
+      t.call(function () { pts = sample(); gsap.set(".intro .ch", { opacity: 0 }); }, null, 0)
+        .to(".intro .mk", { scale: 0, rotation: 140, opacity: 0, duration: 0.5, ease: "expo.in" }, 0)
+        .to(".intro .tag", { opacity: 0, duration: 0.2 }, 0)
+        .to(st, { p: 1, duration: 2.2, ease: "none", onUpdate: function () { draw(pts, st.p); } }, 0)
+        .to(intro, { backgroundColor: "rgba(9,12,8,0)", duration: 0.9, ease: "power2.inOut" }, 0.45);
+      return t;
+    }
+
+    /* ============ D · TUFFO NELLA «AI»: «a» e «i» si accendono, lo zoom entra nella «i»,
+       il blu si schiaccia in una striscia e si ritira sulla parola come un evidenziatore ============ */
+    var portal = null;
+    function prepD() {
+      portal = document.createElement("div");
+      portal.className = "portal";
+      stage.appendChild(portal); extra.push(portal);
+    }
+    function dive() {
+      var t = gsap.timeline(), W = innerWidth, H = innerHeight, chars = gsap.utils.toArray(".intro .ch");
+      var a = chars[3], i = chars[4], others = [chars[0], chars[1], chars[2], chars[5]];
+      var inner = intro.querySelector(".intro-in"), wm = intro.querySelector(".wm");
+      var ai = [a.querySelector(".g"), i.querySelector(".g")];
+      // 1. «ai» si accende di blu, il resto cade
+      t.set(wm, { overflow: "visible" }, 0)
+        .to(ai, { color: "#3F36F5", textShadow: "0 0 36px rgba(19,7,237,.95)", duration: 0.5, ease: "power2.out" }, 0)
+        .to([a, i], { y: -12, duration: 0.5, ease: "power2.out" }, 0)
+        .to(others, { opacity: 0, y: 46, filter: "blur(6px)", stagger: 0.05, duration: 0.55, ease: "power2.in" }, 0.15)
+        .to(".intro .mk", { opacity: 0, scale: 0.6, duration: 0.5, ease: "power2.in" }, 0.15)
+        .to(".intro .tag", { opacity: 0, duration: 0.25 }, 0)
+        // 2. lo zoom entra nell'asta della «i»: lo schermo diventa blu
+        .call(function () {
+          var ir = inner.getBoundingClientRect(), r = ai[1].getBoundingClientRect();
+          gsap.set(inner, { transformOrigin: (r.left + r.width * 0.5 - ir.left) + "px " + (r.top + r.height * 0.66 - ir.top) + "px" });
+        }, null, 0.8)
+        .to(inner, { scale: 160, duration: 1.2, ease: "expo.in" }, 0.85)
+        // il blu sale piano anche se lo zoom non centra perfettamente l'asta: niente lampi
+        .set(portal, { display: "block", left: 0, top: 0, width: W, height: H, borderRadius: 0, opacity: 0, zIndex: 8 }, 1.6)
+        .to(portal, { opacity: 1, duration: 0.42, ease: "power2.in" }, 1.6)
+        // il blu passa dietro al titolo, che intanto sale
+        .set(intro, { display: "none" }, 2.03)
+        .set(portal, { zIndex: 1 }, 2.03)
+        // 3a. si schiaccia in una striscia orizzontale, all'altezza della fascia
+        .to(portal, { top: function () { return band.top; }, height: function () { return band.height; }, duration: 0.75, ease: "expo.inOut" }, 2.3)
+        // 3b. la striscia si ritira sulla parola, come un evidenziatore: prima il bordo sinistro, poi il destro
+        .to(portal, { left: function () { return band.left; }, duration: 0.7, ease: "expo.inOut" }, 2.9)
+        .to(portal, { width: function () { return band.width; }, borderRadius: 4, duration: 0.85, ease: "expo.inOut" }, 2.95)
+        .set(h1, { "--mark": 1 }, 3.8)
+        .set(portal, { display: "none" }, 3.8);
+      return t;
+    }
+
+    /* ============ Apertura di oggi, per confronto: il sipario sale ============ */
+    function curtain() {
+      return gsap.timeline()
+        .fromTo(intro, { clipPath: "inset(0% 0% 0% 0%)" }, { clipPath: "inset(0% 0% 100% 0%)", duration: 1.1, ease: "expo.inOut" }, 0);
+    }
+
+    var PREP = { A: prepA, B1: prepLoom, B2: prepLoom, D: prepD };
+    var RUN = { A: explode, B1: weaveB1, B2: weaveB2, C: particles, D: dive, now: curtain };
+    var HERO_OPT = { B1: { grid: false }, B2: { grid: false }, D: { mark: false } };
+    function play(key) {
+      reset();
+      label.textContent = NAMES[key];
+      document.querySelectorAll(".bar button").forEach(function (b) { b.classList.toggle("on", b.dataset.v === key); });
+      if (PREP[key]) PREP[key]();
+      tl = gsap.timeline();
+      tl.add(introIn());
+      var start = tl.duration() + 0.25;
+      tl.add(RUN[key](), start);
+      tl.add(heroIn(HERO_OPT[key]), start + HERO_AT[key]);
+      tl.set(intro, { display: "none" });
+      window.__prova = { tl: tl }; // per i controlli: fermare l'animazione a un istante
+    }
+
+    document.querySelector(".bar").addEventListener("click", function (e) {
+      var b = e.target.closest("button"); if (b) play(b.dataset.v);
+    });
+    document.addEventListener("keydown", function (e) {
+      var k = { "1": "A", "2": "B1", "3": "B2", "4": "C", "5": "D", "0": "now" }[e.key]; if (k) play(k);
+    });
+    (document.fonts ? document.fonts.ready : Promise.resolve()).then(function () { play("B1"); });
+  })();
+  </script>
+</body>
+</html>
