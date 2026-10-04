@@ -1,8 +1,10 @@
 /* ============================================================
-   TELAIO — HOME: motion graphic
+   TELAIO — motion graphic di tutte le pagine
    GSAP + ScrollTrigger + SplitText + Lenis (ospitate in /assets/vendor/).
-   Senza librerie o con "riduci movimento" la pagina resta statica:
-   il telaio in apertura viene disegnato una volta, fermo.
+   Ogni effetto parte solo se la pagina ha gli elementi che gli servono.
+   Le home hanno l'apertura col sipario (.p-intro); le altre pagine
+   un ingresso breve del titolo. Senza librerie o con "riduci movimento"
+   la pagina resta statica: il telaio in apertura viene disegnato una volta, fermo.
    ============================================================ */
 (function () {
   "use strict";
@@ -10,10 +12,11 @@
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var gsap = window.gsap, ST = window.ScrollTrigger, Split = window.SplitText;
   var motion = root.classList.contains("motion") && !reduce && !!gsap && !!ST;
-  window.__home = true;
+  window.__motion = true;
   if (!motion) root.classList.remove("motion");
 
   var isEn = (root.lang || "").toLowerCase().indexOf("en") === 0;
+  var hasIntro = !!document.querySelector(".p-intro");
 
   var weave = initWeave();
   if (!motion) return;
@@ -21,7 +24,7 @@
   // Arrivo diretto su una sezione (es. /en/#faq): niente apertura, si va dritti lì.
   var deepLink = null;
   try { deepLink = location.hash.length > 1 ? document.querySelector(location.hash) : null; } catch (e) {}
-  if (!deepLink) window.scrollTo(0, 0);
+  if (hasIntro && !deepLink) window.scrollTo(0, 0);
 
   // Si parte a font caricati (SplitText misura le righe); l'apertura copre l'attesa.
   var booted = false;
@@ -62,19 +65,31 @@
     gsap.to(".p-progress", { scaleX: 1, ease: "none", scrollTrigger: { start: 0, end: "max", scrub: 0.3 } });
 
     /* ============================================================
-       APERTURA: il marchio si tesse, il sipario sale, entra il titolo
+       APERTURA: il marchio si tesse, il sipario sale, entra il titolo.
+       Sulle pagine senza sipario: solo l'ingresso del titolo.
        ============================================================ */
     (function () {
       var intro = document.querySelector(".p-intro");
       var h1 = document.querySelector(".p-h1");
+      if (!h1) return;
       var h1Split = Split ? Split.create(h1, { type: "lines", mask: "lines", linesClass: "p-line" }) : null;
       var accent = h1.querySelector(".p-accent");
       gsap.set(h1, { visibility: "visible" });
       if (h1Split) gsap.set(h1Split.lines, { yPercent: 112 });
       if (accent) gsap.set(accent, { "--mark": 0 });
-      if (lenis) lenis.stop();
 
       var tl = gsap.timeline({ defaults: { ease: "expo.out" } });
+      if (!intro) {
+        tl.to(weave, { weave: 1, duration: 2.4, ease: "power2.out" }, 0)
+          .to(h1Split ? h1Split.lines : h1, { yPercent: 0, duration: 1.2, stagger: 0.08 }, 0.1)
+          .to(accent, { "--mark": 1, duration: 1, ease: "expo.inOut" }, 0.6)
+          .fromTo("[data-hero-item]", { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 1, stagger: 0.07 }, 0.05)
+          .add(function () { if (h1Split) h1Split.revert(); });
+        if (deepLink) tl.progress(1);
+        heroExit();
+        return;
+      }
+      if (lenis) lenis.stop();
       tl.to(".p-intro-mk path", { strokeDashoffset: 0, duration: 0.8, stagger: 0.07, ease: "power3.inOut" }, 0)
         .fromTo(".p-intro-wm span", { y: 0, yPercent: 110 }, { yPercent: 0, duration: 0.9, stagger: 0.045 }, 0.25)
         .to(".p-intro-tag", { opacity: 1, duration: 0.6, ease: "power2.out" }, 0.55)
@@ -93,9 +108,15 @@
         if (lenis) lenis.start();
       }
 
+      heroExit();
+
       // Uscita della hero mentre si scorre
-      gsap.to(".p-hero-in", { y: -90, opacity: 0, ease: "none", scrollTrigger: { trigger: ".p-hero", start: "top top", end: "bottom 10%", scrub: true } });
-      gsap.to(".p-hero-foot", { opacity: 0, ease: "none", scrollTrigger: { trigger: ".p-hero", start: "top top", end: "30% top", scrub: true } });
+      function heroExit() {
+        gsap.to(".p-hero-in", { y: -90, opacity: 0, ease: "none", scrollTrigger: { trigger: ".p-hero", start: "top top", end: "bottom 10%", scrub: true } });
+        if (document.querySelector(".p-hero-foot")) {
+          gsap.to(".p-hero-foot", { opacity: 0, ease: "none", scrollTrigger: { trigger: ".p-hero", start: "top top", end: "30% top", scrub: true } });
+        }
+      }
     })();
 
     /* ---- Titoli: le righe salgono da una maschera ---- */
@@ -165,21 +186,22 @@
       add(".p-stat-body > p", { y: 24, opacity: 0, duration: 1, stagger: 0.08 }, 0.35);
     });
 
-    /* ---- Manifesto: le parole si accendono una a una ---- */
-    (function () {
-      var el = document.querySelector(".p-manifesto-text");
-      if (!el || !Split) return;
-      var s = Split.create(el, { type: "words", wordsClass: "p-word" });
-      gsap.fromTo(s.words, { opacity: 0.13 }, {
-        opacity: 1, ease: "none", stagger: 0.1,
-        scrollTrigger: { trigger: el, start: "top 80%", end: "bottom 45%", scrub: true }
+    /* ---- Manifesto e frasi grandi: le parole si accendono una a una ---- */
+    if (Split) {
+      gsap.utils.toArray(".p-manifesto-text, [data-scrub]").forEach(function (el) {
+        var s = Split.create(el, { type: "words", wordsClass: "p-word" });
+        gsap.fromTo(s.words, { opacity: 0.13 }, {
+          opacity: 1, ease: "none", stagger: 0.1,
+          scrollTrigger: { trigger: el, start: "top 80%", end: "bottom 45%", scrub: true }
+        });
       });
-    })();
+    }
 
     /* ---- Casi: scorrimento orizzontale con la sezione bloccata ---- */
     var mm = gsap.matchMedia();
     mm.add("(min-width: 900px)", function () {
       var pin = document.querySelector(".p-cases-pin"), track = document.querySelector(".p-cases-track");
+      if (!pin || !track) return;
       var rail = document.querySelector(".p-rail i"), count = document.querySelector(".p-cases-count b");
       var cards = track.querySelectorAll(".p-case:not(.p-case-cta)").length;
       function dist() { return Math.max(0, track.scrollWidth - document.documentElement.clientWidth); }
@@ -203,7 +225,7 @@
       });
     });
     mm.add("(max-width: 899px)", function () {
-      ST.batch(".p-case", {
+      ST.batch(".p-cases-track .p-case", {
         start: "top 90%",
         onEnter: function (els) {
           els = firstTime(els);
@@ -212,12 +234,13 @@
       });
     });
 
-    /* ---- Come lavoriamo: il filo si tesse e il contatore scorre ---- */
+    /* ---- Passi: il filo si tesse e il contatore scorre ---- */
     (function () {
       var wrap = document.querySelector(".p-steps");
       if (!wrap) return;
       var svg = wrap.querySelector(".p-thread"), bg = svg.querySelector(".bg"), fg = svg.querySelector(".fg");
-      var steps = gsap.utils.toArray(".p-step"), reel = document.querySelector(".p-counter-reel");
+      var section = wrap.closest("section") || document;
+      var steps = gsap.utils.toArray(".p-step", wrap), reel = section.querySelector(".p-counter-reel");
       var len = 0;
       function build() {
         var h = wrap.offsetHeight, d = "M12 0", seg = 110, y = 0, side = 1;
@@ -240,30 +263,60 @@
       });
       function setStep(i) {
         steps.forEach(function (s, k) { s.classList.toggle("is-on", k === i); s.classList.toggle("is-lit", k <= i); });
-        if (reel) gsap.to(reel, { yPercent: -25 * i, duration: 0.9, ease: "expo.out" });
+        if (reel) gsap.to(reel, { yPercent: -100 * i / reel.children.length, duration: 0.9, ease: "expo.out" });
       }
-      steps.forEach(function (s, i) {
-        ST.create({ trigger: s, start: "top 62%", end: "bottom 62%", onToggle: function (self) { if (self.isActive) setStep(i); } });
-      });
-      setStep(0);
+      // Passo attivo: l'ultimo il cui inizio ha superato il 62% dello schermo.
+      // Calcolato a ogni scorrimento, così è giusto anche dopo un salto (ricarica a metà pagina).
+      var last = -1;
+      function sync() {
+        var line = window.innerHeight * 0.62, idx = 0;
+        steps.forEach(function (s, k) { if (s.getBoundingClientRect().top <= line) idx = k; });
+        if (idx !== last) { last = idx; setStep(idx); }
+      }
+      ST.create({ trigger: wrap, start: "top bottom", end: "bottom top", onUpdate: sync, onRefresh: sync });
+      sync();
     })();
 
-    /* ---- Check-up: il blocco blu si apre a tutta pagina ---- */
-    gsap.fromTo(".p-checkup-bg", { clipPath: "inset(6% 4% 6% 4% round 32px)" }, {
-      clipPath: "inset(0% 0% 0% 0% round 0px)", ease: "none",
-      scrollTrigger: { trigger: ".p-checkup", start: "top 95%", end: "top 20%", scrub: true }
+    /* ---- Check-up: la barra dei 30 minuti si riempie un pezzo alla volta ---- */
+    gsap.utils.toArray(".p-timeline").forEach(function (bar) {
+      gsap.from(bar.querySelectorAll(".p-tl-seg i"), {
+        scaleX: 0, duration: 1.1, ease: "expo.inOut", stagger: 0.35,
+        scrollTrigger: { trigger: bar, start: "top 80%", toggleActions: "play none none none" }
+      });
     });
 
+    /* ---- Chi siamo: ordito e trama si intrecciano mentre scorri ---- */
+    gsap.utils.toArray(".p-loom-art").forEach(function (art) {
+      gsap.fromTo(art.querySelectorAll(".warp, .weft"), { strokeDashoffset: 1 }, {
+        strokeDashoffset: 0, ease: "none", stagger: 0.12,
+        scrollTrigger: { trigger: art, start: "top 85%", end: "bottom 45%", scrub: 0.6 }
+      });
+    });
+
+    /* ---- Blocco blu: si apre a tutta pagina ---- */
+    if (document.querySelector(".p-checkup")) {
+      gsap.fromTo(".p-checkup-bg", { clipPath: "inset(6% 4% 6% 4% round 32px)" }, {
+        clipPath: "inset(0% 0% 0% 0% round 0px)", ease: "none",
+        scrollTrigger: { trigger: ".p-checkup", start: "top 95%", end: "top 20%", scrub: true }
+      });
+    }
+
     /* ---- Chiusura e piè di pagina ---- */
-    gsap.fromTo(".p-final-glow", { scale: 0.55, opacity: 0 }, {
-      scale: 1, opacity: 1, ease: "none",
-      scrollTrigger: { trigger: ".p-final", start: "top 85%", end: "center center", scrub: true }
-    });
-    gsap.from(".p-orb", { scale: 0, rotation: -90, duration: 1.4, ease: "expo.out", scrollTrigger: { trigger: ".p-orb", start: "top 92%", toggleActions: "play none none none" } });
-    gsap.fromTo(".p-bigword span", { yPercent: 100 }, {
-      yPercent: 0, ease: "none", stagger: 0.06,
-      scrollTrigger: { trigger: ".p-bigword", start: "top bottom", end: "bottom bottom", scrub: 1 }
-    });
+    if (document.querySelector(".p-final")) {
+      gsap.fromTo(".p-final-glow", { scale: 0.55, opacity: 0 }, {
+        scale: 1, opacity: 1, ease: "none",
+        scrollTrigger: { trigger: ".p-final", start: "top 85%", end: "center center", scrub: true }
+      });
+    }
+    if (document.querySelector(".p-orb")) {
+      gsap.from(".p-orb", { scale: 0, rotation: -90, duration: 1.4, ease: "expo.out", scrollTrigger: { trigger: ".p-orb", start: "top 92%", toggleActions: "play none none none" } });
+    }
+    if (document.querySelector(".p-bigword")) {
+      gsap.fromTo(".p-bigword span", { yPercent: 100 }, {
+        yPercent: 0, ease: "none", stagger: 0.06,
+        scrollTrigger: { trigger: ".p-bigword", start: "top bottom", end: "bottom bottom", scrub: 1 }
+      });
+    }
 
     /* ---- Mouse: card che si inclinano, pulsanti magnetici ---- */
     if (finePointer) {

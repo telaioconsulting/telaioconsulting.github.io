@@ -23,8 +23,19 @@
 
   <link rel="preload" href="/assets/fonts/bricolage-grotesque-500-700-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/ibm-plex-sans-400-600-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <script>document.documentElement.classList.add("js");setTimeout(function(){if(!window.__telaio)document.documentElement.classList.remove("js")},4000)</script>
+  <script>
+    (function (r) {
+      r.classList.add("js");
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) r.classList.add("motion");
+      // Se gli script non partono, si torna alla pagina statica (tutto visibile).
+      setTimeout(function () {
+        if (!window.__telaio) r.classList.remove("js");
+        if (!window.__motion) r.classList.remove("motion");
+      }, 4000);
+    })(document.documentElement);
+  </script>
   <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/motion.css">
 
   <script type="application/ld+json">
   {
@@ -51,6 +62,7 @@
   </svg>
 
   <div class="grain" aria-hidden="true"></div>
+  <div class="p-progress" aria-hidden="true"></div>
 
   <header class="top">
     <div class="wrap top-in">
@@ -78,73 +90,233 @@
   </header>
 
   <main id="top">
-    <div class="wrap">
-      <nav class="crumbs" aria-label="Percorso"><a href="/">Home</a> <span aria-hidden="true">›</span> <span aria-current="page">Cosa facciamo</span></nav>
-    </div>
 
-    <section class="subhero">
-      <div class="wrap" data-stagger>
-        <h1 class="reveal">Cosa facciamo: l'AI al lavoro nelle attività di tutti i giorni</h1>
-        <p class="lede reveal">Partiamo dalle attività che pesano sulla tua settimana. Ecco quelle da cui si parte più spesso, divise per area. Sono esempi: nel check-up guardiamo le tue.</p>
+    <section class="p-hero is-page">
+      <canvas class="p-weave" id="weave" aria-hidden="true"></canvas>
+      <div class="p-hero-veil" aria-hidden="true"></div>
+      <div class="wrap p-hero-in">
+        <nav class="crumbs" aria-label="Percorso" data-hero-item><a href="/">Home</a> <span aria-hidden="true">›</span> <span aria-current="page">Cosa facciamo</span></nav>
+        <h1 class="p-h1">Cosa facciamo: l'AI al lavoro nelle attività di tutti i giorni</h1>
+        <p class="p-hero-lede" data-hero-item>Partiamo dalle attività che pesano sulla tua settimana. Ecco quelle da cui si parte più spesso, divise per area. Sono esempi: nel check-up guardiamo le tue.</p>
       </div>
     </section>
 
-    <section class="sec wrap">
-      <div class="svc-group">
-        <h2 class="reveal">Vendite e negozio online</h2>
-        <div class="cards" data-stagger>
-          <article class="card reveal"><h3>Schede prodotto</h3><p>Dal link della pagina di origine alla scheda pubblicata sul tuo negozio online. L'AI compila i campi e li controlla. Tu approvi con un clic.</p></article>
-          <article class="card reveal"><h3>Preventivi</h3><p>Dalla richiesta del cliente alla bozza di preventivo, con i tuoi listini e le tue condizioni. Funziona bene quando prodotti e prezzi sono in un listino ordinato.</p></article>
-        </div>
-      </div>
+    <!-- Le quattro aree -->
+    <section class="p-sec" style="padding-top:clamp(48px,7vw,96px)">
+      <div class="wrap">
 
-      <div class="svc-group">
-        <h2 class="reveal">Clienti e assistenza</h2>
-        <div class="cards" data-stagger>
-          <article class="card reveal"><h3>Richieste dei clienti</h3><p>Le domande che ricevi ogni giorno trovano una bozza di risposta già pronta, con le informazioni giuste. Tu controlli e invii.</p></article>
-          <article class="card reveal"><h3>Domande ripetute, anche sul sito</h3><p>Le risposte che dai sempre uguali possono stare in un assistente che risponde a qualsiasi ora. Prima di accenderlo decidiamo insieme cosa può dire e chi lo controlla.</p></article>
+        <div class="p-group">
+          <div class="p-group-side" data-reveal>
+            <span class="p-group-n" aria-hidden="true">01</span>
+            <h2>Vendite e negozio online</h2>
+          </div>
+          <div class="p-group-cards">
+            <article class="p-case" data-reveal data-tilt>
+              <div class="p-case-art" aria-hidden="true">
+                <svg class="ill" viewBox="0 0 160 100">
+                  <rect class="soft" x="10" y="36" width="36" height="28" rx="4"/>
+                  <path class="soft" d="M18 46h20M18 54h12"/>
+                  <path class="i1-flow" d="M52 50h22"/>
+                  <path d="M72 45l6 5-6 5"/>
+                  <rect x="88" y="14" width="62" height="72" rx="6"/>
+                  <rect class="i1-img" x="96" y="22" width="22" height="18" rx="3"/>
+                  <path class="i1-l" d="M96 50h44"/>
+                  <path class="i1-l b" d="M96 59h34"/>
+                  <path class="i1-l c" d="M96 68h22"/>
+                  <g class="i1-ok"><circle class="fillb" cx="138" cy="74" r="8"/><path d="M134.5 74l2.5 2.5 5-5" stroke="#fff"/></g>
+                </svg>
+              </div>
+              <h3>Schede prodotto</h3>
+              <p>Dal link della pagina di origine alla scheda pubblicata sul tuo negozio online. L'AI compila i campi e li controlla. Tu approvi con un clic.</p>
+            </article>
+            <article class="p-case" data-reveal data-tilt>
+              <div class="p-case-art" aria-hidden="true">
+                <svg class="ill" viewBox="0 0 160 100">
+                  <rect x="40" y="8" width="80" height="84" rx="6"/>
+                  <path class="soft" d="M50 22h30"/>
+                  <path class="i4-r" d="M50 36h38"/><path class="soft" d="M100 36h10"/>
+                  <path class="i4-r b" d="M50 46h30"/><path class="soft" d="M100 46h10"/>
+                  <path class="i4-r c" d="M50 56h42"/><path class="soft" d="M100 56h10"/>
+                  <path class="soft" d="M50 66h60"/>
+                  <text class="i4-eur" x="50" y="82">€</text>
+                  <rect class="i4-total fillb" x="78" y="73" width="32" height="11" rx="2"/>
+                </svg>
+              </div>
+              <h3>Preventivi</h3>
+              <p>Dalla richiesta del cliente alla bozza di preventivo, con i tuoi listini e le tue condizioni. Funziona bene quando prodotti e prezzi sono in un listino ordinato.</p>
+            </article>
+          </div>
         </div>
-      </div>
 
-      <div class="svc-group">
-        <h2 class="reveal">Amministrazione e documenti</h2>
-        <div class="cards" data-stagger>
-          <article class="card reveal"><h3>Ordini e documenti</h3><p>Arriva un ordine e il resto parte da solo: contratto, fattura elettronica, spedizione.</p></article>
-          <article class="card reveal"><h3>Fatture, email e contratti</h3><p>L'AI legge i documenti e porta i dati dove servono: estrae i dati da fatture e ordini, smista le email, riassume i contratti. Il controllo finale resta a una persona.</p></article>
+        <div class="p-group">
+          <div class="p-group-side" data-reveal>
+            <span class="p-group-n" aria-hidden="true">02</span>
+            <h2>Clienti e assistenza</h2>
+          </div>
+          <div class="p-group-cards">
+            <article class="p-case" data-reveal data-tilt>
+              <div class="p-case-art" aria-hidden="true">
+                <svg class="ill" viewBox="0 0 160 100">
+                  <rect class="soft" x="12" y="12" width="76" height="28" rx="10"/>
+                  <path class="soft" d="M22 22h52M22 30h30"/>
+                  <g class="i3-reply">
+                    <rect class="i3-box" x="58" y="50" width="90" height="34" rx="10"/>
+                    <circle class="i3-dot" cx="93" cy="67" r="2.6"/>
+                    <circle class="i3-dot b" cx="103" cy="67" r="2.6"/>
+                    <circle class="i3-dot c" cx="113" cy="67" r="2.6"/>
+                    <path class="i3-txt" d="M70 62h64M70 72h40"/>
+                  </g>
+                </svg>
+              </div>
+              <h3>Richieste dei clienti</h3>
+              <p>Le domande che ricevi ogni giorno trovano una bozza di risposta già pronta, con le informazioni giuste. Tu controlli e invii.</p>
+            </article>
+            <article class="p-case" data-reveal data-tilt>
+              <div class="p-case-art" aria-hidden="true">
+                <svg class="ill" viewBox="0 0 160 100">
+                  <rect class="soft" x="8" y="8" width="144" height="84" rx="6"/>
+                  <path class="soft" d="M8 20h144"/>
+                  <circle class="soft" cx="16" cy="14" r="1.6"/><circle class="soft" cx="22" cy="14" r="1.6"/><circle class="soft" cx="28" cy="14" r="1.6"/>
+                  <path class="soft" d="M18 32h50M18 40h40M18 48h46"/>
+                  <rect class="i7-panel" x="86" y="28" width="58" height="58" rx="6"/>
+                  <rect class="i7-head" x="86" y="28" width="58" height="10" rx="4"/>
+                  <g class="i7-q"><rect class="soft" x="92" y="44" width="30" height="11" rx="5"/></g>
+                  <g class="i7-a"><rect x="104" y="60" width="34" height="18" rx="6"/></g>
+                </svg>
+              </div>
+              <h3>Domande ripetute, anche sul sito</h3>
+              <p>Le risposte che dai sempre uguali possono stare in un assistente che risponde a qualsiasi ora. Prima di accenderlo decidiamo insieme cosa può dire e chi lo controlla.</p>
+            </article>
+          </div>
         </div>
-      </div>
 
-      <div class="svc-group">
-        <h2 class="reveal">Direzione</h2>
-        <div class="cards" data-stagger>
-          <article class="card reveal"><h3>I numeri della settimana</h3><p>Vendite, acquisti e magazzino in un riepilogo chiaro, ogni lunedì. Senza copiare e incollare.</p></article>
-          <article class="card reveal"><h3>Procedure e archivio</h3><p>Fai una domanda, come la faresti a un collega, e trovi la risposta tra contratti, manuali e procedure.</p></article>
+        <div class="p-group">
+          <div class="p-group-side" data-reveal>
+            <span class="p-group-n" aria-hidden="true">03</span>
+            <h2>Amministrazione e documenti</h2>
+          </div>
+          <div class="p-group-cards">
+            <article class="p-case" data-reveal data-tilt>
+              <div class="p-case-art" aria-hidden="true">
+                <svg class="ill" viewBox="0 0 160 100">
+                  <g class="i2-in"><rect x="8" y="38" width="32" height="24" rx="3"/><path d="M8 41l16 11 16-11"/></g>
+                  <path class="soft i1-flow" d="M44 50h12"/>
+                  <g class="i2-doc"><rect x="62" y="24" width="26" height="34" rx="3"/><path class="soft" d="M68 33h14M68 40h14M68 47h9"/></g>
+                  <g class="i2-doc b"><rect x="94" y="24" width="26" height="34" rx="3"/><path class="soft" d="M100 33h14M100 40h8"/><circle class="fillb" cx="112" cy="49" r="4"/></g>
+                  <g class="i2-doc c"><rect x="126" y="28" width="26" height="26" rx="3"/><path d="M126 37h26M139 28v9"/></g>
+                  <path class="soft" d="M62 72h90"/>
+                  <circle class="i2-run" cx="62" cy="72" r="3"/>
+                </svg>
+              </div>
+              <h3>Ordini e documenti</h3>
+              <p>Arriva un ordine e il resto parte da solo: contratto, fattura elettronica, spedizione.</p>
+            </article>
+            <article class="p-case" data-reveal data-tilt>
+              <div class="p-case-art" aria-hidden="true">
+                <svg class="ill" viewBox="0 0 160 100">
+                  <rect x="14" y="10" width="56" height="80" rx="5"/>
+                  <path class="soft" d="M22 22h34M22 32h40M22 42h28M22 52h40M22 62h32M22 72h36"/>
+                  <rect class="i8-scan" x="16" y="14" width="52" height="8" rx="2"/>
+                  <path class="soft i1-flow" d="M76 50h12"/>
+                  <g class="i8-f"><rect x="94" y="20" width="56" height="16" rx="4"/><path d="M100 28h22"/></g>
+                  <g class="i8-f b"><rect x="94" y="42" width="56" height="16" rx="4"/><path d="M100 50h30"/></g>
+                  <g class="i8-f c"><rect x="94" y="64" width="56" height="16" rx="4"/><path d="M100 72h16"/></g>
+                </svg>
+              </div>
+              <h3>Fatture, email e contratti</h3>
+              <p>L'AI legge i documenti e porta i dati dove servono: estrae i dati da fatture e ordini, smista le email, riassume i contratti. Il controllo finale resta a una persona.</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="p-group">
+          <div class="p-group-side" data-reveal>
+            <span class="p-group-n" aria-hidden="true">04</span>
+            <h2>Direzione</h2>
+          </div>
+          <div class="p-group-cards">
+            <article class="p-case" data-reveal data-tilt>
+              <div class="p-case-art" aria-hidden="true">
+                <svg class="ill" viewBox="0 0 160 100">
+                  <path class="soft" d="M14 86h132"/>
+                  <rect class="i6-b" x="24" y="56" width="14" height="30" rx="2"/>
+                  <rect class="i6-b b" x="48" y="46" width="14" height="40" rx="2"/>
+                  <rect class="i6-b c" x="72" y="52" width="14" height="34" rx="2"/>
+                  <rect class="i6-b d" x="96" y="34" width="14" height="52" rx="2"/>
+                  <rect class="i6-b e" x="120" y="22" width="14" height="64" rx="2"/>
+                  <polyline class="i6-line" points="31,44 55,34 79,40 103,22 127,12"/>
+                  <circle class="i6-pt fillb" cx="127" cy="12" r="4"/>
+                </svg>
+              </div>
+              <h3>I numeri della settimana</h3>
+              <p>Vendite, acquisti e magazzino in un riepilogo chiaro, ogni lunedì. Senza copiare e incollare.</p>
+            </article>
+            <article class="p-case" data-reveal data-tilt>
+              <div class="p-case-art" aria-hidden="true">
+                <svg class="ill" viewBox="0 0 160 100">
+                  <rect class="soft" x="16" y="12" width="60" height="76" rx="5"/>
+                  <path class="soft" d="M24 26h44M24 36h40M24 56h44M24 66h36M24 76h40"/>
+                  <rect class="i5-hl" x="21" y="40" width="50" height="11" rx="2"/>
+                  <path class="i5-hl-l" d="M24 46h44"/>
+                  <rect x="96" y="56" width="52" height="26" rx="10"/>
+                  <path class="soft" d="M106 66h30M106 73h18"/>
+                  <g class="i5-lens"><circle cx="0" cy="0" r="13"/><path d="M9.5 9.5l11 11"/></g>
+                </svg>
+              </div>
+              <h3>Procedure e archivio</h3>
+              <p>Fai una domanda, come la faresti a un collega, e trovi la risposta tra contratti, manuali e procedure.</p>
+            </article>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Con gli strumenti che usi già -->
+    <section class="p-sec">
+      <div class="wrap">
+        <header class="p-head" style="margin-bottom:clamp(24px,3vw,36px)">
+          <h2 class="p-h2" data-split>Con gli strumenti che usi già</h2>
+        </header>
+        <p class="p-statement" data-scrub>Quando si può, partiamo da quello che c'è: gestionale, negozio online, posta, fogli di calcolo. Se serve qualcosa di nuovo, ti spieghiamo perché e quanto costa, prima di iniziare.</p>
+        <div class="p-chips" aria-hidden="true" data-reveal>
+          <span>Gestionale</span><span>Negozio online</span><span>Posta</span><span>Fogli di calcolo</span>
         </div>
       </div>
     </section>
 
-    <section class="sec wrap">
-      <div class="sec-head reveal"><h2>Con gli strumenti che usi già</h2></div>
-      <p class="lede reveal" style="max-width:62ch">Quando si può, partiamo da quello che c'è: gestionale, negozio online, posta, fogli di calcolo. Se serve qualcosa di nuovo, ti spieghiamo perché e quanto costa, prima di iniziare.</p>
+    <!-- Anche la strategia d'impresa -->
+    <section class="p-sec">
+      <div class="wrap p-split">
+        <div class="p-split-side">
+          <h2 class="p-h2" data-split>Anche la strategia d'impresa</h2>
+        </div>
+        <div>
+          <p class="lede" data-reveal style="max-width:56ch">Non tutto parte da un'attività da automatizzare. Ti affianchiamo anche nelle scelte di fondo: mercati e clienti, offerta, organizzazione, crescita. Con un occhio a come l'AI sta cambiando il tuo settore.</p>
+          <p data-reveal style="margin-top:18px"><a class="arrow-link" href="/consulenza-strategica/">Consulenza strategica →</a></p>
+        </div>
+      </div>
     </section>
 
-    <section class="sec wrap">
-      <div class="sec-head reveal"><h2>Anche la strategia d'impresa</h2></div>
-      <p class="lede reveal" style="max-width:62ch">Non tutto parte da un'attività da automatizzare. Ti affianchiamo anche nelle scelte di fondo: mercati e clienti, offerta, organizzazione, crescita. Con un occhio a come l'AI sta cambiando il tuo settore.</p>
-      <p class="reveal" style="margin-top:18px"><a class="arrow-link" href="/consulenza-strategica/">Consulenza strategica →</a></p>
-    </section>
-
-    <section class="sec wrap">
-      <div class="cta-band reveal">
-        <h2>Non vedi la tua attività? Raccontacela nel check-up.</h2>
-        <a class="btn btn-primary" href="/check-up-ai/" data-cta="checkup" data-placement="services">Prenota il check-up AI</a>
+    <!-- Chiusura -->
+    <section class="p-final">
+      <div class="p-final-glow" aria-hidden="true"></div>
+      <div class="wrap">
+        <h2 class="p-final-h" data-split>Non vedi la tua attività? Raccontacela nel check-up.</h2>
+        <a class="p-orb" data-magnetic href="/check-up-ai/" data-cta="checkup" data-placement="services" aria-label="Prenota il check-up AI">
+          <svg class="p-orb-ring" viewBox="0 0 200 200" aria-hidden="true">
+            <defs><path id="orbPath" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs>
+            <text><textPath href="#orbPath">Prenota il check-up AI · 30 minuti · Gratuito · </textPath></text>
+          </svg>
+          <span class="p-orb-arr" aria-hidden="true">→</span>
+        </a>
       </div>
     </section>
   </main>
 
   <div class="mobile-bar"><a class="btn btn-primary btn-block" href="/check-up-ai/" data-cta="checkup" data-placement="mobile_bar">Prenota il check-up AI</a></div>
 
-  <footer>
+  <footer class="p-footer">
     <div class="wrap foot-in foot-grid">
       <div class="foot-col">
         <div class="foot-brand">
@@ -170,8 +342,15 @@
         <span>© 2026 Telaio</span>
       </div>
     </div>
+    <div class="p-bigword" aria-hidden="true"><span>T</span><span>e</span><span>l</span><span>a</span><span>i</span><span>o</span></div>
   </footer>
 
+  <!-- Librerie di animazione, ospitate nel sito (vedi assets/vendor/README.md) -->
+  <script src="/assets/vendor/gsap.min.js"></script>
+  <script src="/assets/vendor/ScrollTrigger.min.js"></script>
+  <script src="/assets/vendor/SplitText.min.js"></script>
+  <script src="/assets/vendor/lenis.min.js"></script>
   <script src="/script.js"></script>
+  <script src="/motion.js"></script>
 </body>
 </html>

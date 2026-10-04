@@ -37,12 +37,12 @@
       // If the scripts don't run, fall back to the static page (everything visible).
       setTimeout(function () {
         if (!window.__telaio) r.classList.remove("js");
-        if (!window.__home) r.classList.remove("motion");
+        if (!window.__motion) r.classList.remove("motion");
       }, 4000);
     })(document.documentElement);
   </script>
   <link rel="stylesheet" href="/style.css">
-  <link rel="stylesheet" href="/home.css">
+  <link rel="stylesheet" href="/motion.css">
 </head>
 <body data-page-type="home">
 
@@ -522,6 +522,6 @@
   <script src="/assets/vendor/SplitText.min.js"></script>
   <script src="/assets/vendor/lenis.min.js"></script>
   <script src="/script.js"></script>
-  <script src="/home.js"></script>
+  <script src="/motion.js"></script>
 </body>
 </html>
