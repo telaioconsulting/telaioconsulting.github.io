@@ -23,8 +23,19 @@
 
   <link rel="preload" href="/assets/fonts/bricolage-grotesque-500-700-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/ibm-plex-sans-400-600-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <script>document.documentElement.classList.add("js");setTimeout(function(){if(!window.__telaio)document.documentElement.classList.remove("js")},4000)</script>
+  <script>
+    (function (r) {
+      r.classList.add("js");
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) r.classList.add("motion");
+      // Se gli script non partono, si torna alla pagina statica (tutto visibile).
+      setTimeout(function () {
+        if (!window.__telaio) r.classList.remove("js");
+        if (!window.__motion) r.classList.remove("motion");
+      }, 4000);
+    })(document.documentElement);
+  </script>
   <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/motion.css">
 
   <script type="application/ld+json">
   {
@@ -64,6 +75,7 @@
   </svg>
 
   <div class="grain" aria-hidden="true"></div>
+  <div class="p-progress" aria-hidden="true"></div>
 
   <header class="top">
     <div class="wrap top-in">
@@ -91,79 +103,108 @@
   </header>
 
   <main id="top">
-    <div class="wrap">
-      <nav class="crumbs" aria-label="Percorso"><a href="/">Home</a> <span aria-hidden="true">›</span> <span aria-current="page">Consulenza strategica</span></nav>
-    </div>
 
-    <section class="subhero">
-      <div class="wrap" data-stagger>
-        <h1 class="reveal">Consulenza strategica: le scelte di fondo, mentre l'AI cambia il mercato</h1>
-        <p class="lede reveal">Ti affianchiamo nelle decisioni che orientano l'impresa: su quali mercati e clienti puntare, cosa offrire, come organizzarti per crescere. E in ogni scelta guardiamo come l'AI sta cambiando il tuo settore.</p>
+    <section class="p-hero is-page">
+      <canvas class="p-weave" id="weave" aria-hidden="true"></canvas>
+      <div class="p-hero-veil" aria-hidden="true"></div>
+      <div class="wrap p-hero-in">
+        <nav class="crumbs" aria-label="Percorso" data-hero-item><a href="/">Home</a> <span aria-hidden="true">›</span> <span aria-current="page">Consulenza strategica</span></nav>
+        <h1 class="p-h1">Consulenza strategica: le scelte di fondo, mentre l'AI cambia il mercato</h1>
+        <p class="p-hero-lede" data-hero-item>Ti affianchiamo nelle decisioni che orientano l'impresa: su quali mercati e clienti puntare, cosa offrire, come organizzarti per crescere. E in ogni scelta guardiamo come l'AI sta cambiando il tuo settore.</p>
       </div>
     </section>
 
-    <section class="sec wrap">
-      <div class="sec-head reveal"><h2>Su cosa lavoriamo</h2></div>
-      <div class="cards" data-stagger>
-        <article class="card reveal"><h3>Mercati e clienti</h3><p>Dove cresce la domanda, quali clienti ti conviene servire, dove sei più forte della concorrenza. Partiamo dai tuoi numeri e da quello che vedi ogni giorno.</p></article>
-        <article class="card reveal"><h3>Offerta</h3><p>Cosa vendi, a chi e come. La rivediamo quando il mercato cambia: anche l'AI sta cambiando quello che i clienti si aspettano.</p></article>
-        <article class="card reveal"><h3>Organizzazione e processi</h3><p>Chi fa cosa, con quali strumenti, dove si perde tempo. Mettere ordine viene prima di qualsiasi automazione.</p></article>
-        <article class="card reveal"><h3>Crescita e investimenti</h3><p>Nuovi mercati, nuovi canali, nuovi investimenti: li valutiamo con te, numeri alla mano, prima di decidere.</p></article>
+    <!-- Su cosa lavoriamo -->
+    <section class="p-sec">
+      <div class="wrap p-split">
+        <div class="p-split-side">
+          <h2 class="p-h2" data-split>Su cosa lavoriamo</h2>
+        </div>
+        <ul class="p-rows is-rich">
+          <li data-reveal><span class="n">01</span><h3>Mercati e clienti</h3><span class="d">Dove cresce la domanda, quali clienti ti conviene servire, dove sei più forte della concorrenza. Partiamo dai tuoi numeri e da quello che vedi ogni giorno.</span></li>
+          <li data-reveal><span class="n">02</span><h3>Offerta</h3><span class="d">Cosa vendi, a chi e come. La rivediamo quando il mercato cambia: anche l'AI sta cambiando quello che i clienti si aspettano.</span></li>
+          <li data-reveal><span class="n">03</span><h3>Organizzazione e processi</h3><span class="d">Chi fa cosa, con quali strumenti, dove si perde tempo. Mettere ordine viene prima di qualsiasi automazione.</span></li>
+          <li data-reveal><span class="n">04</span><h3>Crescita e investimenti</h3><span class="d">Nuovi mercati, nuovi canali, nuovi investimenti: li valutiamo con te, numeri alla mano, prima di decidere.</span></li>
+        </ul>
       </div>
     </section>
 
-    <section class="sec wrap">
-      <div class="sec-head reveal"><h2>Con un occhio all'AI</h2></div>
-      <p class="lede reveal" style="max-width:62ch">L'AI sta cambiando come si compra, come si vende e come si lavora, anche nei settori più tradizionali. In ogni progetto ti diciamo cosa vuol dire per il tuo mercato: cosa cambia per i tuoi clienti, cosa stanno facendo gli altri, dove si apre spazio per te.</p>
-      <div class="callout reveal" style="margin-top:22px">Se dalle scelte nasce un progetto AI, lo portiamo avanti con te, con lo stesso metodo che usiamo per tutti i progetti AI.</div>
-      <p class="reveal" style="margin-top:18px"><a class="arrow-link" href="/come-lavoriamo/">Come lavoriamo sui progetti AI →</a></p>
-    </section>
-
-    <section class="sec wrap">
-      <div class="sec-head reveal"><h2>Come funziona</h2></div>
-      <!-- TODO(conferma): durata del percorso, cosa consegniamo alla fine e come si lega al progetto da 4 settimane -->
-      <div class="steps cols" data-stagger>
-        <div class="step reveal"><span class="n">1</span><h3>Il check-up</h3><p>Si parte dal check-up gratuito: 30 minuti in videochiamata con uno dei fondatori. Ci racconti l'impresa e dove vuoi portarla.</p></div>
-        <div class="step reveal"><span class="n">2</span><h3>L'analisi</h3><p>Guardiamo numeri, mercato e organizzazione, insieme a te e alle persone che servono.</p></div>
-        <div class="step reveal"><span class="n">3</span><h3>Le scelte, per iscritto</h3><p>Mettiamo in fila le priorità: cosa fare, in che ordine, con quali risorse e con quali rischi. Decidi tu.</p></div>
-        <div class="step reveal"><span class="n">4</span><h3>Dopo: restiamo</h3><p>Ti affianchiamo mentre le scelte diventano lavoro di tutti i giorni, e le rivediamo quando il mercato cambia.</p></div>
+    <!-- Con un occhio all'AI -->
+    <section class="p-sec">
+      <div class="wrap">
+        <header class="p-head" style="margin-bottom:clamp(24px,3vw,36px)">
+          <h2 class="p-h2" data-split>Con un occhio all'AI</h2>
+        </header>
+        <p class="p-statement" data-scrub>L'AI sta cambiando come si compra, come si vende e come si lavora, anche nei settori più tradizionali. In ogni progetto ti diciamo cosa vuol dire per il tuo mercato: cosa cambia per i tuoi clienti, cosa stanno facendo gli altri, dove si apre spazio per te.</p>
+        <div class="callout" data-reveal style="margin-top:clamp(32px,4vw,48px); max-width:72ch">Se dalle scelte nasce un progetto AI, lo portiamo avanti con te, con lo stesso metodo che usiamo per tutti i progetti AI.</div>
+        <p data-reveal style="margin-top:18px"><a class="arrow-link" href="/come-lavoriamo/">Come lavoriamo sui progetti AI →</a></p>
       </div>
     </section>
 
-    <section class="sec wrap">
-      <div class="grid-2">
-        <div class="reveal">
-          <h2 style="font-size:var(--step-3); margin-bottom:18px">Cosa trovi sempre, per iscritto</h2>
-          <ul class="ticks">
+    <!-- Come funziona -->
+    <section class="p-sec p-method">
+      <div class="wrap p-method-grid">
+        <div class="p-method-side">
+          <h2 class="p-h2" data-split>Come funziona</h2>
+          <div class="p-counter" aria-hidden="true">
+            <span class="p-counter-win"><span class="p-counter-reel"><i>01</i><i>02</i><i>03</i><i>04</i></span></span>
+            <span class="p-counter-tot">/04</span>
+          </div>
+        </div>
+        <div class="p-steps">
+          <svg class="p-thread" aria-hidden="true"><path class="bg"/><path class="fg"/></svg>
+          <!-- TODO(conferma): durata del percorso, cosa consegniamo alla fine e come si lega al progetto da 4 settimane -->
+          <ol class="p-steps-list">
+            <li class="p-step"><span class="p-step-node" aria-hidden="true"></span><span class="p-step-n">Passo 1</span><h3>Il check-up</h3><p>Si parte dal check-up gratuito: 30 minuti in videochiamata con uno dei fondatori. Ci racconti l'impresa e dove vuoi portarla.</p></li>
+            <li class="p-step"><span class="p-step-node" aria-hidden="true"></span><span class="p-step-n">Passo 2</span><h3>L'analisi</h3><p>Guardiamo numeri, mercato e organizzazione, insieme a te e alle persone che servono.</p></li>
+            <li class="p-step"><span class="p-step-node" aria-hidden="true"></span><span class="p-step-n">Passo 3</span><h3>Le scelte, per iscritto</h3><p>Mettiamo in fila le priorità: cosa fare, in che ordine, con quali risorse e con quali rischi. Decidi tu.</p></li>
+            <li class="p-step"><span class="p-step-node" aria-hidden="true"></span><span class="p-step-n">Passo 4</span><h3>Dopo: restiamo</h3><p>Ti affianchiamo mentre le scelte diventano lavoro di tutti i giorni, e le rivediamo quando il mercato cambia.</p></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cosa trovi sempre / cosa non facciamo -->
+    <section class="p-sec">
+      <div class="wrap p-lists">
+        <div class="p-list yes" data-reveal>
+          <h2>Cosa trovi sempre, per iscritto</h2>
+          <ul>
             <li>Tempi, costi e limiti, prima di iniziare.</li>
             <li>Le priorità, in ordine, e chi se ne occupa.</li>
             <li>I rischi, appena li vediamo: te li diciamo ora, non a lavori finiti.</li>
           </ul>
         </div>
-        <div class="reveal">
-          <h2 style="font-size:var(--step-3); margin-bottom:18px">Cosa non facciamo</h2>
-          <div class="for-col no" style="padding:0; background:none; border:0">
-            <ul>
-              <li>Documenti da cassetto: ogni scelta ha un responsabile e un primo passo.</li>
-              <li>Analisi che durano mesi prima di dirti qualcosa.</li>
-              <li>Ricette uguali per tutti: si parte dalla tua impresa.</li>
-            </ul>
-          </div>
+        <div class="p-list no" data-reveal>
+          <h2>Cosa non facciamo</h2>
+          <ul>
+            <li>Documenti da cassetto: ogni scelta ha un responsabile e un primo passo.</li>
+            <li>Analisi che durano mesi prima di dirti qualcosa.</li>
+            <li>Ricette uguali per tutti: si parte dalla tua impresa.</li>
+          </ul>
         </div>
       </div>
     </section>
 
-    <section class="sec wrap">
-      <div class="cta-band reveal">
-        <h2>Vuoi capire dove portare la tua impresa? Il primo passo è un check-up di 30 minuti.</h2>
-        <a class="btn btn-primary" href="/check-up-ai/" data-cta="checkup" data-placement="strategy">Prenota il check-up AI</a>
+    <!-- Chiusura -->
+    <section class="p-final">
+      <div class="p-final-glow" aria-hidden="true"></div>
+      <div class="wrap">
+        <h2 class="p-final-h" data-split>Vuoi capire dove portare la tua impresa? Il primo passo è un check-up di 30 minuti.</h2>
+        <a class="p-orb" data-magnetic href="/check-up-ai/" data-cta="checkup" data-placement="strategy" aria-label="Prenota il check-up AI">
+          <svg class="p-orb-ring" viewBox="0 0 200 200" aria-hidden="true">
+            <defs><path id="orbPath" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs>
+            <text><textPath href="#orbPath">Prenota il check-up AI · 30 minuti · Gratuito · </textPath></text>
+          </svg>
+          <span class="p-orb-arr" aria-hidden="true">→</span>
+        </a>
       </div>
     </section>
   </main>
 
   <div class="mobile-bar"><a class="btn btn-primary btn-block" href="/check-up-ai/" data-cta="checkup" data-placement="mobile_bar">Prenota il check-up AI</a></div>
 
-  <footer>
+  <footer class="p-footer">
     <div class="wrap foot-in foot-grid">
       <div class="foot-col">
         <div class="foot-brand">
@@ -189,8 +230,15 @@
         <span>© 2026 Telaio</span>
       </div>
     </div>
+    <div class="p-bigword" aria-hidden="true"><span>T</span><span>e</span><span>l</span><span>a</span><span>i</span><span>o</span></div>
   </footer>
 
+  <!-- Librerie di animazione, ospitate nel sito (vedi assets/vendor/README.md) -->
+  <script src="/assets/vendor/gsap.min.js"></script>
+  <script src="/assets/vendor/ScrollTrigger.min.js"></script>
+  <script src="/assets/vendor/SplitText.min.js"></script>
+  <script src="/assets/vendor/lenis.min.js"></script>
   <script src="/script.js"></script>
+  <script src="/motion.js"></script>
 </body>
 </html>

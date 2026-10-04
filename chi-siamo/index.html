@@ -23,8 +23,19 @@
 
   <link rel="preload" href="/assets/fonts/bricolage-grotesque-500-700-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/ibm-plex-sans-400-600-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <script>document.documentElement.classList.add("js");setTimeout(function(){if(!window.__telaio)document.documentElement.classList.remove("js")},4000)</script>
+  <script>
+    (function (r) {
+      r.classList.add("js");
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) r.classList.add("motion");
+      // Se gli script non partono, si torna alla pagina statica (tutto visibile).
+      setTimeout(function () {
+        if (!window.__telaio) r.classList.remove("js");
+        if (!window.__motion) r.classList.remove("motion");
+      }, 4000);
+    })(document.documentElement);
+  </script>
   <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/motion.css">
 
   <script type="application/ld+json">
   {
@@ -84,6 +95,7 @@
   </svg>
 
   <div class="grain" aria-hidden="true"></div>
+  <div class="p-progress" aria-hidden="true"></div>
 
   <header class="top">
     <div class="wrap top-in">
@@ -111,83 +123,127 @@
   </header>
 
   <main id="top">
-    <div class="wrap">
-      <nav class="crumbs" aria-label="Percorso"><a href="/">Home</a> <span aria-hidden="true">›</span> <span aria-current="page">Chi siamo</span></nav>
-    </div>
 
-    <section class="subhero">
-      <div class="wrap" data-stagger>
-        <h1 class="reveal">Chi siamo</h1>
-        <p class="lede reveal">Telaio è un team di consulenza per le piccole e medie imprese: strategia d'impresa e intelligenza artificiale. Siamo tre fondatori con competenze diverse: AI e prodotto, strategia e processi, business e crescita.</p>
+    <section class="p-hero is-page is-huge">
+      <canvas class="p-weave" id="weave" aria-hidden="true"></canvas>
+      <div class="p-hero-veil" aria-hidden="true"></div>
+      <div class="wrap p-hero-in">
+        <nav class="crumbs" aria-label="Percorso" data-hero-item><a href="/">Home</a> <span aria-hidden="true">›</span> <span aria-current="page">Chi siamo</span></nav>
+        <h1 class="p-h1">Chi siamo</h1>
+        <p class="p-hero-lede" data-hero-item>Telaio è un team di consulenza per le piccole e medie imprese: strategia d'impresa e intelligenza artificiale. Siamo tre fondatori con competenze diverse: AI e prodotto, strategia e processi, business e crescita.</p>
       </div>
     </section>
 
-    <section class="sec wrap">
-      <div class="grid-2">
-        <div class="reveal">
-          <h2 style="font-size:var(--step-3); margin-bottom:14px">Perché esiste Telaio</h2>
-          <p class="lede">Vogliamo rendere semplice l'accesso agli strumenti di AI, perché generino valore nelle imprese. Gli strumenti ci sono. Il difficile è scegliere quello giusto e metterlo al lavoro nella tua impresa, con le tue persone. E, prima ancora, fare le scelte di fondo mentre il mercato cambia. Questo è il nostro lavoro.</p>
+    <!-- Perché esiste Telaio · Perché «Telaio» -->
+    <section class="p-sec">
+      <div class="wrap p-origin">
+        <div class="p-origin-text">
+          <div data-reveal>
+            <h2>Perché esiste Telaio</h2>
+            <p class="lede">Vogliamo rendere semplice l'accesso agli strumenti di AI, perché generino valore nelle imprese. Gli strumenti ci sono. Il difficile è scegliere quello giusto e metterlo al lavoro nella tua impresa, con le tue persone. E, prima ancora, fare le scelte di fondo mentre il mercato cambia. Questo è il nostro lavoro.</p>
+          </div>
+          <div data-reveal>
+            <h2>Perché «Telaio»</h2>
+            <p class="lede">Il telaio intreccia due fili, l'ordito e la trama, e ne fa un tessuto. Noi intrecciamo le scelte della tua impresa e gli strumenti di AI, per fare qualcosa che regge nel tempo.</p>
+          </div>
         </div>
-        <div class="reveal">
-          <h2 style="font-size:var(--step-3); margin-bottom:14px">Perché «Telaio»</h2>
-          <p class="lede">Il telaio intreccia due fili, l'ordito e la trama, e ne fa un tessuto. Noi intrecciamo le scelte della tua impresa e gli strumenti di AI, per fare qualcosa che regge nel tempo.</p>
+        <!-- ordito (verticale) e trama (ondulata) che si tessono mentre scorri -->
+        <svg class="p-loom-art" viewBox="0 0 400 400" aria-hidden="true">
+          <rect class="frame" x="20" y="20" width="360" height="360" rx="18"/>
+          <path class="warp" pathLength="1" d="M80 40V360"/>
+          <path class="warp" pathLength="1" d="M120 40V360"/>
+          <path class="warp" pathLength="1" d="M160 40V360"/>
+          <path class="warp" pathLength="1" d="M200 40V360"/>
+          <path class="warp" pathLength="1" d="M240 40V360"/>
+          <path class="warp" pathLength="1" d="M280 40V360"/>
+          <path class="warp" pathLength="1" d="M320 40V360"/>
+          <path class="weft" pathLength="1" d="M40 80Q60 66 80 80T120 80T160 80T200 80T240 80T280 80T320 80T360 80"/>
+          <path class="weft" pathLength="1" d="M40 120Q60 134 80 120T120 120T160 120T200 120T240 120T280 120T320 120T360 120"/>
+          <path class="weft" pathLength="1" d="M40 160Q60 146 80 160T120 160T160 160T200 160T240 160T280 160T320 160T360 160"/>
+          <path class="weft hi" pathLength="1" d="M40 200Q60 214 80 200T120 200T160 200T200 200T240 200T280 200T320 200T360 200"/>
+          <path class="weft" pathLength="1" d="M40 240Q60 226 80 240T120 240T160 240T200 240T240 240T280 240T320 240T360 240"/>
+          <path class="weft" pathLength="1" d="M40 280Q60 294 80 280T120 280T160 280T200 280T240 280T280 280T320 280T360 280"/>
+          <path class="weft" pathLength="1" d="M40 320Q60 306 80 320T120 320T160 320T200 320T240 320T280 320T320 320T360 320"/>
+        </svg>
+      </div>
+    </section>
+
+    <!-- Come ci comportiamo -->
+    <section class="p-sec">
+      <div class="wrap">
+        <header class="p-head">
+          <h2 class="p-h2" data-split>Come ci comportiamo</h2>
+        </header>
+        <ul class="p-values" style="margin-top:0">
+          <li data-reveal><b>Chiarezza</b><span>Se non si capisce, non è finito.</span></li>
+          <li data-reveal><b>Concretezza</b><span>Cose che funzionano, non slide.</span></li>
+          <li data-reveal><b>Vicinanza</b><span>Accanto a te, non sopra di te.</span></li>
+          <li data-reveal><b>Trasparenza</b><span>Tempi, costi e limiti chiari dall'inizio.</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- I fondatori -->
+    <section class="p-sec p-team">
+      <div class="wrap">
+        <header class="p-head">
+          <h2 class="p-h2" data-split>I fondatori</h2>
+        </header>
+        <!-- TODO(conferma): profili LinkedIn dei fondatori quando disponibili (link nelle schede e "sameAs" nei dati strutturati) -->
+        <div class="p-team-grid">
+          <article class="p-founder" id="dan-alessandro-podasca" data-tilt data-reveal>
+            <!-- TODO(conferma): foto dei fondatori; finché mancano restano le iniziali -->
+            <div class="p-founder-art" aria-hidden="true"><b>DP</b></div>
+            <h3>Dan Alessandro Podasca</h3>
+            <p class="role">AI e prodotto</p>
+            <p class="bio">Si è formato al Politecnico di Milano. Ha lavorato su analisi dei dati, prodotto digitale e mondi virtuali, al fianco di brand internazionali. In Telaio trasforma l'AI in strumenti che si usano davvero.</p>
+          </article>
+          <article class="p-founder" id="pasquale-silvestre" data-tilt data-reveal>
+            <div class="p-founder-art" aria-hidden="true"><b>PS</b></div>
+            <h3>Pasquale Silvestre</h3>
+            <p class="role">Strategia e sviluppo</p>
+            <p class="bio">Laurea in Innovation Management. Si è occupato di sviluppo d'impresa, digitalizzazione ed efficienza dei processi, con un passato nel private equity. In Telaio guida la strategia e il rapporto con i clienti.</p>
+          </article>
+          <article class="p-founder" id="rod-lonardo" data-tilt data-reveal>
+            <div class="p-founder-art" aria-hidden="true"><b>RL</b></div>
+            <h3>Rod Lonardo</h3>
+            <p class="role">Business e crescita</p>
+            <p class="bio">Ha studiato finanza alla Bocconi. Nel fintech internazionale ha seguito sviluppo commerciale, partnership e lancio di prodotti. In Telaio porta metodo sui numeri e attenzione alla crescita.</p>
+          </article>
         </div>
       </div>
     </section>
 
-    <section class="sec wrap">
-      <div class="sec-head reveal"><h2>Come ci comportiamo</h2></div>
-      <ul class="values" data-stagger>
-        <li class="reveal"><b>Chiarezza</b><span>Se non si capisce, non è finito.</span></li>
-        <li class="reveal"><b>Concretezza</b><span>Cose che funzionano, non slide.</span></li>
-        <li class="reveal"><b>Vicinanza</b><span>Accanto a te, non sopra di te.</span></li>
-        <li class="reveal"><b>Trasparenza</b><span>Tempi, costi e limiti chiari dall'inizio.</span></li>
-      </ul>
-    </section>
-
-    <section class="sec wrap">
-      <div class="sec-head reveal"><h2>I fondatori</h2></div>
-      <!-- TODO(conferma): profili LinkedIn dei fondatori quando disponibili (link nelle schede e "sameAs" nei dati strutturati) -->
-      <div class="founder-grid" data-stagger>
-        <article class="founder reveal" id="dan-alessandro-podasca">
-          <!-- TODO(conferma): foto dei fondatori; finché mancano restano gli avatar con il marchio -->
-          <div class="avatar" aria-hidden="true"><svg class="mk" viewBox="0 0 64 64"><use href="#mk"></use></svg></div>
-          <h3>Dan Alessandro Podasca</h3>
-          <p class="role">AI e prodotto</p>
-          <p class="bio">Si è formato al Politecnico di Milano. Ha lavorato su analisi dei dati, prodotto digitale e mondi virtuali, al fianco di brand internazionali. In Telaio trasforma l'AI in strumenti che si usano davvero.</p>
-        </article>
-        <article class="founder reveal" id="pasquale-silvestre">
-          <div class="avatar" aria-hidden="true"><svg class="mk" viewBox="0 0 64 64"><use href="#mk"></use></svg></div>
-          <h3>Pasquale Silvestre</h3>
-          <p class="role">Strategia e sviluppo</p>
-          <p class="bio">Laurea in Innovation Management. Si è occupato di sviluppo d'impresa, digitalizzazione ed efficienza dei processi, con un passato nel private equity. In Telaio guida la strategia e il rapporto con i clienti.</p>
-        </article>
-        <article class="founder reveal" id="rod-lonardo">
-          <div class="avatar" aria-hidden="true"><svg class="mk" viewBox="0 0 64 64"><use href="#mk"></use></svg></div>
-          <h3>Rod Lonardo</h3>
-          <p class="role">Business e crescita</p>
-          <p class="bio">Ha studiato finanza alla Bocconi. Nel fintech internazionale ha seguito sviluppo commerciale, partnership e lancio di prodotti. In Telaio porta metodo sui numeri e attenzione alla crescita.</p>
-        </article>
+    <!-- Dove lavoriamo -->
+    <section class="p-sec">
+      <div class="wrap">
+        <header class="p-head" style="margin-bottom:clamp(24px,3vw,36px)">
+          <h2 class="p-h2" data-split>Dove lavoriamo</h2>
+        </header>
+        <!-- TODO(conferma): città di riferimento e incontri di persona -->
+        <p class="p-statement" data-scrub>Lavoriamo con imprese di tutta Italia, in videochiamata, e in inglese con clienti all'estero.</p>
       </div>
     </section>
 
-    <section class="sec wrap">
-      <div class="sec-head reveal"><h2>Dove lavoriamo</h2></div>
-      <!-- TODO(conferma): città di riferimento e incontri di persona -->
-      <p class="lede reveal" style="max-width:62ch">Lavoriamo con imprese di tutta Italia, in videochiamata, e in inglese con clienti all'estero.</p>
-    </section>
-
-    <section class="sec wrap">
-      <div class="cta-band reveal">
-        <h2>Vuoi conoscerci? Il modo più semplice è un check-up.</h2>
-        <a class="btn btn-primary" href="/check-up-ai/" data-cta="checkup" data-placement="about">Prenota il check-up AI</a>
+    <!-- Chiusura -->
+    <section class="p-final">
+      <div class="p-final-glow" aria-hidden="true"></div>
+      <div class="wrap">
+        <h2 class="p-final-h" data-split>Vuoi conoscerci? Il modo più semplice è un check-up.</h2>
+        <a class="p-orb" data-magnetic href="/check-up-ai/" data-cta="checkup" data-placement="about" aria-label="Prenota il check-up AI">
+          <svg class="p-orb-ring" viewBox="0 0 200 200" aria-hidden="true">
+            <defs><path id="orbPath" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs>
+            <text><textPath href="#orbPath">Prenota il check-up AI · 30 minuti · Gratuito · </textPath></text>
+          </svg>
+          <span class="p-orb-arr" aria-hidden="true">→</span>
+        </a>
       </div>
     </section>
   </main>
 
   <div class="mobile-bar"><a class="btn btn-primary btn-block" href="/check-up-ai/" data-cta="checkup" data-placement="mobile_bar">Prenota il check-up AI</a></div>
 
-  <footer>
+  <footer class="p-footer">
     <div class="wrap foot-in foot-grid">
       <div class="foot-col">
         <div class="foot-brand">
@@ -213,8 +269,15 @@
         <span>© 2026 Telaio</span>
       </div>
     </div>
+    <div class="p-bigword" aria-hidden="true"><span>T</span><span>e</span><span>l</span><span>a</span><span>i</span><span>o</span></div>
   </footer>
 
+  <!-- Librerie di animazione, ospitate nel sito (vedi assets/vendor/README.md) -->
+  <script src="/assets/vendor/gsap.min.js"></script>
+  <script src="/assets/vendor/ScrollTrigger.min.js"></script>
+  <script src="/assets/vendor/SplitText.min.js"></script>
+  <script src="/assets/vendor/lenis.min.js"></script>
   <script src="/script.js"></script>
+  <script src="/motion.js"></script>
 </body>
 </html>

@@ -1,7 +1,7 @@
-# Librerie di animazione (home)
+# Librerie di animazione
 
 Copie ospitate nel sito, così le pagine non chiamano server esterni.
-Usate solo dalle home (`/index.html`, `/en/index.html`) tramite `home.js`.
+Usate da tutte le pagine tramite `motion.js`.
 
 | File | Versione | Fonte | Licenza |
 |---|---|---|---|
