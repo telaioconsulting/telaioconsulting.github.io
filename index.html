@@ -27,8 +27,23 @@
 
   <link rel="preload" href="/assets/fonts/bricolage-grotesque-500-700-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/ibm-plex-sans-400-600-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <script>document.documentElement.classList.add("js");setTimeout(function(){if(!window.__telaio)document.documentElement.classList.remove("js")},4000)</script>
+  <script>
+    (function (r) {
+      r.classList.add("js");
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        r.classList.add("motion");
+        // L'apertura parte sempre dall'inizio della pagina
+        if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+      }
+      // Se gli script non partono, si torna alla pagina statica (tutto visibile).
+      setTimeout(function () {
+        if (!window.__telaio) r.classList.remove("js");
+        if (!window.__home) r.classList.remove("motion");
+      }, 4000);
+    })(document.documentElement);
+  </script>
   <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/home.css">
 
   <script type="application/ld+json">
   {
@@ -86,6 +101,23 @@
   </svg>
 
   <div class="grain" aria-hidden="true"></div>
+  <div class="p-progress" aria-hidden="true"></div>
+
+  <!-- Apertura: il marchio si tesse, poi il sipario sale -->
+  <div class="p-intro" aria-hidden="true">
+    <div class="p-intro-in">
+      <svg class="p-intro-mk" viewBox="0 0 64 64">
+        <g fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round">
+          <path d="M24 10 V32 M24 48 V54"></path>
+          <path d="M40 10 V16 M40 32 V54"></path>
+          <path d="M10 24 H16 M32 24 H54"></path>
+          <path d="M10 40 H32 M48 40 H54"></path>
+        </g>
+      </svg>
+      <div class="p-intro-wm"><span>T</span><span>e</span><span>l</span><span>a</span><span>i</span><span>o</span></div>
+    </div>
+    <p class="p-intro-tag">Dall'AI al valore</p>
+  </div>
 
   <header class="top">
     <div class="wrap top-in">
@@ -115,206 +147,401 @@
   <main id="top">
 
     <!-- 1 · APERTURA -->
-    <section class="hero">
-      <canvas id="loom" aria-hidden="true"></canvas>
-      <div class="hero-veil" aria-hidden="true"></div>
-      <div class="wrap">
-        <div class="hero-in" data-stagger>
-          <h1 class="h1-lead reveal"><span class="h1-kicker">Consulenza AI per piccole e medie imprese</span> Il primo strumento AI al lavoro nella tua impresa, in <span class="accent">4&nbsp;settimane</span>.</h1>
-          <p class="tagline reveal">Partiamo da un problema reale, scegliamo lo strumento giusto e lo mettiamo al lavoro con te. Poi restiamo finché produce risultati.</p>
-          <div class="hero-cta reveal">
-            <a class="btn btn-primary" href="/check-up-ai/" data-cta="checkup" data-placement="hero">Prenota il check-up AI</a>
+    <section class="p-hero">
+      <canvas class="p-weave" id="weave" aria-hidden="true"></canvas>
+      <div class="p-hero-veil" aria-hidden="true"></div>
+      <div class="wrap p-hero-in">
+        <p class="p-kicker" data-hero-item><span class="p-dot" aria-hidden="true"></span>Consulenza AI per piccole e medie imprese</p>
+        <h1 class="p-h1">Il primo strumento AI al lavoro nella tua impresa, in <span class="p-accent">4&nbsp;settimane</span>.</h1>
+        <div class="p-hero-row">
+          <p class="p-tagline" data-hero-item>Partiamo da un problema reale, scegliamo lo strumento giusto e lo mettiamo al lavoro con te. Poi restiamo finché produce risultati.</p>
+          <div class="p-hero-cta" data-hero-item>
+            <a class="btn btn-primary p-btn-xl" data-magnetic href="/check-up-ai/" data-cta="checkup" data-placement="hero">Prenota il check-up AI <span class="p-arr" aria-hidden="true">→</span></a>
+            <ul class="p-meta">
+              <li>30 minuti in videochiamata</li>
+              <li>Gratuito</li>
+              <li>Scegli tu giorno e ora</li>
+            </ul>
           </div>
-          <p class="hero-meta reveal"><span>30 minuti in videochiamata · Gratuito · Scegli tu giorno e ora</span></p>
-          <p class="hero-link reveal"><a href="#come-lavoriamo">Come lavoriamo ↓</a></p>
-          <p class="trust reveal">Un solo referente, dall'analisi alla soluzione che funziona. E anche dopo.</p>
         </div>
       </div>
-      <div class="scroll-cue" aria-hidden="true"><span>Scorri</span><span class="rail"></span><span class="bead"></span></div>
+      <div class="p-hero-foot wrap">
+        <p class="p-trust" data-hero-item>Un solo referente, dall'analisi alla soluzione che funziona. E anche dopo.</p>
+        <a class="p-scroll" href="#cambia" data-hero-item><span>Scorri</span><i aria-hidden="true"></i></a>
+      </div>
     </section>
+
+    <!-- Nastro in movimento -->
+    <div class="p-marquee" aria-hidden="true">
+      <div class="p-marquee-track">
+        <div class="p-marquee-group">
+          <span>Dall'AI al valore</span><svg class="mk" viewBox="0 0 64 64"><use href="#mk"></use></svg>
+          <span class="o">Un problema reale</span><svg class="mk" viewBox="0 0 64 64"><use href="#mk"></use></svg>
+          <span>Lo strumento giusto</span><svg class="mk" viewBox="0 0 64 64"><use href="#mk"></use></svg>
+          <span class="o">4 settimane</span><svg class="mk" viewBox="0 0 64 64"><use href="#mk"></use></svg>
+        </div>
+        <div class="p-marquee-group">
+          <span>Dall'AI al valore</span><svg class="mk" viewBox="0 0 64 64"><use href="#mk"></use></svg>
+          <span class="o">Un problema reale</span><svg class="mk" viewBox="0 0 64 64"><use href="#mk"></use></svg>
+          <span>Lo strumento giusto</span><svg class="mk" viewBox="0 0 64 64"><use href="#mk"></use></svg>
+          <span class="o">4 settimane</span><svg class="mk" viewBox="0 0 64 64"><use href="#mk"></use></svg>
+        </div>
+      </div>
+    </div>
 
     <!-- 2 · COSA STA CAMBIANDO -->
-    <section class="sec wrap">
-      <div class="sec-head reveal">
-        <p class="eyebrow">Cosa sta cambiando</p>
-        <h2>L'AI sta cambiando il modo di lavorare. Anche nel tuo settore.</h2>
-      </div>
-      <div class="stats" data-stagger>
-        <div class="stat reveal">
-          <span class="big">16,4%</span>
-          <p>Le imprese italiane che usano l'AI sono raddoppiate in un anno: dall'8,2% al 16,4%.</p>
-          <p class="src">Fonte: <a href="https://www.istat.it/comunicato-stampa/imprese-e-ict-anno-2025/" target="_blank" rel="noopener">Istat, Imprese e ICT 2025</a> · imprese con almeno 10 addetti</p>
+    <section id="cambia" class="p-sec">
+      <div class="wrap">
+        <header class="p-head">
+          <p class="eyebrow" data-reveal>Cosa sta cambiando</p>
+          <h2 class="p-h2" data-split>L'AI sta cambiando il modo di lavorare. Anche nel tuo settore.</h2>
+        </header>
+
+        <div class="p-stat-list">
+          <article class="p-stat">
+            <div class="p-stat-num"><span data-count="16.4" data-decimals="1">16,4</span><small>%</small></div>
+            <div class="p-stat-body">
+              <div class="p-viz p-viz-cols" aria-hidden="true">
+                <div class="p-col" style="--v:.5"><i></i><span>8,2%</span></div>
+                <div class="p-col is-hi" style="--v:1"><i></i><span>16,4%</span></div>
+              </div>
+              <p>Le imprese italiane che usano l'AI sono raddoppiate in un anno: dall'8,2% al 16,4%.</p>
+              <p class="p-src">Fonte: <a href="https://www.istat.it/comunicato-stampa/imprese-e-ict-anno-2025/" target="_blank" rel="noopener">Istat, Imprese e ICT 2025</a> · imprese con almeno 10 addetti</p>
+            </div>
+          </article>
+
+          <article class="p-stat">
+            <div class="p-stat-num"><span data-count="37">37</span><small>punti</small></div>
+            <div class="p-stat-body">
+              <div class="p-viz p-viz-rows" aria-hidden="true">
+                <div class="p-hrow"><span>Grandi imprese</span><i><em style="--v:.531"></em></i><b>53,1%</b></div>
+                <div class="p-hrow is-hi"><span>PMI</span><i><em style="--v:.157"></em></i><b>15,7%</b></div>
+              </div>
+              <p>La distanza tra grandi imprese e PMI: 53,1% contro 15,7%. Nel 2023 erano 20.</p>
+              <p class="p-src">Fonte: <a href="https://www.istat.it/comunicato-stampa/imprese-e-ict-anno-2025/" target="_blank" rel="noopener">Istat, Imprese e ICT 2025</a></p>
+            </div>
+          </article>
+
+          <article class="p-stat">
+            <div class="p-stat-num"><span>1</span><small>su 3</small></div>
+            <div class="p-stat-body">
+              <div class="p-viz p-viz-dots" aria-hidden="true"><i></i><i></i><i class="is-q">?</i></div>
+              <p>Tra le imprese che usano l'AI, una su tre non indica per quale scopo aziendale la usa.</p>
+              <p class="p-src">Fonte: <a href="https://www.istat.it/wp-content/uploads/2025/12/Statreport_ICT2025.pdf" target="_blank" rel="noopener">Istat, Imprese e ICT 2025</a></p>
+            </div>
+          </article>
         </div>
-        <div class="stat reveal">
-          <span class="big">37 punti</span>
-          <p>La distanza tra grandi imprese e PMI: 53,1% contro 15,7%. Nel 2023 erano 20.</p>
-          <p class="src">Fonte: <a href="https://www.istat.it/comunicato-stampa/imprese-e-ict-anno-2025/" target="_blank" rel="noopener">Istat, Imprese e ICT 2025</a></p>
-        </div>
-        <div class="stat reveal">
-          <span class="big">1 su 3</span>
-          <p>Tra le imprese che usano l'AI, una su tre non indica per quale scopo aziendale la usa.</p>
-          <p class="src">Fonte: <a href="https://www.istat.it/wp-content/uploads/2025/12/Statreport_ICT2025.pdf" target="_blank" rel="noopener">Istat, Imprese e ICT 2025</a></p>
-        </div>
-      </div>
-      <p class="lede reveal" style="margin-top:28px; max-width:62ch">Per partire non serve un grande progetto. Serve un problema concreto e qualcuno che ti accompagni fino al risultato.</p>
-      <div class="reveal" style="margin-top:32px">
-        <h3 style="font-size:var(--step-3); max-width:30ch">Scopri come l'AI sta cambiando il tuo settore e cosa puoi fare tu, da subito.</h3>
-        <a class="btn btn-primary" href="/check-up-ai/" data-cta="checkup" data-placement="stats" style="margin-top:22px">Prenota il check-up AI</a>
       </div>
     </section>
 
-    <!-- 3 · DA DOVE SI PARTE -->
-    <section id="cosa-facciamo" class="sec wrap">
-      <div class="sec-head reveal">
-        <p class="eyebrow">Da dove si parte</p>
-        <h2>Le attività che l'AI può togliere dalla tua settimana</h2>
+    <!-- Manifesto: le parole si accendono mentre scorri -->
+    <section class="p-sec p-manifesto">
+      <div class="wrap">
+        <p class="p-manifesto-text">Per partire non serve un grande progetto. Serve un <em>problema concreto</em> e qualcuno che ti accompagni fino al <em>risultato</em>.</p>
+        <div class="p-manifesto-cta" data-reveal>
+          <h3>Scopri come l'AI sta cambiando il tuo settore e cosa puoi fare tu, da subito.</h3>
+          <a class="btn btn-primary p-btn-xl" data-magnetic href="/check-up-ai/" data-cta="checkup" data-placement="stats">Prenota il check-up AI <span class="p-arr" aria-hidden="true">→</span></a>
+        </div>
       </div>
-      <p class="lede reveal" style="max-width:62ch">Ogni impresa è diversa, ma i punti di partenza si somigliano. Qualche esempio.</p>
-      <div class="cards g3" data-stagger style="margin-top:28px">
-        <article class="card reveal"><h3>Schede prodotto</h3><p>Dal link della pagina di origine alla scheda pubblicata sul tuo negozio online. L'AI compila i campi e li controlla. Tu approvi con un clic.</p></article>
-        <article class="card reveal"><h3>Ordini e documenti</h3><p>Arriva un ordine e il resto parte da solo: contratto, fattura elettronica, spedizione.</p></article>
-        <article class="card reveal"><h3>Richieste dei clienti</h3><p>Le domande che ricevi ogni giorno trovano una bozza di risposta già pronta, con le informazioni giuste. Tu controlli e invii.</p></article>
-        <article class="card reveal"><h3>Preventivi</h3><p>Dalla richiesta del cliente alla bozza di preventivo, con i tuoi listini e le tue condizioni.</p></article>
-        <article class="card reveal"><h3>Procedure e archivio</h3><p>Fai una domanda, come la faresti a un collega, e trovi la risposta tra contratti, manuali e procedure.</p></article>
-        <article class="card reveal"><h3>I numeri della settimana</h3><p>Vendite, acquisti e magazzino in un riepilogo chiaro, ogni lunedì. Senza copiare e incollare.</p></article>
+    </section>
+
+    <!-- 3 · DA DOVE SI PARTE (scorrimento orizzontale) -->
+    <section id="cosa-facciamo" class="p-cases">
+      <div class="p-cases-pin">
+        <div class="wrap p-cases-head">
+          <div>
+            <p class="eyebrow">Da dove si parte</p>
+            <h2 class="p-h2" data-split>Le attività che l'AI può togliere dalla tua settimana</h2>
+          </div>
+          <p class="lede">Ogni impresa è diversa, ma i punti di partenza si somigliano. Qualche esempio.</p>
+        </div>
+
+        <div class="p-cases-track">
+          <article class="p-case">
+            <span class="p-case-n">01</span>
+            <div class="p-case-art" aria-hidden="true">
+              <svg class="ill" viewBox="0 0 160 100">
+                <rect class="soft" x="10" y="36" width="36" height="28" rx="4"/>
+                <path class="soft" d="M18 46h20M18 54h12"/>
+                <path class="i1-flow" d="M52 50h22"/>
+                <path d="M72 45l6 5-6 5"/>
+                <rect x="88" y="14" width="62" height="72" rx="6"/>
+                <rect class="i1-img" x="96" y="22" width="22" height="18" rx="3"/>
+                <path class="i1-l" d="M96 50h44"/>
+                <path class="i1-l b" d="M96 59h34"/>
+                <path class="i1-l c" d="M96 68h22"/>
+                <g class="i1-ok"><circle class="fillb" cx="138" cy="74" r="8"/><path d="M134.5 74l2.5 2.5 5-5" stroke="#fff"/></g>
+              </svg>
+            </div>
+            <h3>Schede prodotto</h3>
+            <p>Dal link della pagina di origine alla scheda pubblicata sul tuo negozio online. L'AI compila i campi e li controlla. Tu approvi con un clic.</p>
+          </article>
+
+          <article class="p-case">
+            <span class="p-case-n">02</span>
+            <div class="p-case-art" aria-hidden="true">
+              <svg class="ill" viewBox="0 0 160 100">
+                <g class="i2-in"><rect x="8" y="38" width="32" height="24" rx="3"/><path d="M8 41l16 11 16-11"/></g>
+                <path class="soft i1-flow" d="M44 50h12"/>
+                <g class="i2-doc"><rect x="62" y="24" width="26" height="34" rx="3"/><path class="soft" d="M68 33h14M68 40h14M68 47h9"/></g>
+                <g class="i2-doc b"><rect x="94" y="24" width="26" height="34" rx="3"/><path class="soft" d="M100 33h14M100 40h8"/><circle class="fillb" cx="112" cy="49" r="4"/></g>
+                <g class="i2-doc c"><rect x="126" y="28" width="26" height="26" rx="3"/><path d="M126 37h26M139 28v9"/></g>
+                <path class="soft" d="M62 72h90"/>
+                <circle class="i2-run" cx="62" cy="72" r="3"/>
+              </svg>
+            </div>
+            <h3>Ordini e documenti</h3>
+            <p>Arriva un ordine e il resto parte da solo: contratto, fattura elettronica, spedizione.</p>
+          </article>
+
+          <article class="p-case">
+            <span class="p-case-n">03</span>
+            <div class="p-case-art" aria-hidden="true">
+              <svg class="ill" viewBox="0 0 160 100">
+                <rect class="soft" x="12" y="12" width="76" height="28" rx="10"/>
+                <path class="soft" d="M22 22h52M22 30h30"/>
+                <g class="i3-reply">
+                  <rect class="i3-box" x="58" y="50" width="90" height="34" rx="10"/>
+                  <circle class="i3-dot" cx="93" cy="67" r="2.6"/>
+                  <circle class="i3-dot b" cx="103" cy="67" r="2.6"/>
+                  <circle class="i3-dot c" cx="113" cy="67" r="2.6"/>
+                  <path class="i3-txt" d="M70 62h64M70 72h40"/>
+                </g>
+              </svg>
+            </div>
+            <h3>Richieste dei clienti</h3>
+            <p>Le domande che ricevi ogni giorno trovano una bozza di risposta già pronta, con le informazioni giuste. Tu controlli e invii.</p>
+          </article>
+
+          <article class="p-case">
+            <span class="p-case-n">04</span>
+            <div class="p-case-art" aria-hidden="true">
+              <svg class="ill" viewBox="0 0 160 100">
+                <rect x="40" y="8" width="80" height="84" rx="6"/>
+                <path class="soft" d="M50 22h30"/>
+                <path class="i4-r" d="M50 36h38"/><path class="soft" d="M100 36h10"/>
+                <path class="i4-r b" d="M50 46h30"/><path class="soft" d="M100 46h10"/>
+                <path class="i4-r c" d="M50 56h42"/><path class="soft" d="M100 56h10"/>
+                <path class="soft" d="M50 66h60"/>
+                <text class="i4-eur" x="50" y="82">€</text>
+                <rect class="i4-total fillb" x="78" y="73" width="32" height="11" rx="2"/>
+              </svg>
+            </div>
+            <h3>Preventivi</h3>
+            <p>Dalla richiesta del cliente alla bozza di preventivo, con i tuoi listini e le tue condizioni.</p>
+          </article>
+
+          <article class="p-case">
+            <span class="p-case-n">05</span>
+            <div class="p-case-art" aria-hidden="true">
+              <svg class="ill" viewBox="0 0 160 100">
+                <rect class="soft" x="16" y="12" width="60" height="76" rx="5"/>
+                <path class="soft" d="M24 26h44M24 36h40M24 56h44M24 66h36M24 76h40"/>
+                <rect class="i5-hl" x="21" y="40" width="50" height="11" rx="2"/>
+                <path class="i5-hl-l" d="M24 46h44"/>
+                <rect x="96" y="56" width="52" height="26" rx="10"/>
+                <path class="soft" d="M106 66h30M106 73h18"/>
+                <g class="i5-lens"><circle cx="0" cy="0" r="13"/><path d="M9.5 9.5l11 11"/></g>
+              </svg>
+            </div>
+            <h3>Procedure e archivio</h3>
+            <p>Fai una domanda, come la faresti a un collega, e trovi la risposta tra contratti, manuali e procedure.</p>
+          </article>
+
+          <article class="p-case">
+            <span class="p-case-n">06</span>
+            <div class="p-case-art" aria-hidden="true">
+              <svg class="ill" viewBox="0 0 160 100">
+                <path class="soft" d="M14 86h132"/>
+                <rect class="i6-b" x="24" y="56" width="14" height="30" rx="2"/>
+                <rect class="i6-b b" x="48" y="46" width="14" height="40" rx="2"/>
+                <rect class="i6-b c" x="72" y="52" width="14" height="34" rx="2"/>
+                <rect class="i6-b d" x="96" y="34" width="14" height="52" rx="2"/>
+                <rect class="i6-b e" x="120" y="22" width="14" height="64" rx="2"/>
+                <polyline class="i6-line" points="31,44 55,34 79,40 103,22 127,12"/>
+                <circle class="i6-pt fillb" cx="127" cy="12" r="4"/>
+              </svg>
+            </div>
+            <h3>I numeri della settimana</h3>
+            <p>Vendite, acquisti e magazzino in un riepilogo chiaro, ogni lunedì. Senza copiare e incollare.</p>
+          </article>
+
+          <a class="p-case p-case-cta" href="/check-up-ai/" data-cta="checkup" data-placement="cases">
+            <span class="p-case-n">+</span>
+            <span class="p-case-big" aria-hidden="true">→</span>
+            <h3>Non vedi la tua attività?</h3>
+            <p>Raccontacela nel check-up.</p>
+          </a>
+        </div>
+
+        <div class="wrap p-cases-foot" aria-hidden="true">
+          <div class="p-rail"><i></i></div>
+          <span class="p-cases-count"><b>01</b> / 06</span>
+        </div>
       </div>
-      <p class="reveal" style="margin-top:22px"><a class="arrow-link" href="/check-up-ai/">Non vedi la tua attività? Raccontacela nel check-up. →</a></p>
     </section>
 
     <!-- 3b · STRATEGIA -->
-    <section id="strategia" class="sec wrap">
-      <div class="sec-head reveal">
-        <p class="eyebrow">Strategia d'impresa</p>
-        <h2>Le scelte di fondo, mentre l'AI cambia il mercato</h2>
+    <section id="strategia" class="p-sec p-strategy">
+      <div class="wrap p-split">
+        <div class="p-split-side">
+          <p class="eyebrow" data-reveal>Strategia d'impresa</p>
+          <h2 class="p-h2" data-split>Le scelte di fondo, mentre l'AI cambia il mercato</h2>
+          <p class="lede" data-reveal>Affianchiamo le imprese anche nella strategia: su quali mercati e clienti puntare, cosa offrire, come organizzarsi per crescere. In ogni scelta guardiamo come l'AI sta cambiando il tuo settore.</p>
+          <p data-reveal><a class="arrow-link" href="/consulenza-strategica/">Consulenza strategica, nel dettaglio →</a></p>
+        </div>
+        <ul class="p-rows">
+          <li data-reveal><span class="n">01</span><b>Mercati e clienti</b><span class="d">Dove crescere, e per chi.</span></li>
+          <li data-reveal><span class="n">02</span><b>Offerta</b><span class="d">Cosa vendere, e come.</span></li>
+          <li data-reveal><span class="n">03</span><b>Organizzazione</b><span class="d">Chi fa cosa, con quali strumenti.</span></li>
+          <li data-reveal><span class="n">04</span><b>Crescita</b><span class="d">Nuovi canali, nuovi mercati, nuovi investimenti.</span></li>
+        </ul>
       </div>
-      <p class="lede reveal" style="max-width:62ch">Affianchiamo le imprese anche nella strategia: su quali mercati e clienti puntare, cosa offrire, come organizzarsi per crescere. In ogni scelta guardiamo come l'AI sta cambiando il tuo settore.</p>
-      <ul class="values" data-stagger style="margin-top:28px">
-        <li class="reveal"><b>Mercati e clienti</b><span>Dove crescere, e per chi.</span></li>
-        <li class="reveal"><b>Offerta</b><span>Cosa vendere, e come.</span></li>
-        <li class="reveal"><b>Organizzazione</b><span>Chi fa cosa, con quali strumenti.</span></li>
-        <li class="reveal"><b>Crescita</b><span>Nuovi canali, nuovi mercati, nuovi investimenti.</span></li>
-      </ul>
-      <p class="reveal" style="margin-top:22px"><a class="arrow-link" href="/consulenza-strategica/">Consulenza strategica, nel dettaglio →</a></p>
     </section>
 
-    <!-- 4 · COME LAVORIAMO -->
-    <section id="come-lavoriamo" class="sec wrap">
-      <div class="sec-head reveal">
-        <p class="eyebrow">Come lavoriamo</p>
-        <h2>Quattro passi. Alla fine, uno strumento che lavora per te.</h2>
+    <!-- 4 · COME LAVORIAMO (filo che si tesse allo scroll) -->
+    <section id="come-lavoriamo" class="p-sec p-method">
+      <div class="wrap p-method-grid">
+        <div class="p-method-side">
+          <p class="eyebrow" data-reveal>Come lavoriamo</p>
+          <h2 class="p-h2" data-split>Quattro passi. Alla fine, uno strumento che lavora per te.</h2>
+          <div class="p-counter" aria-hidden="true">
+            <span class="p-counter-win"><span class="p-counter-reel"><i>01</i><i>02</i><i>03</i><i>04</i></span></span>
+            <span class="p-counter-tot">/04</span>
+          </div>
+          <div data-reveal><a class="btn btn-primary p-btn-xl" data-magnetic href="/check-up-ai/" data-cta="checkup" data-placement="method">Prenota il check-up AI <span class="p-arr" aria-hidden="true">→</span></a></div>
+        </div>
+        <div class="p-steps">
+          <svg class="p-thread" aria-hidden="true"><path class="bg"/><path class="fg"/></svg>
+          <ol class="p-steps-list">
+          <li class="p-step"><span class="p-step-node" aria-hidden="true"></span><span class="p-step-n">Passo 1</span><h3>Partiamo da un problema reale</h3><p>Capiamo dove perdi tempo, soldi o occasioni. Scegliamo insieme il problema da risolvere per primo.</p></li>
+          <li class="p-step"><span class="p-step-node" aria-hidden="true"></span><span class="p-step-n">Passo 2</span><h3>Scegliamo gli strumenti giusti</h3><p>Ti proponiamo tre strade. Ti diciamo quale sceglieremmo e perché, con tempi, costi e limiti scritti prima di iniziare.</p></li>
+          <li class="p-step"><span class="p-step-node" aria-hidden="true"></span><span class="p-step-n">Passo 3</span><h3>Li mettiamo al lavoro</h3><p>Prepariamo lo strumento, lo colleghiamo a quello che usi già e lo proviamo sul campo con le tue persone. In 4 settimane hai il primo strumento AI in uso.</p></li>
+          <li class="p-step"><span class="p-step-node" aria-hidden="true"></span><span class="p-step-n">Passo 4</span><h3>Restiamo finché producono risultati</h3><p>Guardiamo insieme cosa cambia, sistemiamo quello che non va e decidiamo il passo successivo.</p></li>
+          </ol>
+        </div>
       </div>
-      <div class="steps cols" data-stagger>
-        <div class="step reveal"><span class="n">1</span><h3>Partiamo da un problema reale</h3><p>Capiamo dove perdi tempo, soldi o occasioni. Scegliamo insieme il problema da risolvere per primo.</p></div>
-        <div class="step reveal"><span class="n">2</span><h3>Scegliamo gli strumenti giusti</h3><p>Ti proponiamo tre strade. Ti diciamo quale sceglieremmo e perché, con tempi, costi e limiti scritti prima di iniziare.</p></div>
-        <div class="step reveal"><span class="n">3</span><h3>Li mettiamo al lavoro</h3><p>Prepariamo lo strumento, lo colleghiamo a quello che usi già e lo proviamo sul campo con le tue persone. In 4 settimane hai il primo strumento AI in uso.</p></div>
-        <div class="step reveal"><span class="n">4</span><h3>Restiamo finché producono risultati</h3><p>Guardiamo insieme cosa cambia, sistemiamo quello che non va e decidiamo il passo successivo.</p></div>
+      <div class="wrap p-method-foot">
+        <div class="callout" data-reveal>Hai un solo referente: Telaio. Rispondiamo del risultato, dall'analisi alla soluzione che funziona, e anche dopo.</div>
+        <p data-reveal><a class="arrow-link" href="/come-lavoriamo/">Come lavoriamo, nel dettaglio →</a></p>
       </div>
-      <div class="callout reveal" style="margin-top:22px">Hai un solo referente: Telaio. Rispondiamo del risultato, dall'analisi alla soluzione che funziona, e anche dopo.</div>
-      <p class="reveal" style="margin-top:18px"><a class="arrow-link" href="/come-lavoriamo/">Come lavoriamo, nel dettaglio →</a></p>
-      <div class="reveal" style="margin-top:28px"><a class="btn btn-primary" href="/check-up-ai/" data-cta="checkup" data-placement="method">Prenota il check-up AI</a></div>
     </section>
 
     <!-- 5 · PERCHÉ TELAIO -->
-    <section id="perche" class="sec wrap">
-      <div class="sec-head reveal">
-        <p class="eyebrow">Perché Telaio</p>
-        <h2>Cosa cambia quando lavori con noi</h2>
+    <section id="perche" class="p-sec">
+      <div class="wrap">
+        <header class="p-head">
+          <p class="eyebrow" data-reveal>Perché Telaio</p>
+          <h2 class="p-h2" data-split>Cosa cambia quando lavori con noi</h2>
+        </header>
+        <div class="p-why-grid">
+          <article class="p-why" data-tilt data-reveal><span class="p-why-n" aria-hidden="true">01</span><h3>Vedi un risultato presto</h3><p>In 4 settimane hai il primo strumento AI in uso. Si parte da un problema alla volta, non da un progetto che dura un anno.</p></article>
+          <article class="p-why" data-tilt data-reveal><span class="p-why-n" aria-hidden="true">02</span><h3>Hai un solo referente</h3><p>Dalla prima call a dopo il lancio parli con le stesse persone. Del risultato rispondiamo noi.</p></article>
+          <article class="p-why" data-tilt data-reveal><span class="p-why-n" aria-hidden="true">03</span><h3>Sai sempre a cosa vai incontro</h3><p>Tempi, costi e limiti chiari dall'inizio, per iscritto. Se c'è un rischio, te lo diciamo ora, non a lavori finiti.</p></article>
+        </div>
+        <ul class="p-values">
+          <li data-reveal><b>Chiarezza</b><span>Se non si capisce, non è finito.</span></li>
+          <li data-reveal><b>Concretezza</b><span>Cose che funzionano, non slide.</span></li>
+          <li data-reveal><b>Vicinanza</b><span>Accanto a te, non sopra di te.</span></li>
+          <li data-reveal><b>Trasparenza</b><span>Tempi, costi e limiti chiari dall'inizio.</span></li>
+        </ul>
       </div>
-      <div class="cards g3" data-stagger>
-        <article class="card reveal"><h3>Vedi un risultato presto</h3><p>In 4 settimane hai il primo strumento AI in uso. Si parte da un problema alla volta, non da un progetto che dura un anno.</p></article>
-        <article class="card reveal"><h3>Hai un solo referente</h3><p>Dalla prima call a dopo il lancio parli con le stesse persone. Del risultato rispondiamo noi.</p></article>
-        <article class="card reveal"><h3>Sai sempre a cosa vai incontro</h3><p>Tempi, costi e limiti chiari dall'inizio, per iscritto. Se c'è un rischio, te lo diciamo ora, non a lavori finiti.</p></article>
-      </div>
-      <ul class="values" data-stagger style="margin-top:22px">
-        <li class="reveal"><b>Chiarezza</b><span>Se non si capisce, non è finito.</span></li>
-        <li class="reveal"><b>Concretezza</b><span>Cose che funzionano, non slide.</span></li>
-        <li class="reveal"><b>Vicinanza</b><span>Accanto a te, non sopra di te.</span></li>
-        <li class="reveal"><b>Trasparenza</b><span>Tempi, costi e limiti chiari dall'inizio.</span></li>
-      </ul>
     </section>
 
     <!-- 6 · CHI SIAMO -->
-    <section id="chi-siamo" class="sec wrap">
-      <div class="sec-head reveal">
-        <p class="eyebrow">Chi siamo</p>
-        <h2>Tre fondatori. Parli direttamente con noi.</h2>
+    <section id="chi-siamo" class="p-sec p-team">
+      <div class="wrap">
+        <header class="p-head">
+          <p class="eyebrow" data-reveal>Chi siamo</p>
+          <h2 class="p-h2" data-split>Tre fondatori. Parli direttamente con noi.</h2>
+        </header>
+        <div class="p-team-grid">
+          <article class="p-founder" data-tilt data-reveal>
+            <div class="p-founder-art" aria-hidden="true"><b>DP</b></div>
+            <h3>Dan Alessandro Podasca</h3>
+            <p class="role">AI e prodotto</p>
+            <p class="bio">Formazione al Politecnico di Milano. Analisi dei dati, prodotto digitale e mondi virtuali, al fianco di brand internazionali.</p>
+          </article>
+          <article class="p-founder" data-tilt data-reveal>
+            <div class="p-founder-art" aria-hidden="true"><b>PS</b></div>
+            <h3>Pasquale Silvestre</h3>
+            <p class="role">Strategia e sviluppo</p>
+            <p class="bio">Laurea in Innovation Management. Sviluppo d'impresa, digitalizzazione ed efficienza dei processi, con un passato nel private equity.</p>
+          </article>
+          <article class="p-founder" data-tilt data-reveal>
+            <div class="p-founder-art" aria-hidden="true"><b>RL</b></div>
+            <h3>Rod Lonardo</h3>
+            <p class="role">Business e crescita</p>
+            <p class="bio">Finanza alla Bocconi. Nel fintech internazionale ha seguito sviluppo commerciale, partnership e lancio di prodotti.</p>
+          </article>
+        </div>
+        <p data-reveal style="margin-top:22px"><a class="arrow-link" href="/chi-siamo/">Conosci la squadra →</a></p>
       </div>
-      <div class="founder-grid" data-stagger>
-        <article class="founder reveal">
-          <div class="avatar" aria-hidden="true"><svg class="mk" viewBox="0 0 64 64"><use href="#mk"></use></svg></div>
-          <h3>Dan Alessandro Podasca</h3>
-          <p class="role">AI e prodotto</p>
-          <p class="bio">Formazione al Politecnico di Milano. Analisi dei dati, prodotto digitale e mondi virtuali, al fianco di brand internazionali.</p>
-        </article>
-        <article class="founder reveal">
-          <div class="avatar" aria-hidden="true"><svg class="mk" viewBox="0 0 64 64"><use href="#mk"></use></svg></div>
-          <h3>Pasquale Silvestre</h3>
-          <p class="role">Strategia e sviluppo</p>
-          <p class="bio">Laurea in Innovation Management. Sviluppo d'impresa, digitalizzazione ed efficienza dei processi, con un passato nel private equity.</p>
-        </article>
-        <article class="founder reveal">
-          <div class="avatar" aria-hidden="true"><svg class="mk" viewBox="0 0 64 64"><use href="#mk"></use></svg></div>
-          <h3>Rod Lonardo</h3>
-          <p class="role">Business e crescita</p>
-          <p class="bio">Finanza alla Bocconi. Nel fintech internazionale ha seguito sviluppo commerciale, partnership e lancio di prodotti.</p>
-        </article>
-      </div>
-      <p class="reveal" style="margin-top:22px"><a class="arrow-link" href="/chi-siamo/">Conosci la squadra →</a></p>
     </section>
 
-    <!-- 7 · IL CHECK-UP AI -->
-    <section id="contatti" class="sec wrap">
-      <div class="sec-head reveal">
-        <p class="eyebrow">Il primo passo</p>
-        <h2>Check-up AI: 30 minuti per capire da dove partire</h2>
-      </div>
-      <div class="two-col">
-        <div class="prose reveal">
-          <p class="lede">Una videochiamata con uno dei fondatori. Ti raccontiamo cosa sta cambiando nel tuo settore, guardiamo insieme la tua impresa e ti diciamo da dove partiremmo.</p>
-          <div style="margin-top:26px"><a class="btn btn-primary" href="/check-up-ai/" data-cta="checkup" data-placement="checkup_section">Prenota il check-up AI</a></div>
-          <p class="hero-meta" style="margin-top:16px"><span>Gratuito. Ti chiediamo poche informazioni per prepararci.</span></p>
+    <!-- 7 · IL CHECK-UP AI (blocco blu a tutta pagina) -->
+    <section id="contatti" class="p-checkup">
+      <div class="p-checkup-bg" aria-hidden="true"></div>
+      <div class="wrap p-checkup-in">
+        <div>
+          <p class="p-eyebrow-inv" data-reveal>Il primo passo</p>
+          <h2 class="p-h2" data-split>Check-up AI: 30 minuti per capire da dove partire</h2>
+          <p class="p-lede-inv" data-reveal>Una videochiamata con uno dei fondatori. Ti raccontiamo cosa sta cambiando nel tuo settore, guardiamo insieme la tua impresa e ti diciamo da dove partiremmo.</p>
+          <div class="p-checkup-cta" data-reveal>
+            <a class="btn btn-primary p-btn-xl p-btn-inv" data-magnetic href="/check-up-ai/" data-cta="checkup" data-placement="checkup_section">Prenota il check-up AI <span class="p-arr" aria-hidden="true">→</span></a>
+            <p class="p-micro">Gratuito. Ti chiediamo poche informazioni per prepararci.</p>
+          </div>
         </div>
-        <div class="reveal">
-          <p class="eyebrow" style="margin-bottom:16px">Cosa ti porti a casa</p>
-          <ul class="ticks">
-            <li>Un quadro chiaro di come l'AI sta cambiando il tuo settore.</li>
-            <li>Due o tre attività della tua impresa dove l'AI può far risparmiare tempo o errori.</li>
-            <li>Una risposta franca: conviene partire adesso? Se no, cosa fare prima.</li>
+        <div>
+          <p class="p-eyebrow-inv" data-reveal>Cosa ti porti a casa</p>
+          <ul class="p-takeaways">
+            <li data-reveal><span>01</span>Un quadro chiaro di come l'AI sta cambiando il tuo settore.</li>
+            <li data-reveal><span>02</span>Due o tre attività della tua impresa dove l'AI può far risparmiare tempo o errori.</li>
+            <li data-reveal><span>03</span>Una risposta franca: conviene partire adesso? Se no, cosa fare prima.</li>
           </ul>
         </div>
       </div>
     </section>
 
     <!-- 8 · DOMANDE FREQUENTI -->
-    <section id="faq" class="sec wrap">
-      <div class="sec-head reveal">
-        <p class="eyebrow">FAQ</p>
-        <h2>Le domande che ci fanno più spesso</h2>
+    <section id="faq" class="p-sec">
+      <div class="wrap p-split">
+        <div class="p-split-side">
+          <p class="eyebrow" data-reveal>FAQ</p>
+          <h2 class="p-h2" data-split>Le domande che ci fanno più spesso</h2>
+          <p data-reveal><a class="arrow-link" href="/domande-frequenti/">Tutte le domande →</a></p>
+        </div>
+        <div>
+          <details class="qa" data-reveal data-question-id="what"><summary>Cosa fa Telaio?</summary><div class="a"><p>Telaio aiuta le piccole e medie imprese a usare l'intelligenza artificiale dove crea valore. Partiamo da un problema reale, scegliamo lo strumento giusto, lo mettiamo al lavoro e restiamo finché produce risultati. Hai un solo referente, dall'analisi alla soluzione che funziona.</p></div></details>
+          <details class="qa" data-reveal data-question-id="checkup"><summary>Cos'è il check-up AI?</summary><div class="a"><p>È una videochiamata gratuita di 30 minuti con uno dei fondatori. Ti raccontiamo come l'AI sta cambiando il tuo settore, troviamo due o tre attività da cui partire e ti diciamo con franchezza se conviene.</p></div></details>
+          <details class="qa" data-reveal data-question-id="timeline"><summary>In quanto tempo vedo un risultato?</summary><div class="a"><!-- TODO(conferma): definizione delle 4 settimane (da quando partono, cosa vuol dire "in uso") --><p>In 4 settimane hai il primo strumento AI in uso. Le settimane partono quando hai approvato la proposta e abbiamo gli accessi che servono.</p></div></details>
+          <details class="qa" data-reveal data-question-id="cost"><summary>Quanto costa lavorare con Telaio?</summary><div class="a"><p>Dipende dal problema da risolvere e dalla soluzione. Prima di iniziare ricevi una proposta scritta con tempi, costi e limiti, così sai a cosa vai incontro. Il check-up è gratuito.</p></div></details>
+          <details class="qa" data-reveal data-question-id="size"><summary>La mia impresa è troppo piccola per l'AI?</summary><div class="a"><p>Di solito no. Molti strumenti di AI costano poco e si adattano anche a chi ha pochi collaboratori, e in un'impresa piccola il tempo risparmiato si sente subito. Nel check-up ti diciamo se conviene partire adesso.</p></div></details>
+          <details class="qa" data-reveal data-question-id="data"><summary>I miei dati sono al sicuro?</summary><div class="a"><p>Prima di iniziare ti diciamo quali dati usa lo strumento, dove vengono conservati e chi può vederli. Scegliamo con te soluzioni coerenti con il GDPR e con le regole della tua azienda, e ti diciamo subito i limiti.</p></div></details>
+        </div>
       </div>
-      <div class="reveal">
-        <details class="qa" data-question-id="what"><summary>Cosa fa Telaio?</summary><div class="a"><p>Telaio aiuta le piccole e medie imprese a usare l'intelligenza artificiale dove crea valore. Partiamo da un problema reale, scegliamo lo strumento giusto, lo mettiamo al lavoro e restiamo finché produce risultati. Hai un solo referente, dall'analisi alla soluzione che funziona.</p></div></details>
-        <details class="qa" data-question-id="checkup"><summary>Cos'è il check-up AI?</summary><div class="a"><p>È una videochiamata gratuita di 30 minuti con uno dei fondatori. Ti raccontiamo come l'AI sta cambiando il tuo settore, troviamo due o tre attività da cui partire e ti diciamo con franchezza se conviene.</p></div></details>
-        <details class="qa" data-question-id="timeline"><summary>In quanto tempo vedo un risultato?</summary><div class="a"><!-- TODO(conferma): definizione delle 4 settimane (da quando partono, cosa vuol dire "in uso") --><p>In 4 settimane hai il primo strumento AI in uso. Le settimane partono quando hai approvato la proposta e abbiamo gli accessi che servono.</p></div></details>
-        <details class="qa" data-question-id="cost"><summary>Quanto costa lavorare con Telaio?</summary><div class="a"><p>Dipende dal problema da risolvere e dalla soluzione. Prima di iniziare ricevi una proposta scritta con tempi, costi e limiti, così sai a cosa vai incontro. Il check-up è gratuito.</p></div></details>
-        <details class="qa" data-question-id="size"><summary>La mia impresa è troppo piccola per l'AI?</summary><div class="a"><p>Di solito no. Molti strumenti di AI costano poco e si adattano anche a chi ha pochi collaboratori, e in un'impresa piccola il tempo risparmiato si sente subito. Nel check-up ti diciamo se conviene partire adesso.</p></div></details>
-        <details class="qa" data-question-id="data"><summary>I miei dati sono al sicuro?</summary><div class="a"><p>Prima di iniziare ti diciamo quali dati usa lo strumento, dove vengono conservati e chi può vederli. Scegliamo con te soluzioni coerenti con il GDPR e con le regole della tua azienda, e ti diciamo subito i limiti.</p></div></details>
-      </div>
-      <p class="reveal" style="margin-top:14px"><a class="arrow-link" href="/domande-frequenti/">Tutte le domande →</a></p>
     </section>
 
     <!-- 9 · CHIUSURA -->
-    <section class="sec wrap">
-      <div class="cta-band reveal">
-        <h2>Scopri come l'AI sta cambiando il tuo settore e cosa puoi fare tu, da subito.</h2>
-        <a class="btn btn-primary" href="/check-up-ai/" data-cta="checkup" data-placement="final">Prenota il check-up AI</a>
-        <p class="sub">30 minuti · Gratuito · Con uno dei fondatori</p>
+    <section class="p-final">
+      <div class="p-final-glow" aria-hidden="true"></div>
+      <div class="wrap">
+        <h2 class="p-final-h" data-split>Scopri come l'AI sta cambiando il tuo settore e cosa puoi fare tu, da subito.</h2>
+        <a class="p-orb" data-magnetic href="/check-up-ai/" data-cta="checkup" data-placement="final" aria-label="Prenota il check-up AI">
+          <svg class="p-orb-ring" viewBox="0 0 200 200" aria-hidden="true">
+            <defs><path id="orbPath" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs>
+            <text><textPath href="#orbPath">Prenota il check-up AI · 30 minuti · Gratuito · </textPath></text>
+          </svg>
+          <span class="p-orb-arr" aria-hidden="true">→</span>
+        </a>
+        <p class="p-final-sub">30 minuti · Gratuito · Con uno dei fondatori</p>
       </div>
     </section>
   </main>
 
   <div class="mobile-bar"><a class="btn btn-primary btn-block" href="/check-up-ai/" data-cta="checkup" data-placement="mobile_bar">Prenota il check-up AI</a></div>
 
-  <footer>
+  <footer class="p-footer">
     <div class="wrap foot-in foot-grid">
       <div class="foot-col">
         <div class="foot-brand">
@@ -340,8 +567,15 @@
         <span>© 2026 Telaio</span>
       </div>
     </div>
+    <div class="p-bigword" aria-hidden="true"><span>T</span><span>e</span><span>l</span><span>a</span><span>i</span><span>o</span></div>
   </footer>
 
+  <!-- Librerie di animazione, ospitate nel sito (vedi assets/vendor/README.md) -->
+  <script src="/assets/vendor/gsap.min.js"></script>
+  <script src="/assets/vendor/ScrollTrigger.min.js"></script>
+  <script src="/assets/vendor/SplitText.min.js"></script>
+  <script src="/assets/vendor/lenis.min.js"></script>
   <script src="/script.js"></script>
+  <script src="/home.js"></script>
 </body>
 </html>
