@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Free AI check-up: 30 minutes with a founder | Telaio</title>
+  <meta name="description" content="In 30 minutes, see how AI is changing your industry and where to start in your business. A free video call with a Telaio founder, in English or Italian.">
+  <meta name="theme-color" content="#090C08">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://telaioconsulting.github.io/en/ai-check-up/">
+  <link rel="alternate" hreflang="it" href="https://telaioconsulting.github.io/check-up-ai/">
+  <link rel="alternate" hreflang="en" href="https://telaioconsulting.github.io/en/ai-check-up/">
+  <link rel="alternate" hreflang="x-default" href="https://telaioconsulting.github.io/check-up-ai/">
+
+  <meta property="og:title" content="Free AI check-up: 30 minutes with a founder">
+  <meta property="og:description" content="In 30 minutes, see how AI is changing your industry and where to start in your business.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://telaioconsulting.github.io/en/ai-check-up/">
+  <meta property="og:locale" content="en_GB">
+  <meta property="og:site_name" content="Telaio">
+  <meta property="og:image" content="https://telaioconsulting.github.io/assets/og-telaio.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Free AI check-up: 30 minutes with a founder">
+  <meta name="twitter:description" content="A free 30-minute video call with a Telaio founder, in English or Italian.">
+  <meta name="twitter:image" content="https://telaioconsulting.github.io/assets/og-telaio.png">
+
+  <link rel="preload" href="/assets/fonts/bricolage-grotesque-500-700-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/ibm-plex-sans-400-600-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <script>
+    (function (r) {
+      r.classList.add("js");
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) r.classList.add("motion");
+      // If the scripts don't run, fall back to the static page (everything visible).
+      setTimeout(function () {
+        if (!window.__telaio) r.classList.remove("js");
+        if (!window.__motion) r.classList.remove("motion");
+      }, 4000);
+    })(document.documentElement);
+  </script>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/motion.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Service",
+        "@id": "https://telaioconsulting.github.io/en/ai-check-up/#service",
+        "name": "AI check-up",
+        "serviceType": "AI consulting for businesses",
+        "description": "A free 30-minute video call with one of Telaio's founders: how AI is changing your industry, two or three places to start, and a straight answer on what's worth doing.",
+        "provider": { "@id": "https://telaioconsulting.github.io/#organization" },
+        "areaServed": "IT",
+        "availableChannel": {
+          "@type": "ServiceChannel",
+          "serviceUrl": "https://telaioconsulting.github.io/en/ai-check-up/",
+          "availableLanguage": ["en", "it"]
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://telaioconsulting.github.io/en/" },
+          { "@type": "ListItem", "position": 2, "name": "AI check-up" }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body data-page-type="checkup">
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="mk" viewBox="0 0 64 64">
+      <g fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round">
+        <path d="M24 10 V32 M24 48 V54"></path>
+        <path d="M40 10 V16 M40 32 V54"></path>
+        <path d="M10 24 H16 M32 24 H54"></path>
+        <path d="M10 40 H32 M48 40 H54"></path>
+      </g>
+    </symbol>
+  </svg>
+
+  <div class="grain" aria-hidden="true"></div>
+  <div class="p-progress" aria-hidden="true"></div>
+
+  <header class="top">
+    <div class="wrap top-in">
+      <a class="brand" href="/en/" aria-label="Telaio — home">
+        <svg class="mk" viewBox="0 0 64 64" aria-hidden="true"><use href="#mk"></use></svg>
+        <span class="wm">Telaio</span>
+      </a>
+      <nav class="nav" id="nav" aria-label="Main navigation">
+        <a href="/en/#how-we-work">How we work</a>
+        <a href="/en/#strategy">Strategy</a>
+        <a href="/en/#about">About us</a>
+        <a href="/en/#faq">FAQ</a>
+      </nav>
+      <div class="top-actions">
+        <div class="lang" aria-label="Language" data-lang-switch>
+          <a href="/check-up-ai/" class="lang-link" hreflang="it">IT</a>
+          <a href="/en/ai-check-up/" class="lang-link is-active" aria-current="page">EN</a>
+        </div>
+        <button class="icon-btn" id="themeBtn" type="button" aria-label="Switch to light theme">◐</button>
+        <a class="btn btn-primary btn-sm" href="#book" data-cta="checkup" data-placement="nav">Book your AI check-up</a>
+        <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">≡</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- HERO -->
+    <section class="p-hero is-page">
+      <canvas class="p-weave" id="weave" aria-hidden="true"></canvas>
+      <div class="p-hero-veil" aria-hidden="true"></div>
+      <div class="wrap p-hero-in">
+        <nav class="crumbs" aria-label="Breadcrumb" data-hero-item><a href="/en/">Home</a> <span aria-hidden="true">›</span> <span aria-current="page">AI check-up</span></nav>
+        <p class="p-kicker" data-hero-item><span class="p-dot" aria-hidden="true"></span>AI check-up · 30 minutes · Free</p>
+        <h1 class="p-h1">AI check-up: find out what AI can do for your business</h1>
+        <div class="p-hero-row">
+          <p class="p-tagline" data-hero-item>In 30 minutes we show you how AI is changing your industry, find where to start together, and tell you plainly whether it's worth it.</p>
+          <div class="p-hero-cta" data-hero-item>
+            <a class="btn btn-primary p-btn-xl" data-magnetic href="#book" data-cta="checkup" data-placement="checkup_top">Book your AI check-up <span class="p-arr" aria-hidden="true">→</span></a>
+            <ul class="p-meta">
+              <li>Video call</li>
+              <li>With one of the founders</li>
+              <li>In English or Italian</li>
+              <li>Free</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT HAPPENS -->
+    <section class="p-sec">
+      <div class="wrap">
+        <header class="p-head">
+          <h2 class="p-h2" data-split>What happens in the 30 minutes</h2>
+        </header>
+        <div class="p-timeline" aria-hidden="true">
+          <div class="p-tl-seg" style="--m:5"><i></i><span>01 · 5 min</span></div>
+          <div class="p-tl-seg" style="--m:10"><i></i><span>02 · 10 min</span></div>
+          <div class="p-tl-seg" style="--m:10"><i></i><span>03 · 10 min</span></div>
+          <div class="p-tl-seg" style="--m:5"><i></i><span>04 · 5 min</span></div>
+        </div>
+        <div class="p-moments">
+          <div class="p-moment" data-reveal><span class="p-moment-dur">5 min</span><h3>Your business</h3><p>You tell us what you do and where the time goes. We'll have read your answers already, so we get straight to the point.</p></div>
+          <div class="p-moment" data-reveal><span class="p-moment-dur">10 min</span><h3>Your industry</h3><p>We show you what's changing with AI in your industry, with concrete examples.</p></div>
+          <div class="p-moment" data-reveal><span class="p-moment-dur">10 min</span><h3>Your opportunities</h3><p>We find two or three tasks where AI can save time or cut errors, and what it would take.</p></div>
+          <div class="p-moment" data-reveal><span class="p-moment-dur">5 min</span><h3>Next step</h3><p>We tell you where we'd start and why. If AI isn't worth it for you today, we'll say so.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AFTER THE CHECK-UP -->
+    <section class="p-sec">
+      <div class="wrap">
+        <header class="p-head">
+          <h2 class="p-h2" data-split>After the check-up</h2>
+        </header>
+        <div class="p-why-grid">
+          <article class="p-why" data-tilt data-reveal><span class="p-why-n" aria-hidden="true">01</span><h3>A short questionnaire.</h3><p>We send it at the end of the call, to understand the problem better.</p></article>
+          <article class="p-why" data-tilt data-reveal><span class="p-why-n" aria-hidden="true">02</span><h3>A written proposal.</h3><p>Three options and the one we'd choose, with time, cost and limits.</p></article>
+          <article class="p-why" data-tilt data-reveal><span class="p-why-n" aria-hidden="true">03</span><h3>Your first tool in use.</h3><p>If you go ahead, your first AI tool is in use within 4 weeks.</p></article>
+        </div>
+        <p class="p-statement" data-scrub style="margin-top:clamp(40px,6vw,72px)">You decide, in your own time. The check-up doesn't commit you to anything.</p>
+      </div>
+    </section>
+
+    <!-- FOR YOU OR NOT -->
+    <section class="p-sec">
+      <div class="wrap p-lists">
+        <div class="p-list yes" data-reveal>
+          <h2>It's for you if…</h2>
+          <ul>
+            <li>you run or manage a small or mid-sized business;</li>
+            <li>repetitive tasks weigh on your team's week;</li>
+            <li>you'd rather start small, from one concrete problem.</li>
+          </ul>
+        </div>
+        <div class="p-list no" data-reveal>
+          <h2>It's not for you if…</h2>
+          <ul>
+            <li>you're looking for an AI course;</li>
+            <li>your company already has a dedicated AI team;</li>
+            <!-- TODO(conferma): riga da confermare; se non viene confermata, si toglie -->
+            <li>you want to build an AI product to sell.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- PICK A DAY AND TIME (full-width blue block) -->
+    <section id="book" class="p-checkup">
+      <div class="p-checkup-bg" aria-hidden="true"></div>
+      <div class="wrap p-checkup-in is-top">
+        <div>
+          <h2 class="p-h2" data-split>Pick a day and time</h2>
+          <p class="p-lede-inv" data-reveal>We'll ask you a few questions. They help us prepare, so the call starts from your situation.</p>
+        </div>
+        <div>
+          <!-- TODO(conferma): link della pagina di prenotazione Google, da mettere in due punti: il link di incorporamento in BOOKING_EMBED_URL_EN (script.js; se c'è un solo calendario, vale quello italiano) e, qui sotto, al posto del testo con l'email per chi non ha JavaScript, il link «Open the calendar» alla stessa pagina, in una scheda nuova. Finché manca, il riquadro mostra l'email. -->
+          <div class="booking-box" data-reveal>
+            <div data-booking hidden>
+              <button class="btn btn-primary" type="button" data-booking-loader>Show available times</button>
+              <p class="micro">The calendar is provided by Google and only loads when you open it.</p>
+            </div>
+            <p class="no-js-only">Write to us at <a href="mailto:info@telaioconsulting.com" data-email-link>info@telaioconsulting.com</a> and we'll suggest a day and time.</p>
+          </div>
+          <p class="booking-meta" data-reveal>We only use this information to organise and prepare the call. <a href="/en/privacy/">Read our privacy notice.</a></p>
+          <p class="booking-meta" data-reveal>Prefer email? <a href="mailto:info@telaioconsulting.com" data-email-link>info@telaioconsulting.com</a></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- QUESTIONS -->
+    <section class="p-sec">
+      <div class="wrap p-split">
+        <div class="p-split-side">
+          <h2 class="p-h2" data-split>Questions about the check-up</h2>
+        </div>
+        <div>
+          <details class="qa" data-reveal data-question-id="checkup-cost"><summary>Is it really free?</summary><div class="a"><p>Yes. The check-up is free and doesn't commit you to anything.</p></div></details>
+          <details class="qa" data-reveal data-question-id="who"><summary>Who will I meet?</summary><div class="a"><p>One of Telaio's three founders.</p></div></details>
+          <details class="qa" data-reveal data-question-id="language"><summary>Which language and time zone?</summary><div class="a"><p>English or Italian, your choice. We're on Central European Time.</p></div></details>
+          <details class="qa" data-reveal data-question-id="prepare"><summary>Do I need to prepare anything?</summary><div class="a"><p>No. If you like, think of one task that takes up time every week. That's enough.</p></div></details>
+          <details class="qa" data-reveal data-question-id="no-go"><summary>What if I don't want to go ahead?</summary><div class="a"><p>That's fine. You keep the picture we built together.</p></div></details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="mobile-bar"><a class="btn btn-primary btn-block" href="#book" data-cta="checkup" data-placement="mobile_bar">Book your AI check-up</a></div>
+
+  <footer class="p-footer">
+    <div class="wrap foot-in foot-grid">
+      <div class="foot-col">
+        <div class="foot-brand">
+          <svg class="mk" viewBox="0 0 64 64" aria-hidden="true"><use href="#mk"></use></svg>
+          <span class="wm">Telaio</span>
+        </div>
+        <span class="foot-tag">From AI to value.</span>
+        <span>Strategy and Strategy and AI consulting for small and mid-sized businesses</span>
+      </div>
+      <nav class="foot-col" aria-label="Pages">
+        <a href="/en/#how-we-work">How we work</a>
+        <a href="/en/#strategy">Strategy</a>
+        <a href="/en/#about">About us</a>
+        <a href="/en/#faq">FAQ</a>
+        <a href="/en/ai-check-up/">AI check-up</a>
+      </nav>
+      <div class="foot-col">
+        <a href="mailto:info@telaioconsulting.com" data-email-link>info@telaioconsulting.com</a>
+        <a href="/en/privacy/">Privacy</a>
+        <a href="/en/cookies/">Cookies</a>
+        <!-- TODO(conferma): link a LinkedIn e Instagram di Telaio quando esistono (e "sameAs" nell'Organization dei dati strutturati) -->
+        <span>© 2026 Telaio</span>
+      </div>
+    </div>
+    <div class="p-bigword" aria-hidden="true"><span>T</span><span>e</span><span>l</span><span>a</span><span>i</span><span>o</span></div>
+  </footer>
+
+  <!-- Animation libraries, hosted on the site (see assets/vendor/README.md) -->
+  <script src="/assets/vendor/gsap.min.js"></script>
+  <script src="/assets/vendor/ScrollTrigger.min.js"></script>
+  <script src="/assets/vendor/SplitText.min.js"></script>
+  <script src="/assets/vendor/lenis.min.js"></script>
+  <script src="/script.js"></script>
+  <script src="/motion.js"></script>
+</body>
+</html>

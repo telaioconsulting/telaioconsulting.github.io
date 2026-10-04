@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Privacy notice | Telaio</title>
+  <meta name="description" content="How Telaio handles the data of website visitors and people who book an AI check-up: what we collect, why, for how long and how to exercise your rights.">
+  <meta name="theme-color" content="#090C08">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://telaioconsulting.github.io/en/privacy/">
+  <link rel="alternate" hreflang="it" href="https://telaioconsulting.github.io/privacy/">
+  <link rel="alternate" hreflang="en" href="https://telaioconsulting.github.io/en/privacy/">
+  <link rel="alternate" hreflang="x-default" href="https://telaioconsulting.github.io/privacy/">
+
+  <meta property="og:title" content="Privacy notice | Telaio">
+  <meta property="og:description" content="What data we collect, why, for how long and how to exercise your rights.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://telaioconsulting.github.io/en/privacy/">
+  <meta property="og:locale" content="en_GB">
+  <meta property="og:site_name" content="Telaio">
+  <meta property="og:image" content="https://telaioconsulting.github.io/assets/og-telaio.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Privacy notice | Telaio">
+  <meta name="twitter:description" content="What data we collect, why and how to exercise your rights.">
+  <meta name="twitter:image" content="https://telaioconsulting.github.io/assets/og-telaio.png">
+
+  <link rel="preload" href="/assets/fonts/bricolage-grotesque-500-700-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/ibm-plex-sans-400-600-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <script>
+    (function (r) {
+      r.classList.add("js");
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) r.classList.add("motion");
+      // If the scripts don't run, fall back to the static page (everything visible).
+      setTimeout(function () {
+        if (!window.__telaio) r.classList.remove("js");
+        if (!window.__motion) r.classList.remove("motion");
+      }, 4000);
+    })(document.documentElement);
+  </script>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/motion.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://telaioconsulting.github.io/en/" },
+      { "@type": "ListItem", "position": 2, "name": "Privacy notice" }
+    ]
+  }
+  </script>
+</head>
+<body data-page-type="privacy">
+  <!-- TODO(conferma): bozza da far rivedere al legale prima dell'unione -->
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="mk" viewBox="0 0 64 64">
+      <g fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round">
+        <path d="M24 10 V32 M24 48 V54"></path>
+        <path d="M40 10 V16 M40 32 V54"></path>
+        <path d="M10 24 H16 M32 24 H54"></path>
+        <path d="M10 40 H32 M48 40 H54"></path>
+      </g>
+    </symbol>
+  </svg>
+
+  <div class="grain" aria-hidden="true"></div>
+  <div class="p-progress" aria-hidden="true"></div>
+
+  <header class="top">
+    <div class="wrap top-in">
+      <a class="brand" href="/en/" aria-label="Telaio — home">
+        <svg class="mk" viewBox="0 0 64 64" aria-hidden="true"><use href="#mk"></use></svg>
+        <span class="wm">Telaio</span>
+      </a>
+      <nav class="nav" id="nav" aria-label="Main navigation">
+        <a href="/en/#how-we-work">How we work</a>
+        <a href="/en/#strategy">Strategy</a>
+        <a href="/en/#about">About us</a>
+        <a href="/en/#faq">FAQ</a>
+      </nav>
+      <div class="top-actions">
+        <div class="lang" aria-label="Language" data-lang-switch>
+          <a href="/privacy/" class="lang-link" hreflang="it">IT</a>
+          <a href="/en/privacy/" class="lang-link is-active" aria-current="page">EN</a>
+        </div>
+        <button class="icon-btn" id="themeBtn" type="button" aria-label="Switch to light theme">◐</button>
+        <a class="btn btn-primary btn-sm" href="/en/ai-check-up/" data-cta="checkup" data-placement="nav">Book your AI check-up</a>
+        <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">≡</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="p-hero is-page is-compact">
+      <canvas class="p-weave" id="weave" aria-hidden="true"></canvas>
+      <div class="p-hero-veil" aria-hidden="true"></div>
+      <div class="wrap p-hero-in">
+        <nav class="crumbs" data-hero-item aria-label="Breadcrumb"><a href="/en/">Home</a> <span aria-hidden="true">›</span> <span aria-current="page">Privacy notice</span></nav>
+        <h1 class="p-h1">Privacy notice</h1>
+        <p class="p-hero-lede" data-hero-item>Here we explain what data we handle when you visit the site or book an AI check-up, why we do it and what your rights are.</p>
+      </div>
+    </section>
+
+    <section class="wrap p-legal">
+      <div class="legal">
+        <h2>1. Who is responsible</h2>
+        <!-- TODO(conferma): il legale dice se serve anche un recapito postale -->
+        <p>The data controller is Pasquale Silvestre, for the Telaio project. For any question, write to <a href="mailto:info@telaioconsulting.com" data-email-link>info@telaioconsulting.com</a>.</p>
+
+        <h2>2. What data we handle</h2>
+        <ul>
+          <li><strong>Browsing.</strong> The service that hosts the site, GitHub Pages, logs visitors' IP addresses for security. <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages#data-collection" target="_blank" rel="noopener">GitHub's documentation</a> explains this.</li>
+          <li><strong>Booking the check-up.</strong> First name, last name, email and your answers to the form, collected through the Google Calendar booking page.</li>
+          <li><strong>Email.</strong> The information you send us when you write to us.</li>
+        </ul>
+
+        <h2>3. Why we handle it, and on what basis</h2>
+        <ul>
+          <li>To organise, prepare and hold the call, and to reply to your emails: steps you ask for before any agreement (GDPR Article 6(1)(b)).</li>
+          <li>To keep the site secure: legitimate interest (GDPR Article 6(1)(f)).</li>
+        </ul>
+
+        <h2>4. Who handles it on our behalf</h2>
+        <!-- TODO(conferma): il legale indica quali tutele citare per i trattamenti fuori dall'Unione europea -->
+        <p>We rely on two outside services that handle data on our behalf: Google, for the booking calendar and the video call, and GitHub, which hosts the site. They may process data outside the European Union, with the safeguards the GDPR requires.</p>
+
+        <h2>5. How long we keep it</h2>
+        <!-- TODO(conferma): periodo di conservazione dei dati di prenotazione se non nasce un rapporto -->
+        <p>We keep data only for as long as the purposes above require.</p>
+
+        <h2>6. Your rights</h2>
+        <p>You can ask us at any time to access your data, to correct or delete it, to restrict its use, to object to its processing or to receive it in a format you can take elsewhere. Just write to <a href="mailto:info@telaioconsulting.com" data-email-link>info@telaioconsulting.com</a>.</p>
+        <p>If you think your data is being handled incorrectly, you can complain to the Italian data protection authority, the <a href="https://www.garanteprivacy.it" target="_blank" rel="noopener">Garante per la protezione dei dati personali</a>.</p>
+
+        <h2>7. Automated decisions</h2>
+        <p>We don't make decisions based solely on automated processing.</p>
+
+        <p class="updated">Last updated: 2 October 2026</p>
+      </div>
+    </section>
+  </main>
+
+  <div class="mobile-bar"><a class="btn btn-primary btn-block" href="/en/ai-check-up/" data-cta="checkup" data-placement="mobile_bar">Book your AI check-up</a></div>
+
+  <footer class="p-footer">
+    <div class="wrap foot-in foot-grid">
+      <div class="foot-col">
+        <div class="foot-brand">
+          <svg class="mk" viewBox="0 0 64 64" aria-hidden="true"><use href="#mk"></use></svg>
+          <span class="wm">Telaio</span>
+        </div>
+        <span class="foot-tag">From AI to value.</span>
+        <span>Strategy and Strategy and AI consulting for small and mid-sized businesses</span>
+      </div>
+      <nav class="foot-col" aria-label="Pages">
+        <a href="/en/#how-we-work">How we work</a>
+        <a href="/en/#strategy">Strategy</a>
+        <a href="/en/#about">About us</a>
+        <a href="/en/#faq">FAQ</a>
+        <a href="/en/ai-check-up/">AI check-up</a>
+      </nav>
+      <div class="foot-col">
+        <a href="mailto:info@telaioconsulting.com" data-email-link>info@telaioconsulting.com</a>
+        <a href="/en/privacy/" aria-current="page">Privacy</a>
+        <a href="/en/cookies/">Cookies</a>
+        <!-- TODO(conferma): link a LinkedIn e Instagram di Telaio quando esistono (e "sameAs" nell'Organization dei dati strutturati) -->
+        <span>© 2026 Telaio</span>
+      </div>
+    </div>
+    <div class="p-bigword" aria-hidden="true"><span>T</span><span>e</span><span>l</span><span>a</span><span>i</span><span>o</span></div>
+  </footer>
+
+  <!-- Animation libraries, hosted on the site (see assets/vendor/README.md) -->
+  <script src="/assets/vendor/gsap.min.js"></script>
+  <script src="/assets/vendor/ScrollTrigger.min.js"></script>
+  <script src="/assets/vendor/SplitText.min.js"></script>
+  <script src="/assets/vendor/lenis.min.js"></script>
+  <script src="/script.js"></script>
+  <script src="/motion.js"></script>
+</body>
+</html>
