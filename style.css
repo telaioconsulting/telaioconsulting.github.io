@@ -560,8 +560,8 @@ footer { border-top: 1px solid var(--line); padding: 48px 0; background: var(--s
 /* ============================================================
    RESPONSIVE
    ============================================================ */
-/* Menu a scomparsa: sotto i 1040 px le voci della testata non entrano più in una riga */
-@media (max-width: 1040px) {
+/* Menu a scomparsa: sotto i 1120 px le voci della testata non entrano più in una riga */
+@media (max-width: 1120px) {
   .menu-btn { display: inline-grid; }
   .top-actions { margin-left: auto; }
   .nav {

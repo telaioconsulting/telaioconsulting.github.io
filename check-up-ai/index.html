@@ -26,8 +26,19 @@
 
   <link rel="preload" href="/assets/fonts/bricolage-grotesque-500-700-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/ibm-plex-sans-400-600-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <script>document.documentElement.classList.add("js");setTimeout(function(){if(!window.__telaio)document.documentElement.classList.remove("js")},4000)</script>
+  <script>
+    (function (r) {
+      r.classList.add("js");
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) r.classList.add("motion");
+      // Se gli script non partono, si torna alla pagina statica (tutto visibile).
+      setTimeout(function () {
+        if (!window.__telaio) r.classList.remove("js");
+        if (!window.__motion) r.classList.remove("motion");
+      }, 4000);
+    })(document.documentElement);
+  </script>
   <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/motion.css">
 
   <script type="application/ld+json">
   {
@@ -72,6 +83,7 @@
   </svg>
 
   <div class="grain" aria-hidden="true"></div>
+  <div class="p-progress" aria-hidden="true"></div>
 
   <header class="top">
     <div class="wrap top-in">
@@ -82,6 +94,7 @@
       <nav class="nav" id="nav" aria-label="Navigazione principale">
         <a href="/come-lavoriamo/">Come lavoriamo</a>
         <a href="/cosa-facciamo/">Cosa facciamo</a>
+        <a href="/consulenza-strategica/">Strategia</a>
         <a href="/chi-siamo/">Chi siamo</a>
         <a href="/domande-frequenti/">Domande frequenti</a>
       </nav>
@@ -98,59 +111,84 @@
   </header>
 
   <main id="top">
-    <div class="wrap">
-      <nav class="crumbs" aria-label="Percorso"><a href="/">Home</a> <span aria-hidden="true">›</span> <span aria-current="page">Check-up AI</span></nav>
-    </div>
 
     <!-- APERTURA -->
-    <section class="subhero">
-      <div class="wrap" data-stagger>
-        <p class="eyebrow reveal">Check-up AI · 30 minuti · Gratuito</p>
-        <h1 class="reveal">Check-up AI: scopri cosa può fare l'AI per la tua impresa</h1>
-        <p class="lede reveal">In 30 minuti ti raccontiamo come l'AI sta cambiando il tuo settore, troviamo insieme da dove partire e ti diciamo con franchezza se conviene.</p>
-        <div class="hero-cta reveal">
-          <a class="btn btn-primary" href="#prenota" data-cta="checkup" data-placement="checkup_top">Prenota il check-up AI</a>
+    <section class="p-hero is-page">
+      <canvas class="p-weave" id="weave" aria-hidden="true"></canvas>
+      <div class="p-hero-veil" aria-hidden="true"></div>
+      <div class="wrap p-hero-in">
+        <nav class="crumbs" aria-label="Percorso" data-hero-item><a href="/">Home</a> <span aria-hidden="true">›</span> <span aria-current="page">Check-up AI</span></nav>
+        <p class="p-kicker" data-hero-item><span class="p-dot" aria-hidden="true"></span>Check-up AI · 30 minuti · Gratuito</p>
+        <h1 class="p-h1">Check-up AI: scopri cosa può fare l'AI per la tua impresa</h1>
+        <div class="p-hero-row">
+          <p class="p-tagline" data-hero-item>In 30 minuti ti raccontiamo come l'AI sta cambiando il tuo settore, troviamo insieme da dove partire e ti diciamo con franchezza se conviene.</p>
+          <div class="p-hero-cta" data-hero-item>
+            <a class="btn btn-primary p-btn-xl" data-magnetic href="#prenota" data-cta="checkup" data-placement="checkup_top">Prenota il check-up AI <span class="p-arr" aria-hidden="true">→</span></a>
+            <ul class="p-meta">
+              <li>In videochiamata</li>
+              <li>Con uno dei fondatori</li>
+              <li>Gratuito</li>
+            </ul>
+          </div>
         </div>
-        <p class="hero-meta reveal"><span>In videochiamata · Con uno dei fondatori · Gratuito</span></p>
       </div>
     </section>
 
     <!-- COSA SUCCEDE NEI 30 MINUTI -->
-    <section class="sec wrap">
-      <div class="sec-head reveal"><h2>Cosa succede nei 30 minuti</h2></div>
-      <div class="moments" data-stagger>
-        <div class="moment reveal"><span class="dur">5 min</span><div><h3>La tua impresa</h3><p>Ci racconti cosa fate e dove va il tempo. Abbiamo già letto le tue risposte, quindi andiamo dritti al punto.</p></div></div>
-        <div class="moment reveal"><span class="dur">10 min</span><div><h3>Il tuo settore</h3><p>Ti mostriamo cosa cambia con l'AI nel tuo settore, con esempi concreti.</p></div></div>
-        <div class="moment reveal"><span class="dur">10 min</span><div><h3>Le tue opportunità</h3><p>Troviamo due o tre attività dove l'AI può far risparmiare tempo o errori. Ti diciamo cosa servirebbe.</p></div></div>
-        <div class="moment reveal"><span class="dur">5 min</span><div><h3>Il passo successivo</h3><p>Ti diciamo da dove partiremmo e perché. Se oggi l'AI non conviene, te lo diciamo.</p></div></div>
+    <section class="p-sec">
+      <div class="wrap">
+        <header class="p-head">
+          <h2 class="p-h2" data-split>Cosa succede nei 30 minuti</h2>
+        </header>
+        <div class="p-timeline" aria-hidden="true">
+          <div class="p-tl-seg" style="--m:5"><i></i><span>01 · 5 min</span></div>
+          <div class="p-tl-seg" style="--m:10"><i></i><span>02 · 10 min</span></div>
+          <div class="p-tl-seg" style="--m:10"><i></i><span>03 · 10 min</span></div>
+          <div class="p-tl-seg" style="--m:5"><i></i><span>04 · 5 min</span></div>
+        </div>
+        <div class="p-moments">
+          <div class="p-moment" data-reveal><span class="p-moment-dur">5 min</span><h3>La tua impresa</h3><p>Ci racconti cosa fate e dove va il tempo. Abbiamo già letto le tue risposte, quindi andiamo dritti al punto.</p></div>
+          <div class="p-moment" data-reveal><span class="p-moment-dur">10 min</span><h3>Il tuo settore</h3><p>Ti mostriamo cosa cambia con l'AI nel tuo settore, con esempi concreti.</p></div>
+          <div class="p-moment" data-reveal><span class="p-moment-dur">10 min</span><h3>Le tue opportunità</h3><p>Troviamo due o tre attività dove l'AI può far risparmiare tempo o errori. Ti diciamo cosa servirebbe.</p></div>
+          <div class="p-moment" data-reveal><span class="p-moment-dur">5 min</span><h3>Il passo successivo</h3><p>Ti diciamo da dove partiremmo e perché. Se oggi l'AI non conviene, te lo diciamo.</p></div>
+        </div>
       </div>
     </section>
 
     <!-- COSA TI PORTI A CASA -->
-    <section class="sec wrap">
-      <div class="sec-head reveal"><h2>Cosa ti porti a casa</h2></div>
-      <ul class="ticks reveal">
-        <li>Un quadro chiaro di come l'AI sta cambiando il tuo settore.</li>
-        <li>Due o tre attività della tua impresa dove l'AI può far risparmiare tempo o errori.</li>
-        <li>Una risposta franca: conviene partire adesso? Se no, cosa fare prima.</li>
-      </ul>
+    <section class="p-sec">
+      <div class="wrap p-split">
+        <div class="p-split-side">
+          <h2 class="p-h2" data-split>Cosa ti porti a casa</h2>
+        </div>
+        <ul class="p-takeaways is-dark">
+          <li data-reveal><span>01</span>Un quadro chiaro di come l'AI sta cambiando il tuo settore.</li>
+          <li data-reveal><span>02</span>Due o tre attività della tua impresa dove l'AI può far risparmiare tempo o errori.</li>
+          <li data-reveal><span>03</span>Una risposta franca: conviene partire adesso? Se no, cosa fare prima.</li>
+        </ul>
+      </div>
     </section>
 
     <!-- DOPO IL CHECK-UP -->
-    <section class="sec wrap">
-      <div class="sec-head reveal"><h2>Dopo il check-up</h2></div>
-      <div class="steps" data-stagger>
-        <div class="step reveal"><span class="n">1</span><h3>Un breve questionario</h3><p>Te lo mandiamo noi a fine call. Qualche domanda in più sul problema da risolvere e sugli strumenti che usi.</p></div>
-        <div class="step reveal"><span class="n">2</span><h3>La proposta, per iscritto</h3><p>Tre strade e quella che sceglieremmo, con tempi, costi e limiti.</p></div>
-        <div class="step reveal"><span class="n">3</span><h3>Il primo strumento in uso</h3><p>Se decidi di partire, in 4 settimane hai il primo strumento AI in uso.</p></div>
+    <section class="p-sec">
+      <div class="wrap">
+        <header class="p-head">
+          <h2 class="p-h2" data-split>Dopo il check-up</h2>
+        </header>
+        <div class="p-why-grid">
+          <article class="p-why" data-tilt data-reveal><span class="p-why-n" aria-hidden="true">01</span><h3>Un breve questionario</h3><p>Te lo mandiamo noi a fine call. Qualche domanda in più sul problema da risolvere e sugli strumenti che usi.</p></article>
+          <article class="p-why" data-tilt data-reveal><span class="p-why-n" aria-hidden="true">02</span><h3>La proposta, per iscritto</h3><p>Tre strade e quella che sceglieremmo, con tempi, costi e limiti.</p></article>
+          <article class="p-why" data-tilt data-reveal><span class="p-why-n" aria-hidden="true">03</span><h3>Il primo strumento in uso</h3><p>Se decidi di partire, in 4 settimane hai il primo strumento AI in uso.</p></article>
+        </div>
+        <p data-reveal style="margin-top:22px"><a class="arrow-link" href="/consulenza-strategica/">Se prima servono scelte di fondo, la proposta può essere un percorso strategico →</a></p>
+        <p class="p-statement" data-scrub style="margin-top:clamp(40px,6vw,72px)">Decidi tu, con calma. Il check-up non ti impegna a nulla.</p>
       </div>
-      <p class="lede reveal" style="margin-top:22px">Decidi tu, con calma. Il check-up non ti impegna a nulla.</p>
     </section>
 
     <!-- PER CHI È E PER CHI NO -->
-    <section class="sec wrap">
-      <div class="for-grid" data-stagger>
-        <div class="for-col yes reveal">
+    <section class="p-sec">
+      <div class="wrap p-lists">
+        <div class="p-list yes" data-reveal>
           <h2>È per te se…</h2>
           <ul>
             <li>guidi o gestisci una piccola o media impresa;</li>
@@ -158,7 +196,7 @@
             <li>vuoi partire da un problema concreto, in piccolo.</li>
           </ul>
         </div>
-        <div class="for-col no reveal">
+        <div class="p-list no" data-reveal>
           <h2>Non è per te se…</h2>
           <ul>
             <li>cerchi un corso sull'AI;</li>
@@ -170,38 +208,49 @@
       </div>
     </section>
 
-    <!-- SCEGLI GIORNO E ORA -->
-    <section id="prenota" class="sec wrap">
-      <div class="sec-head reveal"><h2>Scegli giorno e ora</h2></div>
-      <p class="lede reveal" style="max-width:62ch">Ti chiediamo poche informazioni. Servono a prepararci, così la call parte dal tuo caso.</p>
-      <!-- TODO(conferma): link della pagina di prenotazione Google, da mettere in due punti: il link di incorporamento in BOOKING_EMBED_URL_IT (script.js) e, qui sotto, al posto del testo con l'email per chi non ha JavaScript, il link «Apri il calendario» alla stessa pagina, in una scheda nuova. Finché manca, il riquadro mostra l'email. -->
-      <div class="booking-box reveal" style="margin-top:22px">
-        <div data-booking hidden>
-          <button class="btn btn-primary" type="button" data-booking-loader>Mostra i giorni disponibili</button>
-          <p class="micro">Il calendario è di Google: si carica solo quando lo apri.</p>
+    <!-- SCEGLI GIORNO E ORA (blocco blu a tutta pagina) -->
+    <section id="prenota" class="p-checkup">
+      <div class="p-checkup-bg" aria-hidden="true"></div>
+      <div class="wrap p-checkup-in is-top">
+        <div>
+          <h2 class="p-h2" data-split>Scegli giorno e ora</h2>
+          <p class="p-lede-inv" data-reveal>Ti chiediamo poche informazioni. Servono a prepararci, così la call parte dal tuo caso.</p>
         </div>
-        <p class="no-js-only">Scrivici a <a href="mailto:info@telaioconsulting.com" data-email-link>info@telaioconsulting.com</a>: ti proponiamo noi giorno e ora.</p>
+        <div>
+          <!-- TODO(conferma): link della pagina di prenotazione Google, da mettere in due punti: il link di incorporamento in BOOKING_EMBED_URL_IT (script.js) e, qui sotto, al posto del testo con l'email per chi non ha JavaScript, il link «Apri il calendario» alla stessa pagina, in una scheda nuova. Finché manca, il riquadro mostra l'email. -->
+          <div class="booking-box" data-reveal>
+            <div data-booking hidden>
+              <button class="btn btn-primary" type="button" data-booking-loader>Mostra i giorni disponibili</button>
+              <p class="micro">Il calendario è di Google: si carica solo quando lo apri.</p>
+            </div>
+            <p class="no-js-only">Scrivici a <a href="mailto:info@telaioconsulting.com" data-email-link>info@telaioconsulting.com</a>: ti proponiamo noi giorno e ora.</p>
+          </div>
+          <p class="booking-meta" data-reveal>Usiamo questi dati solo per organizzare e preparare la call. <a href="/privacy/">Leggi l'informativa privacy.</a></p>
+          <p class="booking-meta" data-reveal>Preferisci scriverci? <a href="mailto:info@telaioconsulting.com" data-email-link>info@telaioconsulting.com</a></p>
+        </div>
       </div>
-      <p class="booking-meta reveal">Usiamo questi dati solo per organizzare e preparare la call. <a href="/privacy/">Leggi l'informativa privacy.</a></p>
-      <p class="booking-meta reveal">Preferisci scriverci? <a href="mailto:info@telaioconsulting.com" data-email-link>info@telaioconsulting.com</a></p>
     </section>
 
     <!-- DOMANDE SUL CHECK-UP -->
-    <section class="sec wrap">
-      <div class="sec-head reveal"><h2>Domande sul check-up</h2></div>
-      <div class="reveal">
-        <details class="qa" data-question-id="checkup-cost"><summary>Quanto costa il check-up?</summary><div class="a"><p>Niente. Il check-up è gratuito e non ti impegna a nulla.</p></div></details>
-        <details class="qa" data-question-id="who"><summary>Chi incontro?</summary><div class="a"><p>Uno dei tre fondatori di Telaio.</p></div></details>
-        <details class="qa" data-question-id="prepare"><summary>Devo preparare qualcosa?</summary><div class="a"><p>No. Se vuoi, pensa a un'attività che ti porta via tempo ogni settimana. Basta quella.</p></div></details>
-        <details class="qa" data-question-id="call"><summary>Come ci colleghiamo?</summary><div class="a"><!-- TODO(conferma): piattaforma della videochiamata --><p>In videochiamata. Il link arriva nella mail di conferma.</p></div></details>
-        <details class="qa" data-question-id="no-go"><summary>E se poi non voglio andare avanti?</summary><div class="a"><p>Va benissimo. Ti resta il quadro che abbiamo visto insieme.</p></div></details>
+    <section class="p-sec">
+      <div class="wrap p-split">
+        <div class="p-split-side">
+          <h2 class="p-h2" data-split>Domande sul check-up</h2>
+        </div>
+        <div>
+          <details class="qa" data-reveal data-question-id="checkup-cost"><summary>Quanto costa il check-up?</summary><div class="a"><p>Niente. Il check-up è gratuito e non ti impegna a nulla.</p></div></details>
+          <details class="qa" data-reveal data-question-id="who"><summary>Chi incontro?</summary><div class="a"><p>Uno dei tre fondatori di Telaio.</p></div></details>
+          <details class="qa" data-reveal data-question-id="prepare"><summary>Devo preparare qualcosa?</summary><div class="a"><p>No. Se vuoi, pensa a un'attività che ti porta via tempo ogni settimana. Basta quella.</p></div></details>
+          <details class="qa" data-reveal data-question-id="call"><summary>Come ci colleghiamo?</summary><div class="a"><!-- TODO(conferma): piattaforma della videochiamata --><p>In videochiamata. Il link arriva nella mail di conferma.</p></div></details>
+          <details class="qa" data-reveal data-question-id="no-go"><summary>E se poi non voglio andare avanti?</summary><div class="a"><p>Va benissimo. Ti resta il quadro che abbiamo visto insieme.</p></div></details>
+        </div>
       </div>
     </section>
   </main>
 
   <div class="mobile-bar"><a class="btn btn-primary btn-block" href="#prenota" data-cta="checkup" data-placement="mobile_bar">Prenota il check-up AI</a></div>
 
-  <footer>
+  <footer class="p-footer">
     <div class="wrap foot-in foot-grid">
       <div class="foot-col">
         <div class="foot-brand">
@@ -209,11 +258,12 @@
           <span class="wm">Telaio</span>
         </div>
         <span class="foot-tag">Dall'AI al valore.</span>
-        <span>Consulenza AI per piccole e medie imprese.</span>
+        <span>Consulenza strategica e AI per piccole e medie imprese.</span>
       </div>
       <nav class="foot-col" aria-label="Pagine">
         <a href="/come-lavoriamo/">Come lavoriamo</a>
         <a href="/cosa-facciamo/">Cosa facciamo</a>
+        <a href="/consulenza-strategica/">Consulenza strategica</a>
         <a href="/chi-siamo/">Chi siamo</a>
         <a href="/domande-frequenti/">Domande frequenti</a>
         <a href="/check-up-ai/">Check-up AI</a>
@@ -226,8 +276,15 @@
         <span>© 2026 Telaio</span>
       </div>
     </div>
+    <div class="p-bigword" aria-hidden="true"><span>T</span><span>e</span><span>l</span><span>a</span><span>i</span><span>o</span></div>
   </footer>
 
+  <!-- Librerie di animazione, ospitate nel sito (vedi assets/vendor/README.md) -->
+  <script src="/assets/vendor/gsap.min.js"></script>
+  <script src="/assets/vendor/ScrollTrigger.min.js"></script>
+  <script src="/assets/vendor/SplitText.min.js"></script>
+  <script src="/assets/vendor/lenis.min.js"></script>
   <script src="/script.js"></script>
+  <script src="/motion.js"></script>
 </body>
 </html>

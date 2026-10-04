@@ -23,8 +23,19 @@
 
   <link rel="preload" href="/assets/fonts/bricolage-grotesque-500-700-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/ibm-plex-sans-400-600-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <script>document.documentElement.classList.add("js");setTimeout(function(){if(!window.__telaio)document.documentElement.classList.remove("js")},4000)</script>
+  <script>
+    (function (r) {
+      r.classList.add("js");
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) r.classList.add("motion");
+      // Se gli script non partono, si torna alla pagina statica (tutto visibile).
+      setTimeout(function () {
+        if (!window.__telaio) r.classList.remove("js");
+        if (!window.__motion) r.classList.remove("motion");
+      }, 4000);
+    })(document.documentElement);
+  </script>
   <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/motion.css">
 
   <script type="application/ld+json">
   {
@@ -33,7 +44,8 @@
       {
         "@type": "FAQPage",
         "mainEntity": [
-          { "@type": "Question", "name": "Cosa fa Telaio?", "acceptedAnswer": { "@type": "Answer", "text": "Telaio aiuta le piccole e medie imprese a usare l'intelligenza artificiale dove crea valore. Partiamo da un problema reale, scegliamo lo strumento giusto, lo mettiamo al lavoro e restiamo finché produce risultati. Hai un solo referente, dall'analisi alla soluzione che funziona." } },
+          { "@type": "Question", "name": "Cosa fa Telaio?", "acceptedAnswer": { "@type": "Answer", "text": "Telaio aiuta le piccole e medie imprese a usare l'intelligenza artificiale dove crea valore. Partiamo da un problema reale, scegliamo lo strumento giusto, lo mettiamo al lavoro e restiamo finché produce risultati. Hai un solo referente, dall'analisi alla soluzione che funziona. Lavoriamo anche sulla strategia d'impresa: mercati e clienti, offerta, organizzazione, crescita." } },
+          { "@type": "Question", "name": "Fate anche consulenza strategica?", "acceptedAnswer": { "@type": "Answer", "text": "Sì. Ti affianchiamo anche nelle scelte di fondo dell'impresa: su quali mercati e clienti puntare, cosa offrire, come organizzarti per crescere. In ogni scelta guardiamo come l'AI sta cambiando il tuo settore. Anche qui si parte dal check-up." } },
           { "@type": "Question", "name": "Cos'è il check-up AI?", "acceptedAnswer": { "@type": "Answer", "text": "È una videochiamata gratuita di 30 minuti con uno dei fondatori. Ti raccontiamo come l'AI sta cambiando il tuo settore, troviamo due o tre attività da cui partire e ti diciamo con franchezza se conviene." } },
           { "@type": "Question", "name": "Cosa succede dopo il check-up?", "acceptedAnswer": { "@type": "Answer", "text": "Ti mandiamo un breve questionario per capire meglio il problema. Poi, se vuoi, ti mandiamo una proposta scritta: tre strade, quella che sceglieremmo, tempi, costi e limiti. Decidi tu." } },
           { "@type": "Question", "name": "In quanto tempo vedo un risultato?", "acceptedAnswer": { "@type": "Answer", "text": "In 4 settimane hai il primo strumento AI in uso. Le settimane partono quando hai approvato la proposta e abbiamo gli accessi che servono." } },
@@ -73,6 +85,7 @@
   </svg>
 
   <div class="grain" aria-hidden="true"></div>
+  <div class="p-progress" aria-hidden="true"></div>
 
   <header class="top">
     <div class="wrap top-in">
@@ -83,6 +96,7 @@
       <nav class="nav" id="nav" aria-label="Navigazione principale">
         <a href="/come-lavoriamo/">Come lavoriamo</a>
         <a href="/cosa-facciamo/">Cosa facciamo</a>
+        <a href="/consulenza-strategica/">Strategia</a>
         <a href="/chi-siamo/">Chi siamo</a>
         <a href="/domande-frequenti/" aria-current="page">Domande frequenti</a>
       </nav>
@@ -99,45 +113,46 @@
   </header>
 
   <main id="top">
-    <div class="wrap">
-      <nav class="crumbs" aria-label="Percorso"><a href="/">Home</a> <span aria-hidden="true">›</span> <span aria-current="page">Domande frequenti</span></nav>
-    </div>
 
-    <section class="subhero">
-      <div class="wrap" data-stagger>
-        <h1 class="reveal">Domande frequenti</h1>
-        <p class="lede reveal">Le risposte alle domande che ci fanno più spesso. Prima la risposta, poi i dettagli.</p>
+    <section class="p-hero is-page is-compact">
+      <canvas class="p-weave" id="weave" aria-hidden="true"></canvas>
+      <div class="p-hero-veil" aria-hidden="true"></div>
+      <div class="wrap p-hero-in">
+        <nav class="crumbs" aria-label="Percorso" data-hero-item><a href="/">Home</a> <span aria-hidden="true">›</span> <span aria-current="page">Domande frequenti</span></nav>
+        <h1 class="p-h1">Domande frequenti</h1>
+        <p class="p-hero-lede" data-hero-item>Le risposte alle domande che ci fanno più spesso. Prima la risposta, poi i dettagli.</p>
       </div>
     </section>
 
-    <section class="sec wrap" style="padding-top:12px">
-      <div class="reveal" style="max-width:860px">
-        <details class="qa" id="what" data-question-id="what"><summary>Cosa fa Telaio?</summary><div class="a"><p>Telaio aiuta le piccole e medie imprese a usare l'intelligenza artificiale dove crea valore. Partiamo da un problema reale, scegliamo lo strumento giusto, lo mettiamo al lavoro e restiamo finché produce risultati. Hai un solo referente, dall'analisi alla soluzione che funziona.</p></div></details>
-        <details class="qa" id="checkup" data-question-id="checkup"><summary>Cos'è il check-up AI?</summary><div class="a"><p>È una videochiamata gratuita di 30 minuti con uno dei fondatori. Ti raccontiamo come l'AI sta cambiando il tuo settore, troviamo due o tre attività da cui partire e ti diciamo con franchezza se conviene.</p></div></details>
-        <details class="qa" id="after" data-question-id="after"><summary>Cosa succede dopo il check-up?</summary><div class="a"><p>Ti mandiamo un breve questionario per capire meglio il problema. Poi, se vuoi, ti mandiamo una proposta scritta: tre strade, quella che sceglieremmo, tempi, costi e limiti. Decidi tu.</p></div></details>
-        <details class="qa" id="timeline" data-question-id="timeline"><summary>In quanto tempo vedo un risultato?</summary><div class="a"><!-- TODO(conferma): definizione delle 4 settimane (da quando partono, cosa vuol dire "in uso") --><p>In 4 settimane hai il primo strumento AI in uso. Le settimane partono quando hai approvato la proposta e abbiamo gli accessi che servono.</p></div></details>
-        <details class="qa" id="cost" data-question-id="cost"><summary>Quanto costa lavorare con Telaio?</summary><div class="a"><p>Dipende dal problema da risolvere e dalla soluzione. Prima di iniziare ricevi una proposta scritta con tempi, costi e limiti, così sai a cosa vai incontro. Il check-up è gratuito.</p></div></details>
-        <details class="qa" id="skills" data-question-id="skills"><summary>Serve avere competenze tecniche in azienda?</summary><div class="a"><p>No. Ti spieghiamo tutto con parole semplici. Ci serve una persona che conosca bene il lavoro da migliorare e un po' del suo tempo.</p></div></details>
-        <details class="qa" id="size" data-question-id="size"><summary>La mia impresa è troppo piccola per l'AI?</summary><div class="a"><p>Di solito no. Molti strumenti di AI costano poco e si adattano anche a chi ha pochi collaboratori, e in un'impresa piccola il tempo risparmiato si sente subito. Nel check-up ti diciamo se conviene partire adesso.</p></div></details>
-        <details class="qa" id="data" data-question-id="data"><summary>I miei dati sono al sicuro?</summary><div class="a"><p>Prima di iniziare ti diciamo quali dati usa lo strumento, dove vengono conservati e chi può vederli. Scegliamo con te soluzioni coerenti con il GDPR e con le regole della tua azienda, e ti diciamo subito i limiti.</p></div></details>
-        <details class="qa" id="tools" data-question-id="tools"><summary>Lavorate con gli strumenti che uso già?</summary><div class="a"><p>Sì, quando si può partiamo da lì: gestionale, negozio online, posta, fogli di calcolo. Se serve qualcosa di nuovo, ti spieghiamo perché e quanto costa.</p></div></details>
-        <details class="qa" id="not-fit" data-question-id="not-fit"><summary>E se l'AI non fa per la mia impresa?</summary><div class="a"><p>Te lo diciamo. Se nel check-up vediamo che oggi non conviene, te lo diciamo chiaramente e ti indichiamo cosa fare prima.</p></div></details>
-        <details class="qa" id="after-4-weeks" data-question-id="after-4-weeks"><summary>Cosa succede dopo le 4 settimane?</summary><div class="a"><p>Restiamo. Controlliamo con te i risultati, sistemiamo quello che serve e, se vuoi, passiamo al problema successivo. Resti con un solo referente: noi.</p></div></details>
-        <details class="qa" id="ai-act" data-question-id="ai-act"><summary>L'AI Act riguarda anche la mia impresa?</summary><div class="a"><!-- TODO(conferma): revisione legale --><p>In parte sì. Se in azienda usate strumenti di AI, l'AI Act chiede di aiutare le persone che li usano a saperli usare: formazione e regole interne, senza certificati obbligatori. Gli obblighi più pesanti riguardano i sistemi «ad alto rischio», per esempio nella selezione del personale, e partono dal dicembre 2027. In Italia la legge 132/2025 chiede anche di informare i lavoratori quando si usa l'AI nei casi previsti. Nel check-up ti diciamo cosa riguarda il tuo caso e quando serve un avvocato.</p></div></details>
-        <details class="qa" id="where" data-question-id="where"><summary>Lavorate in tutta Italia? E all'estero?</summary><div class="a"><p>Sì. Lavoriamo in videochiamata con imprese di tutta Italia e, in inglese, con clienti all'estero.</p></div></details>
+    <section class="p-sec" style="padding-top:clamp(40px,6vw,80px)">
+      <div class="wrap p-split">
+        <div class="p-split-side p-faq-side" data-reveal>
+          <p class="p-faq-count" aria-hidden="true"><b>14</b><span>domande</span></p>
+          <a class="btn btn-primary p-btn-xl" data-magnetic href="/check-up-ai/" data-cta="checkup" data-placement="faq">Prenota il check-up AI <span class="p-arr" aria-hidden="true">→</span></a>
+        </div>
+        <div class="p-faq-list">
+          <details class="qa" data-reveal id="what" data-question-id="what"><summary>Cosa fa Telaio?</summary><div class="a"><p>Telaio aiuta le piccole e medie imprese a usare l'intelligenza artificiale dove crea valore. Partiamo da un problema reale, scegliamo lo strumento giusto, lo mettiamo al lavoro e restiamo finché produce risultati. Hai un solo referente, dall'analisi alla soluzione che funziona. Lavoriamo anche sulla strategia d'impresa: mercati e clienti, offerta, organizzazione, crescita.</p></div></details>
+          <details class="qa" data-reveal id="strategy" data-question-id="strategy"><summary>Fate anche consulenza strategica?</summary><div class="a"><p>Sì. Ti affianchiamo anche nelle scelte di fondo dell'impresa: su quali mercati e clienti puntare, cosa offrire, come organizzarti per crescere. In ogni scelta guardiamo come l'AI sta cambiando il tuo settore. Anche qui si parte dal check-up.</p><p><a class="arrow-link" href="/consulenza-strategica/">Consulenza strategica →</a></p></div></details>
+          <details class="qa" data-reveal id="checkup" data-question-id="checkup"><summary>Cos'è il check-up AI?</summary><div class="a"><p>È una videochiamata gratuita di 30 minuti con uno dei fondatori. Ti raccontiamo come l'AI sta cambiando il tuo settore, troviamo due o tre attività da cui partire e ti diciamo con franchezza se conviene.</p></div></details>
+          <details class="qa" data-reveal id="after" data-question-id="after"><summary>Cosa succede dopo il check-up?</summary><div class="a"><p>Ti mandiamo un breve questionario per capire meglio il problema. Poi, se vuoi, ti mandiamo una proposta scritta: tre strade, quella che sceglieremmo, tempi, costi e limiti. Decidi tu.</p></div></details>
+          <details class="qa" data-reveal id="timeline" data-question-id="timeline"><summary>In quanto tempo vedo un risultato?</summary><div class="a"><!-- TODO(conferma): definizione delle 4 settimane (da quando partono, cosa vuol dire "in uso") --><p>In 4 settimane hai il primo strumento AI in uso. Le settimane partono quando hai approvato la proposta e abbiamo gli accessi che servono.</p></div></details>
+          <details class="qa" data-reveal id="cost" data-question-id="cost"><summary>Quanto costa lavorare con Telaio?</summary><div class="a"><p>Dipende dal problema da risolvere e dalla soluzione. Prima di iniziare ricevi una proposta scritta con tempi, costi e limiti, così sai a cosa vai incontro. Il check-up è gratuito.</p></div></details>
+          <details class="qa" data-reveal id="skills" data-question-id="skills"><summary>Serve avere competenze tecniche in azienda?</summary><div class="a"><p>No. Ti spieghiamo tutto con parole semplici. Ci serve una persona che conosca bene il lavoro da migliorare e un po' del suo tempo.</p></div></details>
+          <details class="qa" data-reveal id="size" data-question-id="size"><summary>La mia impresa è troppo piccola per l'AI?</summary><div class="a"><p>Di solito no. Molti strumenti di AI costano poco e si adattano anche a chi ha pochi collaboratori, e in un'impresa piccola il tempo risparmiato si sente subito. Nel check-up ti diciamo se conviene partire adesso.</p></div></details>
+          <details class="qa" data-reveal id="data" data-question-id="data"><summary>I miei dati sono al sicuro?</summary><div class="a"><p>Prima di iniziare ti diciamo quali dati usa lo strumento, dove vengono conservati e chi può vederli. Scegliamo con te soluzioni coerenti con il GDPR e con le regole della tua azienda, e ti diciamo subito i limiti.</p></div></details>
+          <details class="qa" data-reveal id="tools" data-question-id="tools"><summary>Lavorate con gli strumenti che uso già?</summary><div class="a"><p>Sì, quando si può partiamo da lì: gestionale, negozio online, posta, fogli di calcolo. Se serve qualcosa di nuovo, ti spieghiamo perché e quanto costa.</p></div></details>
+          <details class="qa" data-reveal id="not-fit" data-question-id="not-fit"><summary>E se l'AI non fa per la mia impresa?</summary><div class="a"><p>Te lo diciamo. Se nel check-up vediamo che oggi non conviene, te lo diciamo chiaramente e ti indichiamo cosa fare prima.</p></div></details>
+          <details class="qa" data-reveal id="after-4-weeks" data-question-id="after-4-weeks"><summary>Cosa succede dopo le 4 settimane?</summary><div class="a"><p>Restiamo. Controlliamo con te i risultati, sistemiamo quello che serve e, se vuoi, passiamo al problema successivo. Resti con un solo referente: noi.</p></div></details>
+          <details class="qa" data-reveal id="ai-act" data-question-id="ai-act"><summary>L'AI Act riguarda anche la mia impresa?</summary><div class="a"><!-- TODO(conferma): revisione legale --><p>In parte sì. Se in azienda usate strumenti di AI, l'AI Act chiede di aiutare le persone che li usano a saperli usare: formazione e regole interne, senza certificati obbligatori. Gli obblighi più pesanti riguardano i sistemi «ad alto rischio», per esempio nella selezione del personale, e partono dal dicembre 2027. In Italia la legge 132/2025 chiede anche di informare i lavoratori quando si usa l'AI nei casi previsti. Nel check-up ti diciamo cosa riguarda il tuo caso e quando serve un avvocato.</p></div></details>
+          <details class="qa" data-reveal id="where" data-question-id="where"><summary>Lavorate in tutta Italia? E all'estero?</summary><div class="a"><p>Sì. Lavoriamo in videochiamata con imprese di tutta Italia e, in inglese, con clienti all'estero.</p></div></details>
+        </div>
       </div>
     </section>
-
-    <div class="sec wrap">
-      <div class="cta-band reveal">
-        <a class="btn btn-primary" href="/check-up-ai/" data-cta="checkup" data-placement="faq">Prenota il check-up AI</a>
-      </div>
-    </div>
   </main>
 
   <div class="mobile-bar"><a class="btn btn-primary btn-block" href="/check-up-ai/" data-cta="checkup" data-placement="mobile_bar">Prenota il check-up AI</a></div>
 
-  <footer>
+  <footer class="p-footer">
     <div class="wrap foot-in foot-grid">
       <div class="foot-col">
         <div class="foot-brand">
@@ -145,11 +160,12 @@
           <span class="wm">Telaio</span>
         </div>
         <span class="foot-tag">Dall'AI al valore.</span>
-        <span>Consulenza AI per piccole e medie imprese.</span>
+        <span>Consulenza strategica e AI per piccole e medie imprese.</span>
       </div>
       <nav class="foot-col" aria-label="Pagine">
         <a href="/come-lavoriamo/">Come lavoriamo</a>
         <a href="/cosa-facciamo/">Cosa facciamo</a>
+        <a href="/consulenza-strategica/">Consulenza strategica</a>
         <a href="/chi-siamo/">Chi siamo</a>
         <a href="/domande-frequenti/">Domande frequenti</a>
         <a href="/check-up-ai/">Check-up AI</a>
@@ -162,8 +178,15 @@
         <span>© 2026 Telaio</span>
       </div>
     </div>
+    <div class="p-bigword" aria-hidden="true"><span>T</span><span>e</span><span>l</span><span>a</span><span>i</span><span>o</span></div>
   </footer>
 
+  <!-- Librerie di animazione, ospitate nel sito (vedi assets/vendor/README.md) -->
+  <script src="/assets/vendor/gsap.min.js"></script>
+  <script src="/assets/vendor/ScrollTrigger.min.js"></script>
+  <script src="/assets/vendor/SplitText.min.js"></script>
+  <script src="/assets/vendor/lenis.min.js"></script>
   <script src="/script.js"></script>
+  <script src="/motion.js"></script>
 </body>
 </html>
