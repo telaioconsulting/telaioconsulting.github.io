@@ -27,7 +27,7 @@ html:not(.motion) .p-progress { display: none; }
 .motion [data-reveal] { opacity: 0; }
 .motion [data-hero-item] { opacity: 0; }
 .motion .p-h1 { visibility: hidden; }
-/* la testata scende insieme al sipario, solo nelle home */
+/* la testata scende alla fine dell'apertura, solo nelle home */
 .motion .p-intro ~ .top { transform: translateY(-100%); }
 
 /* ============================================================
@@ -47,6 +47,9 @@ html:not(.motion) .p-progress { display: none; }
   font-size: clamp(2.8rem, 8vw, 5.2rem); line-height: 1; letter-spacing: -.045em;
 }
 .p-intro-wm span { display: inline-block; transform: translateY(110%); }
+/* le linee del marchio che diventano i fili del tessuto (ordito e trama), sopra l'apertura */
+.p-loom { position: fixed; inset: 0; z-index: 301; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.p-loom line { stroke-linecap: round; fill: none; }
 .p-intro-tag {
   position: absolute; left: 0; right: 0; bottom: clamp(28px, 6vh, 56px); text-align: center;
   font-family: var(--f-mono); font-size: var(--step--1); letter-spacing: .3em; text-transform: uppercase;
@@ -154,6 +157,33 @@ html:not(.motion) .p-progress { display: none; }
   font-size: clamp(2.3rem, 5.4vw, 4.9rem); line-height: 1; letter-spacing: -.045em;
 }
 .p-h2 .p-line { padding-bottom: .05em; }
+
+/* ---- Trama delle sezioni: la griglia del tessuto, appena accennata, si accende attorno al mouse.
+   Il livello lo aggiunge motion.js (solo con motion); --tx e --ty sono il punto luce dentro la sezione.
+   Sul telefono la luce è una fascia a metà schermo e la trama ci scorre sotto. ---- */
+.p-has-trama { isolation: isolate; }
+.p-trama {
+  --tx: -999px; --ty: -999px; --spot: 360px circle; --glow: 260px circle;
+  position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background-image:
+    radial-gradient(var(--glow) at var(--tx) var(--ty), color-mix(in srgb, var(--brand) 18%, transparent), transparent 70%),
+    radial-gradient(circle, var(--weft) 0 1.7px, transparent 2.3px),
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--ink) 34%, transparent) 0 1px, transparent 1px 44px),
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--weft) 60%, transparent) 0 1px, transparent 1px 44px);
+  background-size: auto, 44px 44px, auto, auto;
+  background-position: 0 0, -22px -22px, 0 0, 0 0;
+  -webkit-mask-image: radial-gradient(var(--spot) at var(--tx) var(--ty), #000 0%, rgba(0, 0, 0, .5) 45%, rgba(0, 0, 0, .12) 100%);
+          mask-image: radial-gradient(var(--spot) at var(--tx) var(--ty), #000 0%, rgba(0, 0, 0, .5) 45%, rgba(0, 0, 0, .12) 100%);
+}
+.p-trama-touch .p-trama { --spot: 120% 260px; --glow: 90% 200px; }
+/* sul blocco blu del check-up i fili sono chiari */
+.p-checkup .p-trama {
+  background-image:
+    radial-gradient(var(--glow) at var(--tx) var(--ty), rgba(255, 255, 255, .14), transparent 70%),
+    radial-gradient(circle, #fff 0 1.7px, transparent 2.3px),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, .28) 0 1px, transparent 1px 44px),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, .36) 0 1px, transparent 1px 44px);
+}
 
 /* ---- Numeri ---- */
 .p-stat-list { border-top: 1px solid var(--line); }
@@ -514,7 +544,7 @@ html:not(.motion) .p-progress { display: none; }
    ALTRE PAGINE
    ============================================================ */
 
-/* ---- Hero di pagina: lo stesso tessuto, più bassa, senza sipario ---- */
+/* ---- Hero di pagina: lo stesso tessuto, più bassa, senza apertura ---- */
 .p-hero.is-page { min-height: min(88svh, 860px); }
 .p-hero.is-compact { min-height: min(62svh, 540px); }
 .p-hero.is-page .p-hero-in { padding-top: clamp(36px, 8vh, 104px); padding-bottom: clamp(56px, 10vh, 120px); }

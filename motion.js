@@ -2,7 +2,7 @@
    TELAIO — motion graphic di tutte le pagine
    GSAP + ScrollTrigger + SplitText + Lenis (ospitate in /assets/vendor/).
    Ogni effetto parte solo se la pagina ha gli elementi che gli servono.
-   Le home hanno l'apertura col sipario (.p-intro); le altre pagine
+   Le home hanno l'apertura (.p-intro: il marchio diventa il tessuto); le altre pagine
    un ingresso breve del titolo. Senza librerie o con "riduci movimento"
    la pagina resta statica: il telaio in apertura viene disegnato una volta, fermo.
    ============================================================ */
@@ -65,8 +65,8 @@
     gsap.to(".p-progress", { scaleX: 1, ease: "none", scrollTrigger: { start: 0, end: "max", scrub: 0.3 } });
 
     /* ============================================================
-       APERTURA: il marchio si tesse, il sipario sale, entra il titolo.
-       Sulle pagine senza sipario: solo l'ingresso del titolo.
+       APERTURA: il marchio si disegna, le sue linee diventano i fili del tessuto, entra il titolo.
+       Sulle pagine senza apertura: solo l'ingresso del titolo.
        ============================================================ */
     (function () {
       var intro = document.querySelector(".p-intro");
@@ -90,22 +90,120 @@
         return;
       }
       if (lenis) lenis.stop();
+      var loom = weave ? buildLoom(19, 9) : null;
       tl.to(".p-intro-mk path", { strokeDashoffset: 0, duration: 0.8, stagger: 0.07, ease: "power3.inOut" }, 0)
         .fromTo(".p-intro-wm span", { y: 0, yPercent: 110 }, { yPercent: 0, duration: 0.9, stagger: 0.045 }, 0.25)
-        .to(".p-intro-tag", { opacity: 1, duration: 0.6, ease: "power2.out" }, 0.55)
-        .to(intro, { clipPath: "inset(0% 0% 100% 0%)", duration: 1.1, ease: "expo.inOut" }, 1.3)
-        .to(weave, { weave: 1, duration: 2.8, ease: "power2.out" }, 1.4)
-        .fromTo(".top", { y: 0, yPercent: -100 }, { yPercent: 0, duration: 1 }, 2.0)
-        .fromTo(".p-kicker", { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 1 }, 1.75)
-        .to(h1Split ? h1Split.lines : h1, { yPercent: 0, duration: 1.3, stagger: 0.09 }, 1.8)
-        .to(accent, { "--mark": 1, duration: 1, ease: "expo.inOut" }, 2.35)
-        .fromTo("[data-hero-item]:not(.p-kicker)", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 1.1, stagger: 0.09 }, 2.15)
-        .add(function () { intro.parentNode && intro.parentNode.removeChild(intro); if (lenis) lenis.start(); }, 2.45)
+        .to(".p-intro-tag", { opacity: 1, duration: 0.6, ease: "power2.out" }, 0.55);
+
+      // ORDITO E TRAMA: le quattro linee del marchio diventano i fili del tessuto della hero
+      var S = 1.45, END = S + 2.85, HERO = S + 1.9, mk = intro.querySelector(".p-intro-mk");
+      if (loom) {
+        gsap.set(".p-weave", { opacity: 0 });
+        var ground = getComputedStyle(intro).backgroundColor.replace(/rgba?\(([^,]+),([^,]+),([^,)]+).*/, "rgba($1,$2,$3,0)");
+        // 1. le lettere scivolano via, il marchio va al centro dello schermo e si ingrandisce
+        tl.to(".p-intro-wm span", { x: 90, opacity: 0, filter: "blur(4px)", stagger: 0.05, duration: 0.5, ease: "power2.in" }, S)
+          .to(".p-intro-tag", { opacity: 0, duration: 0.25 }, S)
+          .to(mk, {
+            x: function () { var r = mk.getBoundingClientRect(); return innerWidth / 2 - (r.left + r.width / 2); },
+            y: function () { var r = mk.getBoundingClientRect(); return innerHeight / 2 - (r.top + r.height / 2); },
+            scale: 2.6, duration: 0.85, ease: "expo.inOut"
+          }, S)
+          .call(loom.swap, null, S + 0.9);
+        // 2. le quattro linee, grosse e blu, si allungano fino ai bordi
+        loom.warp.forEach(function (l) { tl.to(l, { attr: { y1: -30, y2: innerHeight + 30 }, stroke: "#3F36F5", duration: 0.6, ease: "expo.inOut" }, S + 0.92); });
+        loom.weft.forEach(function (l) { tl.to(l, { attr: { x1: -30, x2: innerWidth + 30 }, stroke: "#8E9DFF", duration: 0.6, ease: "expo.inOut" }, S + 0.92); });
+        tl.to(intro, { backgroundColor: ground, duration: 0.6, ease: "power2.inOut" }, S + 0.95)
+        // 3. si moltiplicano e si posano sui fili del tessuto
+          .call(loom.aim, null, S + 1.58);
+        loom.spread(tl, S + 1.6);
+        // 4. il tessuto vero prende il loro posto
+        tl.set(weave, { weave: 1 }, END)
+          .to(".p-weave", { opacity: 1, duration: 0.6, ease: "power1.inOut" }, END)
+          .to(loom.svg, { opacity: 0, duration: 0.6, ease: "power1.inOut" }, END);
+      } else {
+        tl.to(intro, { clipPath: "inset(0% 0% 100% 0%)", duration: 1.1, ease: "expo.inOut" }, S)
+          .to(weave, { weave: 1, duration: 2.8, ease: "power2.out" }, S);
+        HERO = S + 0.5; END = S + 1.1;
+      }
+      tl.fromTo(".top", { y: 0, yPercent: -100 }, { yPercent: 0, duration: 1 }, HERO + 0.2)
+        .fromTo(".p-kicker", { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 1 }, HERO)
+        .to(h1Split ? h1Split.lines : h1, { yPercent: 0, duration: 1.3, stagger: 0.09 }, HERO + 0.05)
+        .to(accent, { "--mark": 1, duration: 1, ease: "expo.inOut" }, HERO + 0.6)
+        .fromTo("[data-hero-item]:not(.p-kicker)", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 1.1, stagger: 0.09 }, HERO + 0.35)
+        .add(endIntro, END + 0.65)
         .add(function () { if (h1Split) h1Split.revert(); });
       if (deepLink) {
         tl.progress(1);
+        endIntro();
+      }
+      function endIntro() {
         if (intro.parentNode) intro.parentNode.removeChild(intro);
+        if (loom && loom.svg.parentNode) loom.svg.parentNode.removeChild(loom.svg);
         if (lenis) lenis.start();
+      }
+
+      // Le linee del marchio: un SVG sopra l'apertura, con tante linee pronte (ordito e trama).
+      // swap: prendono il posto dei quattro tratti del marchio; aim: chiedono al tessuto dove stanno i suoi fili;
+      // spread: ognuna va sul suo filo, si assottiglia e ne prende il colore.
+      function buildLoom(nW, nR) {
+        var W = innerWidth, H = innerHeight, NS = "http://www.w3.org/2000/svg", targets = null;
+        var svg = document.createElementNS(NS, "svg");
+        svg.setAttribute("class", "p-loom"); svg.setAttribute("viewBox", "0 0 " + W + " " + H); svg.setAttribute("aria-hidden", "true");
+        // maschera: all'inizio tutto visibile; alla fine la stessa sfumatura del tessuto verso l'orizzonte
+        svg.innerHTML = '<defs><linearGradient id="p-loom-g" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="' + H + '">' +
+          '<stop offset="0" stop-color="#000"/><stop offset="0.45" stop-color="#888"/><stop offset="1" stop-color="#fff"/></linearGradient>' +
+          '<mask id="p-loom-m" maskUnits="userSpaceOnUse" x="0" y="0" width="' + W + '" height="' + H + '">' +
+          '<rect width="' + W + '" height="' + H + '" fill="url(#p-loom-g)"/><rect class="p-loom-full" width="' + W + '" height="' + H + '" fill="#fff"/></mask></defs>' +
+          '<g mask="url(#p-loom-m)"></g>';
+        var g = svg.querySelector("g"), warp = [], weft = [], i;
+        for (i = 0; i < nW; i++) warp.push(g.appendChild(document.createElementNS(NS, "line")));
+        for (i = 0; i < nR; i++) weft.push(g.appendChild(document.createElementNS(NS, "line")));
+        gsap.set(warp.concat(weft), { opacity: 0 });
+        document.body.appendChild(svg);
+
+        function swap() {
+          var r = mk.getBoundingClientRect(), s = r.width / 64;
+          var v = [r.left + 24 * s, r.left + 40 * s], h = [r.top + 24 * s, r.top + 40 * s];
+          warp.forEach(function (l, k) {
+            var x = v[k < nW / 2 ? 0 : 1];
+            gsap.set(l, { attr: { x1: x, y1: r.top + 10 * s, x2: x, y2: r.top + 54 * s }, strokeWidth: 7 * s, stroke: "#1307ED", opacity: 1 });
+          });
+          weft.forEach(function (l, k) {
+            var y = h[k < nR / 2 ? 0 : 1];
+            gsap.set(l, { attr: { x1: r.left + 10 * s, y1: y, x2: r.left + 54 * s, y2: y }, strokeWidth: 7 * s, stroke: "#1307ED", opacity: 1 });
+          });
+          gsap.set(mk, { opacity: 0 });
+          gsap.set(svg, { filter: "drop-shadow(0 0 14px rgba(19,7,237,0.9))" });
+        }
+        function aim() {
+          // lo sfondo dell'apertura è già sparito: le linee passano dietro al titolo e al velo della hero, come il tessuto
+          var hero = document.querySelector(".p-hero"), veil = hero && hero.querySelector(".p-hero-veil");
+          if (veil) { hero.insertBefore(svg, veil); svg.style.zIndex = 1; }
+          targets = weave.threads(nW, nR);
+          // se un filo non è sullo schermo, la linea va sull'ultimo che c'è
+          while (targets.warp.length < nW) targets.warp.push(targets.warp[targets.warp.length - 1] || { x1: W / 2, y1: H, x2: W / 2, y2: H });
+          while (targets.weft.length < nR) targets.weft.push(targets.weft[targets.weft.length - 1] || { x1: 0, y1: H, x2: W, y2: H });
+          var grad = svg.querySelector("linearGradient");
+          grad.setAttribute("y1", targets.top - 30); grad.setAttribute("y2", H);
+        }
+        function spread(t, at) {
+          var cw = (nW - 1) / 2;
+          warp.forEach(function (l, k) {
+            t.to(l, {
+              attr: { x1: function () { return targets.warp[k].x1; }, y1: function () { return targets.warp[k].y1; }, x2: function () { return targets.warp[k].x2; }, y2: function () { return targets.warp[k].y2; } },
+              strokeWidth: 1, stroke: function () { return targets.warpColor; }, duration: 1.1, ease: "expo.inOut"
+            }, at + Math.abs(k - cw) * 0.025);
+          });
+          weft.forEach(function (l, k) {
+            t.to(l, {
+              attr: { x1: function () { return targets.weft[k].x1; }, y1: function () { return targets.weft[k].y1; }, x2: function () { return targets.weft[k].x2; }, y2: function () { return targets.weft[k].y2; } },
+              strokeWidth: 1, stroke: function () { return targets.weftColor; }, duration: 0.95, ease: "power3.inOut"
+            }, at + 0.1 + k * 0.04);
+          });
+          t.to(svg.querySelector(".p-loom-full"), { opacity: 0, duration: 1.1, ease: "power2.inOut" }, at)
+            .to(svg, { filter: "drop-shadow(0 0 0px rgba(19,7,237,0))", duration: 0.9 }, at);
+        }
+        return { svg: svg, warp: warp, weft: weft, swap: swap, aim: aim, spread: spread };
       }
 
       heroExit();
@@ -346,6 +444,44 @@
       });
     }
 
+    /* ---- Sezioni: la trama del tessuto, appena accennata, si accende attorno al mouse ----
+       Col mouse la luce lo segue con un po' di ritardo; sul telefono è una fascia a metà schermo.
+       Si aggiorna solo quando il mouse o la pagina si muovono, e solo nelle sezioni vicine allo schermo. */
+    (function () {
+      var layers = gsap.utils.toArray("main > section:not(.p-hero)").filter(function (s) {
+        return getComputedStyle(s).position !== "static";
+      }).map(function (s) {
+        var l = document.createElement("div");
+        l.className = "p-trama"; l.setAttribute("aria-hidden", "true");
+        s.classList.add("p-has-trama"); s.appendChild(l);
+        return { s: s, l: l };
+      });
+      if (!layers.length) return;
+      var px = -9999, py = -9999, cx = px, cy = py, lastY = -1, lastX = cx, lastYc = cy;
+      if (finePointer) {
+        window.addEventListener("pointermove", function (e) {
+          px = e.clientX; py = e.clientY;
+          if (cx < -9000) { cx = px; cy = py; } // la prima volta la luce compare lì, senza attraversare la pagina
+        }, { passive: true });
+      }
+      else root.classList.add("p-trama-touch");
+      window.addEventListener("resize", function () { lastY = -1; });
+      gsap.ticker.add(function () {
+        if (finePointer) { cx += (px - cx) * 0.18; cy += (py - cy) * 0.18; }
+        else { cx = window.innerWidth / 2; cy = window.innerHeight / 2; }
+        var y = window.scrollY;
+        if (y === lastY && Math.abs(cx - lastX) < 0.5 && Math.abs(cy - lastYc) < 0.5) return;
+        lastY = y; lastX = cx; lastYc = cy;
+        var vh = window.innerHeight;
+        layers.forEach(function (o) {
+          var r = o.s.getBoundingClientRect();
+          if (r.bottom < -400 || r.top > vh + 400) return;
+          o.l.style.setProperty("--tx", Math.round(cx - r.left) + "px");
+          o.l.style.setProperty("--ty", Math.round(cy - r.top) + "px");
+        });
+      });
+    })();
+
     // Arrivo su una sezione: si scorre lì a posizioni ricalcolate (le sezioni bloccate allungano la pagina)
     if (deepLink) {
       ST.refresh();
@@ -567,6 +703,35 @@
     hero.addEventListener("pointerleave", function () { tmon = 0; tmx = 0.5; tmy = 0.5; });
     window.addEventListener("resize", resize);
     window.__loomRedraw = function () { if (!running) draw(0); }; // chiamata da script.js al cambio tema
+
+    // I fili del tessuto come segmenti dritti, in coordinate dello schermo e nel loro colore:
+    // l'apertura delle home ci fa posare sopra le linee del marchio.
+    st.threads = function (nCols, nRows) {
+      project(st.t);
+      var r = canvas.getBoundingClientRect(), light = root.getAttribute("data-theme") === "light";
+      var out = {
+        warp: [], weft: [],
+        top: r.top + (sy[(NZ - 1) * NX + (NX >> 1)] || H * 0.2),
+        warpColor: light ? "rgba(9,12,8,0.2)" : "rgba(155,160,147,0.3)",
+        weftColor: light ? "rgba(19,7,237,0.34)" : "rgba(142,157,255,0.55)"
+      };
+      function pick(n, a, b) { var v = []; for (var q = 0; q < n; q++) v.push(Math.round(a + (b - a) * q / Math.max(1, n - 1))); return v; }
+      pick(nCols, 0, NX - 1).forEach(function (i) {
+        var near = -1, far = -1;
+        for (var j = 0; j < NZ; j++) if (ok[j * NX + i]) { if (near < 0) near = j; far = j; }
+        if (near < 0) return;
+        var a = near * NX + i, b = far * NX + i;
+        out.warp.push({ x1: r.left + sx[b], y1: r.top + sy[b], x2: r.left + sx[a], y2: r.top + sy[a] });
+      });
+      pick(nRows, 1, Math.round(NZ * 0.75)).forEach(function (j) {
+        var left = -1, right = -1;
+        for (var i = 0; i < NX; i++) if (ok[j * NX + i]) { if (left < 0) left = i; right = i; }
+        if (left < 0) return;
+        var a = j * NX + left, b = j * NX + right;
+        out.weft.push({ x1: r.left + sx[a], y1: r.top + sy[a], x2: r.left + sx[b], y2: r.top + sy[b] });
+      });
+      return out;
+    };
 
     resize();
     if (motion && "IntersectionObserver" in window) {
