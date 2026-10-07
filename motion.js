@@ -100,9 +100,9 @@
       var tl = gsap.timeline({ defaults: { ease: "expo.out" } });
       if (!intro) {
         tl.to(weave, { weave: 1, duration: 2.4, ease: "power2.out" }, 0)
-          .to(h1Split ? h1Split.lines : h1, { yPercent: 0, duration: 1.2, stagger: 0.08 }, 0.1)
-          .to(accent, { "--mark": 1, duration: 1, ease: "expo.inOut" }, 0.6)
-          .fromTo("[data-hero-item]", { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 1, stagger: 0.07 }, 0.05)
+          .to(h1Split ? h1Split.lines : h1, { yPercent: 0, duration: 1.2, stagger: 0.08 }, 0.1);
+        if (accent) tl.to(accent, { "--mark": 1, duration: 1, ease: "expo.inOut" }, 0.6);
+        tl.fromTo("[data-hero-item]", { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 1, stagger: 0.07 }, 0.05)
           .add(function () { if (h1Split) h1Split.revert(); });
         if (deepLink) tl.progress(1);
         heroExit();
@@ -146,9 +146,9 @@
       }
       tl.fromTo(".top", { y: 0, yPercent: -100 }, { yPercent: 0, duration: 1 }, HERO + 0.2)
         .fromTo(".p-kicker", { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 1 }, HERO)
-        .to(h1Split ? h1Split.lines : h1, { yPercent: 0, duration: 1.3, stagger: 0.09 }, HERO + 0.05)
-        .to(accent, { "--mark": 1, duration: 1, ease: "expo.inOut" }, HERO + 0.6)
-        .fromTo("[data-hero-item]:not(.p-kicker)", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 1.1, stagger: 0.09 }, HERO + 0.35)
+        .to(h1Split ? h1Split.lines : h1, { yPercent: 0, duration: 1.3, stagger: 0.09 }, HERO + 0.05);
+      if (accent) tl.to(accent, { "--mark": 1, duration: 1, ease: "expo.inOut" }, HERO + 0.6);
+      tl.fromTo("[data-hero-item]:not(.p-kicker)", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 1.1, stagger: 0.09 }, HERO + 0.35)
         .add(endIntro, END + 0.65)
         .add(function () { if (h1Split) h1Split.revert(); });
       // appena lo sfondo dell'apertura è trasparente, testata e pulsante della hero si possono già cliccare;
