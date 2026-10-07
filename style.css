@@ -119,7 +119,9 @@
   --step-4:  clamp(2rem, 4vw, 3.1rem);
   --step-5:  clamp(3rem, 9.2vw, 7rem);
 
-  --r-sm: 4px; --r-md: 8px; --r-lg: 14px; --r-pill: 999px;
+  /* angoli del brand book (telaio-tokens.css): 3 e 6 px, la pillola solo dove serve */
+  --r-sm: 3px; --r-md: 6px; --r-lg: 6px; --r-pill: 999px;
+  --tracking-label: .14em;
   --shadow-lg: 0 2px 6px rgba(0,0,0,.5), 0 30px 60px -24px rgba(0,0,0,.85);
   --ease: cubic-bezier(.2,.7,.2,1);
   --maxw: 1120px;
@@ -194,9 +196,9 @@ a, button, summary { touch-action: manipulation; }
 .eyebrow {
   display: inline-flex; align-items: center; gap: 14px;
   font-family: var(--f-mono); font-size: var(--step--1); font-weight: 500;
-  letter-spacing: .24em; text-transform: uppercase; color: var(--weft);
+  letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--weft);
 }
-.eyebrow::before { content: ""; width: 28px; height: 1px; background: linear-gradient(90deg, var(--brand), transparent); flex: none; }
+.eyebrow::before { content: ""; width: 28px; height: 1px; background: var(--brand); flex: none; }
 .lede { font-size: var(--step-1); color: var(--muted); line-height: 1.55; }
 .mk { color: var(--brand); flex: none; }
 
@@ -261,9 +263,20 @@ html:not(.js) .no-js-only { display: block; }
 }
 .icon-btn:hover { color: var(--ink); border-color: var(--line-strong); }
 .menu-btn { display: none; }
+/* Icone del tema e del menu disegnate a tratto (come le icone del marchio) invece dei caratteri ◐ ☾ ≡,
+   che arrivavano da un font di sistema. Il carattere resta nel pulsante ma non si vede. */
+#themeBtn, #menuBtn { font-size: 0; }
+#themeBtn::before, #menuBtn::before {
+  content: ""; width: 20px; height: 20px; background: currentColor;
+  -webkit-mask: var(--i-icon) center / contain no-repeat; mask: var(--i-icon) center / contain no-repeat;
+}
+#themeBtn { --i-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='8'/%3E%3Cpath d='M12 4a8 8 0 0 1 0 16z' fill='%23000'/%3E%3C/svg%3E"); }
+:root[data-theme="light"] #themeBtn { --i-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19.5 14.6A8 8 0 1 1 9.4 4.5a6.5 6.5 0 0 0 10.1 10.1z'/%3E%3C/svg%3E"); }
+#menuBtn { --i-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round'%3E%3Cpath d='M4 7h16M4 12h16M4 17h16'/%3E%3C/svg%3E"); }
+#menuBtn[aria-expanded="true"] { --i-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round'%3E%3Cpath d='M6 6l12 12M18 6L6 18'/%3E%3C/svg%3E"); }
 
 /* Selettore lingua */
-.lang { display: inline-flex; align-items: center; gap: 2px; font-family: var(--f-mono); font-size: 11px; }
+.lang { display: inline-flex; align-items: center; gap: 2px; font-family: var(--f-mono); font-size: 12px; }
 .lang-link {
   display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px;
   padding: 6px 8px; color: var(--muted); text-decoration: none; border-radius: var(--r-sm); letter-spacing: .06em;
@@ -486,7 +499,7 @@ html:not(.js) .no-js-only { display: block; }
 .step p { color: var(--muted); line-height: 1.55; }
 
 /* Riquadro "in evidenza" */
-.callout { border-left: 2px solid var(--brand); background: color-mix(in srgb, var(--brand) 7%, var(--surface)); padding: 18px 22px; border-radius: var(--r-md); color: var(--ink); line-height: 1.55; }
+.callout { border: 1px solid color-mix(in srgb, var(--brand) 40%, var(--line)); background: color-mix(in srgb, var(--brand) 7%, var(--surface)); padding: 18px 22px; border-radius: var(--r-md); color: var(--ink); line-height: 1.55; }
 
 /* Momenti del check-up, con la durata */
 .moments { display: grid; gap: 14px; }

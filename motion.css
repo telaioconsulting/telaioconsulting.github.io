@@ -24,7 +24,7 @@ html.lenis { scroll-behavior: auto !important; }
 /* ---- Barra di avanzamento della pagina ---- */
 .p-progress {
   position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 120; pointer-events: none;
-  background: linear-gradient(90deg, var(--brand), var(--weft));
+  background: var(--brand);
   transform-origin: 0 50%; transform: scaleX(0);
 }
 html:not(.motion) .p-progress { display: none; }
@@ -85,7 +85,7 @@ html:not(.motion) .p-progress { display: none; }
   border: 1px solid color-mix(in srgb, var(--weft) 28%, transparent);
   background: color-mix(in srgb, var(--ground) 55%, transparent);
   -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
-  font-family: var(--f-mono); font-size: var(--step--1); letter-spacing: .16em; text-transform: uppercase; color: var(--weft);
+  font-family: var(--f-mono); font-size: var(--step--1); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--weft);
 }
 .p-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--brand); flex: none; animation: p-pulse 2.2s ease-out infinite; }
 @keyframes p-pulse {
@@ -96,7 +96,7 @@ html:not(.motion) .p-progress { display: none; }
 
 .p-h1 {
   position: relative; isolation: isolate;
-  margin-top: clamp(20px, 3vh, 32px); max-width: 17ch;
+  margin-top: clamp(20px, 3vh, 32px); max-width: 20ch; /* tre righe invece di quattro, stessa grandezza */
   font-size: clamp(2.6rem, 6.2vw, 6rem); line-height: .98; letter-spacing: -.045em;
 }
 .p-h1 .p-line { padding-bottom: .04em; }
@@ -118,13 +118,26 @@ html:not(.motion) .p-progress { display: none; }
   font-size: clamp(1.15rem, 1.7vw, 1.45rem); line-height: 1.38; max-width: 40ch;
 }
 .p-hero-cta { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
-.p-meta { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 18px; font-family: var(--f-mono); font-size: 12px; color: var(--muted); }
+.p-meta { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 18px; font-family: var(--f-mono); font-size: .8125rem; color: var(--muted); }
 .p-meta li { display: inline-flex; align-items: center; gap: 8px; }
 .p-meta li + li::before { content: ""; width: 4px; height: 4px; background: var(--brand); transform: rotate(45deg); }
 
 .p-btn-xl { padding: 18px 26px; font-size: 1.04rem; gap: 12px; }
 /* sui pulsanti magnetici la posizione la muove GSAP: una transizione CSS su transform la rallentava a ogni passo */
 .motion [data-magnetic] { transition: background .18s ease, box-shadow .2s ease, scale .12s ease-out; }
+/* Frecce: icona a tratto del marchio (griglia 24, angoli arrotondati) al posto del carattere →,
+   che i font del sito non hanno e il browser prendeva da un font di sistema.
+   Il carattere resta nel testo (nascosto), il disegno è una maschera colorata col colore del testo. */
+:root {
+  --i-arr: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4.5 12h15M13.5 6l6 6-6 6'/%3E%3C/svg%3E");
+  --i-arr-thin: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4.5 12h15M13.5 6l6 6-6 6'/%3E%3C/svg%3E");
+}
+.p-arr, .p-orb-arr, .p-case-big {
+  width: 1em; height: 1em; overflow: hidden; text-indent: 200%; white-space: nowrap;
+  background: currentColor;
+  -webkit-mask: var(--i-arr) center / contain no-repeat; mask: var(--i-arr) center / contain no-repeat;
+}
+.p-orb-arr, .p-case-big { -webkit-mask-image: var(--i-arr-thin); mask-image: var(--i-arr-thin); }
 .p-arr { display: inline-block; transition: transform .35s var(--ease); }
 @media (hover: hover) { .btn:hover .p-arr { transform: translateX(4px); } }
 
@@ -133,10 +146,10 @@ html:not(.motion) .p-progress { display: none; }
   display: flex; justify-content: space-between; align-items: center; gap: 24px;
   padding-top: clamp(40px, 7vh, 80px); padding-bottom: 28px;
 }
-.p-trust { font-family: var(--f-mono); font-size: 12px; color: var(--muted); max-width: 46ch; }
+.p-trust { font-family: var(--f-mono); font-size: .8125rem; color: var(--muted); max-width: 46ch; }
 .p-scroll {
   display: inline-flex; align-items: center; gap: 12px; min-height: 44px;
-  font-family: var(--f-mono); font-size: 11px; letter-spacing: .24em; text-transform: uppercase; color: var(--muted); text-decoration: none;
+  font-family: var(--f-mono); font-size: 11px; letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--muted); text-decoration: none;
 }
 .p-scroll i { position: relative; width: 1px; height: 38px; background: var(--line-strong); overflow: hidden; }
 .p-scroll i::after { content: ""; position: absolute; left: 0; top: 0; width: 1px; height: 40%; background: var(--weft); transform: translateY(-100%); animation: p-drop 2s var(--ease) infinite; }
@@ -158,8 +171,16 @@ html:not(.motion) .p-progress { display: none; }
 /* ============================================================
    SEZIONI
    ============================================================ */
-.p-sec { position: relative; padding-block: clamp(96px, 13vw, 184px); }
+.p-sec { position: relative; padding-block: clamp(88px, 11vw, 152px); }
+/* due sezioni di fila stavano a quasi 370 px l'una dall'altra: la seconda parte più vicina
+   (:where tiene bassa la specificità, così le sezioni con un loro spazio in alto lo conservano) */
+.p-sec + :where(.p-sec) { padding-top: clamp(56px, 7vw, 104px); }
 .p-head { margin-bottom: clamp(48px, 6vw, 88px); }
+/* nelle colonne a lato il titolo segue la larghezza della colonna, non dello schermo */
+.p-split-side, .p-method-side { container-type: inline-size; }
+:is(.p-split-side, .p-method-side) .p-h2 { font-size: clamp(2.3rem, min(5.4vw, 14cqi), 4.6rem); }
+/* su schermi bassi (portatili 1366×768) la colonna fissa era più alta dello schermo e nascondeva il pulsante */
+@media (min-width: 900px) and (max-height: 820px) { .p-split-side, .p-method-side { position: static; } }
 .p-h2 {
   margin-top: 18px; max-width: 18ch;
   font-size: clamp(2.3rem, 5.4vw, 4.9rem); line-height: 1; letter-spacing: -.045em;
@@ -209,7 +230,8 @@ html:not(.motion) .p-progress { display: none; }
   font-size: clamp(5.2rem, 15vw, 13.5rem); line-height: .84; letter-spacing: -.065em;
   font-variant-numeric: tabular-nums;
 }
-.p-stat-num small { font-size: .3em; letter-spacing: -.02em; color: var(--weft); white-space: nowrap; }
+/* il blu chiaro resta per le piccole etichette (brand book): l'unità accanto al numero grande è grigia */
+.p-stat-num small { font-size: .3em; letter-spacing: -.02em; color: var(--muted); white-space: nowrap; }
 .p-stat-body > p { color: var(--muted); font-size: var(--step-1); line-height: 1.5; max-width: 40ch; }
 .p-stat-body > .p-src { margin-top: 14px; font-family: var(--f-mono); font-size: 11px; line-height: 1.4; }
 .p-src a { color: var(--weft); }
@@ -218,7 +240,7 @@ html:not(.motion) .p-progress { display: none; }
 .p-viz-cols { display: flex; align-items: flex-end; gap: 14px; height: 132px; }
 .p-col { width: 66px; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; gap: 8px; }
 .p-col i { display: block; height: calc(var(--v) * (100% - 26px)); border-radius: 4px 4px 0 0; background: var(--line-strong); transform-origin: 50% 100%; }
-.p-col.is-hi i { background: linear-gradient(180deg, var(--weft), var(--brand)); box-shadow: 0 0 40px -6px rgba(19, 7, 237, .8); }
+.p-col.is-hi i { background: var(--brand); }
 .p-col span { font-family: var(--f-mono); font-size: 12px; color: var(--muted); }
 .p-col.is-hi span { color: var(--ink); }
 
@@ -226,7 +248,7 @@ html:not(.motion) .p-progress { display: none; }
 .p-hrow { display: grid; grid-template-columns: 112px 1fr 54px; gap: 12px; align-items: center; font-family: var(--f-mono); font-size: 12px; color: var(--muted); }
 .p-hrow i { height: 12px; border-radius: 3px; background: var(--panel); overflow: hidden; }
 .p-hrow em { display: block; height: 100%; width: calc(var(--v) * 100%); background: var(--line-strong); transform-origin: 0 50%; }
-.p-hrow.is-hi em { background: linear-gradient(90deg, var(--brand), var(--weft)); }
+.p-hrow.is-hi em { background: var(--brand); }
 .p-hrow b { color: var(--ink); font-weight: 500; text-align: right; }
 
 .p-viz-dots { display: flex; gap: 12px; }
@@ -235,7 +257,7 @@ html:not(.motion) .p-progress { display: none; }
   display: grid; place-items: center; font-style: normal;
   font-family: var(--f-display); font-weight: 700; font-size: 1.6rem; color: var(--weft);
 }
-.p-viz-dots i.is-hi { background: var(--brand); box-shadow: 0 0 22px -4px rgba(19, 7, 237, .9); }
+.p-viz-dots i.is-hi { background: var(--brand); }
 .p-viz-dots.is-ten { flex-wrap: wrap; gap: 8px; max-width: 360px; }
 .p-viz-dots.is-ten i { width: 28px; height: 28px; }
 .p-viz-dots i.is-q { position: relative; background: transparent; }
@@ -248,7 +270,13 @@ html:not(.motion) .p-progress { display: none; }
   font-family: var(--f-display); font-weight: 700; color: var(--ink);
   font-size: clamp(2.1rem, 5.4vw, 5rem); line-height: 1.02; letter-spacing: -.04em; max-width: 21ch;
 }
-.p-manifesto-text em { font-style: normal; color: var(--weft); }
+/* le parole chiave: bianche con l'evidenziatore blu sotto, come «4 settimane» nella hero */
+.p-manifesto-text em { font-style: normal; color: var(--ink); }
+.p-manifesto-text em .p-word,
+html:not(.motion) .p-manifesto-text em {
+  background: linear-gradient(var(--brand), var(--brand)) 0 92% / 100% .2em no-repeat;
+  -webkit-box-decoration-break: clone; box-decoration-break: clone;
+}
 .p-manifesto-cta {
   margin-top: clamp(56px, 8vw, 104px); padding-top: 36px; border-top: 1px solid var(--line);
   display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 28px;
@@ -273,6 +301,8 @@ html:not(.motion) .p-progress { display: none; }
 }
 .p-case:hover { border-color: color-mix(in srgb, var(--brand) 50%, var(--line)); }
 .p-case-n { font-family: var(--f-mono); font-size: var(--step--1); letter-spacing: .14em; color: var(--weft); }
+/* le esperienze non hanno un ordine: niente numero decorativo (resta il + sulla card blu) */
+.p-case:not(.p-case-cta) .p-case-n { display: none; }
 .p-case-art {
   position: relative; height: 140px; margin: 4px 0 10px; border-radius: var(--r-md); overflow: hidden;
   display: grid; place-items: center; color: var(--weft);
@@ -303,7 +333,7 @@ html:not(.motion) .p-progress { display: none; }
   .motion .p-cases-foot { display: flex; align-items: center; gap: 22px; margin-top: clamp(28px, 4vh, 44px); width: 100%; }
 }
 .p-rail { flex: 1; height: 2px; background: var(--line); border-radius: 2px; overflow: hidden; }
-.p-rail i { display: block; height: 100%; background: linear-gradient(90deg, var(--brand), var(--weft)); transform-origin: 0 50%; transform: scaleX(0); }
+.p-rail i { display: block; height: 100%; background: var(--brand); transform-origin: 0 50%; transform: scaleX(0); }
 .p-cases-count { font-family: var(--f-mono); font-size: var(--step--1); color: var(--muted); letter-spacing: .1em; }
 .p-cases-count b { color: var(--ink); font-weight: 600; }
 
@@ -372,23 +402,22 @@ html:not(.motion) .p-progress { display: none; }
 .p-rows { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
 .p-rows li {
   position: relative; isolation: isolate; overflow: hidden;
-  display: grid; grid-template-columns: 56px 1fr; gap: 6px 12px;
+  display: grid; grid-template-columns: 1fr; gap: 6px 12px;
   padding: clamp(24px, 3vw, 36px) 18px clamp(24px, 3vw, 36px) 8px; border-bottom: 1px solid var(--line);
   transition: color .45s var(--ease);
 }
+/* le righe non sono link: al passaggio del mouse si colorano appena (il blu pieno significa «clicca») */
 .p-rows li::before {
-  content: ""; position: absolute; inset: 0; z-index: -1; background: var(--brand);
-  transform: scaleY(0); transform-origin: 50% 100%; transition: transform .55s var(--ease);
+  content: ""; position: absolute; inset: 0; z-index: -1; background: color-mix(in srgb, var(--brand) 12%, transparent);
+  transform: scaleY(0); transform-origin: 50% 100%; transition: transform .3s cubic-bezier(.23, 1, .32, 1);
 }
 /* gli effetti al passaggio del mouse solo dove c'è un mouse: sul telefono il tocco li lasciava accesi */
 @media (hover: hover) { .p-rows li:hover::before { transform: scaleY(1); } }
-.p-rows .n { grid-row: span 2; padding-top: .9em; font-family: var(--f-mono); font-size: var(--step--1); color: var(--weft); transition: color .45s var(--ease); }
-.p-rows b { font-family: var(--f-display); font-size: clamp(1.7rem, 3.4vw, 2.8rem); line-height: 1.04; letter-spacing: -.035em; transition: transform .55s var(--ease); }
-.p-rows .d { color: var(--muted); transition: color .45s var(--ease); }
-@media (hover: hover) {
-  .p-rows li:hover b { color: #fff; transform: translateX(10px); }
-  .p-rows li:hover .n, .p-rows li:hover .d { color: rgba(255, 255, 255, .85); }
-}
+/* numeri decorativi tolti: l'elenco non ha un ordine */
+.p-rows .n { display: none; }
+.p-rows b { font-family: var(--f-display); font-size: clamp(1.7rem, 3.4vw, 2.8rem); line-height: 1.04; letter-spacing: -.035em; transition: transform .3s cubic-bezier(.23, 1, .32, 1); }
+.p-rows .d { color: var(--muted); }
+@media (hover: hover) { .p-rows li:hover b { transform: translateX(10px); } }
 
 /* ---- Come lavoriamo ---- */
 .p-method { border-top: 1px solid var(--line); }
@@ -399,7 +428,7 @@ html:not(.motion) .p-progress { display: none; }
 .p-counter-reel { display: flex; flex-direction: column; }
 .p-counter-reel i {
   display: block; height: 1em; font-style: normal;
-  background: linear-gradient(180deg, var(--ink) 30%, var(--weft)); -webkit-background-clip: text; background-clip: text; color: transparent;
+  color: var(--ink);
 }
 .p-counter-tot { font-size: clamp(1.4rem, 2.4vw, 2.1rem); color: var(--muted); padding-top: .5em; }
 
@@ -408,22 +437,21 @@ html:not(.motion) .p-progress { display: none; }
 .p-thread { position: absolute; left: 0; top: 0; width: 24px; height: 100%; overflow: visible; }
 .p-thread path { fill: none; stroke-width: 2; stroke-linecap: round; }
 .p-thread .bg { stroke: var(--line-strong); stroke-dasharray: 2 6; }
-.p-thread .fg { stroke: var(--brand); filter: drop-shadow(0 0 6px rgba(19, 7, 237, .9)); }
+.p-thread .fg { stroke: var(--brand); filter: drop-shadow(0 0 3px rgba(19, 7, 237, .55)); }
 .p-step { position: relative; min-height: 46vh; padding-block: clamp(36px, 7vh, 80px); display: flex; flex-direction: column; justify-content: center; gap: 12px; transition: opacity .6s var(--ease); }
 .p-step-node {
   position: absolute; left: -60px; top: 50%; width: 16px; height: 16px; margin-top: -8px;
   background: var(--ground); border: 2px solid var(--line-strong); transform: rotate(45deg);
   transition: background .4s var(--ease), border-color .4s var(--ease), box-shadow .4s var(--ease);
 }
-.p-step-n { font-family: var(--f-mono); font-size: var(--step--1); letter-spacing: .16em; text-transform: uppercase; color: var(--weft); }
+.p-step-n { font-family: var(--f-mono); font-size: var(--step--1); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--weft); }
 .p-step h3 { font-size: clamp(1.8rem, 3.2vw, 2.7rem); letter-spacing: -.035em; max-width: 18ch; }
 .p-step p { color: var(--muted); font-size: var(--step-1); line-height: 1.5; max-width: 42ch; }
-.motion .p-step { opacity: .28; }
-.motion .p-step.is-lit { opacity: .5; }
-.motion .p-step.is-on { opacity: 1; }
-/* con la tastiera un passo ancora spento si accende appena ci entra il focus */
-.motion .p-step:focus-within { opacity: 1; }
-.p-step.is-lit .p-step-node { background: var(--brand); border-color: var(--brand); box-shadow: 0 0 0 6px color-mix(in srgb, var(--brand) 25%, transparent), 0 0 30px rgba(19, 7, 237, .9); }
+/* si spengono solo il titolo e il nodo, il testo resta sempre leggibile (prima i passi
+   non ancora attivi scendevano sotto il contrasto minimo) */
+.motion .p-step :is(h2, h3) { color: var(--muted); transition: color .6s var(--ease); }
+.motion .p-step.is-on :is(h2, h3) { color: var(--ink); }
+.p-step.is-lit .p-step-node { background: var(--brand); border-color: var(--brand); box-shadow: 0 0 0 6px color-mix(in srgb, var(--brand) 25%, transparent); }
 .p-method-foot { margin-top: clamp(24px, 4vw, 48px); }
 .p-method-foot .arrow-link { margin-top: 16px; }
 
@@ -452,6 +480,30 @@ html:not(.motion) .p-progress { display: none; }
 .p-why h3 { font-size: var(--step-2); letter-spacing: -.02em; }
 .p-why p { color: var(--muted); line-height: 1.55; }
 
+/* Perché Telaio nella home: non tre card uguali. Il primo motivo (le 4 settimane) è grande, a sinistra,
+   con la trama del marchio in alto; gli altri due accanto. Qui i numeri erano solo decorazione: via. */
+:is(#perche, #why) .p-why-grid { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
+:is(#perche, #why) .p-why-n { display: none; }
+:is(#perche, #why) .p-why { min-height: 0; padding-top: clamp(26px, 3vw, 38px); justify-content: flex-end; }
+:is(#perche, #why) .p-why:first-child {
+  grid-row: span 2; min-height: 420px;
+  background: radial-gradient(90% 70% at 85% 0%, color-mix(in srgb, var(--brand) 42%, transparent), transparent 70%), var(--surface);
+}
+:root[data-theme="light"] :is(#perche, #why) .p-why:first-child {
+  background: radial-gradient(90% 70% at 85% 0%, color-mix(in srgb, var(--brand) 16%, transparent), transparent 70%), var(--surface);
+}
+:is(#perche, #why) .p-why:first-child::after {
+  content: ""; position: absolute; inset: -30% -30% 40%; z-index: 0; pointer-events: none;
+  background-image:
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--weft) 22%, transparent) 0 1px, transparent 1px 16px),
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--weft) 12%, transparent) 0 1px, transparent 1px 16px);
+  transform: rotate(-14deg);
+  -webkit-mask-image: linear-gradient(180deg, #000 20%, transparent 80%);
+          mask-image: linear-gradient(180deg, #000 20%, transparent 80%);
+}
+:is(#perche, #why) .p-why:first-child h3 { font-size: clamp(2rem, 3.6vw, 3.2rem); letter-spacing: -.035em; line-height: 1.02; max-width: 14ch; }
+:is(#perche, #why) .p-why:first-child p { font-size: var(--step-1); max-width: 34ch; }
+
 .p-values { list-style: none; margin: clamp(48px, 6vw, 88px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); }
 .p-values li { padding: 26px 22px 0 0; display: flex; flex-direction: column; gap: 6px; }
 .p-values b { font-family: var(--f-display); font-size: clamp(1.5rem, 2.5vw, 2.2rem); letter-spacing: -.035em; line-height: 1.05; }
@@ -476,7 +528,7 @@ html:not(.motion) .p-progress { display: none; }
 .p-founder-art b { position: relative; font-family: var(--f-display); font-size: clamp(3.6rem, 6vw, 5.4rem); letter-spacing: -.06em; color: var(--ink); transition: transform .8s var(--ease); }
 @media (hover: hover) { .p-founder:hover .p-founder-art b { transform: scale(1.08); } }
 .p-founder h3 { font-size: var(--step-2); letter-spacing: -.02em; padding-inline: 8px; }
-.p-founder .role { font-family: var(--f-mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--weft); padding-inline: 8px; }
+.p-founder .role { font-family: var(--f-mono); font-size: 12px; letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--weft); padding-inline: 8px; }
 .p-founder .bio { color: var(--muted); font-size: var(--step--1); line-height: 1.55; padding-inline: 8px; margin-top: 4px; }
 
 /* ---- Check-up: blocco blu ---- */
@@ -493,13 +545,13 @@ html:not(.motion) .p-progress { display: none; }
 .p-checkup-bg::after {
   content: ""; position: absolute; inset: 0;
   background:
-    radial-gradient(55% 70% at 85% 10%, rgba(142, 157, 255, .55), transparent 65%),
+    radial-gradient(55% 70% at 85% 10%, rgba(142, 157, 255, .28), transparent 65%),
     radial-gradient(50% 60% at 0% 100%, rgba(4, 2, 60, .6), transparent 70%);
 }
 @keyframes p-drift { to { transform: translate(40px, 40px); } }
 .p-checkup-in { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: clamp(40px, 6vw, 104px); align-items: end; }
 .p-checkup .p-h2 { color: #fff; }
-.p-eyebrow-inv { font-family: var(--f-mono); font-size: var(--step--1); font-weight: 500; letter-spacing: .24em; text-transform: uppercase; color: rgba(255, 255, 255, .78); }
+.p-eyebrow-inv { font-family: var(--f-mono); font-size: var(--step--1); font-weight: 500; letter-spacing: var(--tracking-label); text-transform: uppercase; color: rgba(255, 255, 255, .78); }
 .p-lede-inv { margin-top: 26px; max-width: 48ch; font-size: var(--step-1); line-height: 1.55; color: rgba(255, 255, 255, .86); }
 .p-checkup-cta { margin-top: 34px; }
 .p-btn-inv { background: #fff; color: var(--brand); }
@@ -623,15 +675,15 @@ html:not(.motion) .p-progress { display: none; }
 
 /* ---- Righe ricche (Strategia: su cosa lavoriamo) ---- */
 .p-rows h3 { font-family: var(--f-display); font-size: clamp(1.7rem, 3.4vw, 2.8rem); line-height: 1.04; letter-spacing: -.035em; transition: transform .55s var(--ease), color .45s var(--ease); }
-@media (hover: hover) { .p-rows li:hover h3 { color: #fff; transform: translateX(10px); } }
+@media (hover: hover) { .p-rows li:hover h3 { transform: translateX(10px); } }
 .p-rows.is-rich .d { max-width: 54ch; line-height: 1.55; }
 .p-rows.is-wide { max-width: none; }
 
 /* ---- Check-up: la barra dei 30 minuti e i quattro momenti ---- */
 .p-timeline { display: flex; gap: 6px; margin-bottom: clamp(28px, 4vw, 48px); }
 .p-tl-seg { flex: var(--m) 1 0; min-width: 0; }
-.p-tl-seg i { display: block; height: 12px; border-radius: 3px; background: linear-gradient(90deg, var(--brand), var(--weft)); transform-origin: 0 50%; }
-.p-tl-seg:nth-child(even) i { background: linear-gradient(90deg, var(--weft), color-mix(in srgb, var(--weft) 55%, var(--brand))); }
+.p-tl-seg i { display: block; height: 12px; border-radius: 3px; background: var(--brand); transform-origin: 0 50%; }
+.p-tl-seg:nth-child(even) i { background: color-mix(in srgb, var(--brand) 60%, var(--ground)); }
 .p-tl-seg span { display: block; margin-top: 10px; font-family: var(--f-mono); font-size: 12px; color: var(--muted); white-space: nowrap; }
 .p-moments { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
 .p-moment { padding-top: 18px; border-top: 1px solid var(--line-strong); display: flex; flex-direction: column; gap: 10px; }
@@ -659,7 +711,8 @@ html:not(.motion) .p-progress { display: none; }
 .p-group { display: grid; grid-template-columns: minmax(0, .75fr) minmax(0, 1.6fr); gap: clamp(28px, 5vw, 80px); align-items: start; padding-block: clamp(40px, 6vw, 72px); border-top: 1px solid var(--line); }
 .p-group:last-child { border-bottom: 1px solid var(--line); }
 .p-group-side { position: sticky; top: 112px; }
-.p-group-n { display: block; font-family: var(--f-mono); font-size: var(--step--1); letter-spacing: .16em; color: var(--weft); margin-bottom: 14px; }
+/* le aree non hanno un ordine: il numero era solo decorazione */
+.p-group-n { display: none; }
 .p-group-side h2 { font-size: clamp(1.9rem, 3.4vw, 3rem); letter-spacing: -.04em; line-height: 1.02; max-width: 12ch; }
 .p-group-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
 .p-group-cards .p-case { min-height: 0; }
@@ -667,7 +720,7 @@ html:not(.motion) .p-progress { display: none; }
 /* strumenti che usi già: pillole collegate da un filo */
 .p-chips { position: relative; display: flex; flex-wrap: wrap; gap: 12px; margin-top: clamp(28px, 4vw, 44px); }
 .p-chips span {
-  position: relative; z-index: 1; padding: 12px 20px; border-radius: var(--r-pill);
+  position: relative; z-index: 1; padding: 12px 20px; border-radius: var(--r-sm);
   border: 1px solid var(--line-strong); background: var(--surface);
   font-family: var(--f-mono); font-size: var(--step--1); letter-spacing: .06em; color: var(--ink);
   transition: border-color .3s var(--ease), background .3s var(--ease);
@@ -700,7 +753,7 @@ html:not(.motion) .p-progress { display: none; }
 
 /* ---- Domande frequenti: pannello fisso a lato ---- */
 .p-faq-side .p-faq-count { display: flex; align-items: baseline; gap: 12px; margin-bottom: clamp(24px, 3vw, 36px); font-family: var(--f-display); font-weight: 700; letter-spacing: -.06em; }
-.p-faq-count b { font-size: clamp(5rem, 11vw, 9.5rem); line-height: .85; background: linear-gradient(180deg, var(--ink) 30%, var(--weft)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.p-faq-count b { font-size: clamp(5rem, 11vw, 9.5rem); line-height: .85; color: var(--ink); }
 .p-faq-count span { font-size: clamp(1.3rem, 2.2vw, 1.9rem); color: var(--muted); letter-spacing: -.02em; }
 .p-faq-list .qa .a .arrow-link { margin-top: 10px; }
 
@@ -730,7 +783,8 @@ html:not(.motion) .p-progress { display: none; }
   .p-counter { display: none; }
   /* senza il contatore il pulsante restava attaccato al titolo */
   .p-h2 + .p-counter + [data-reveal] { margin-top: 28px; }
-  .p-why-grid, .p-team-grid { grid-template-columns: 1fr; }
+  .p-why-grid, .p-team-grid, :is(#perche, #why) .p-why-grid { grid-template-columns: 1fr; }
+  :is(#perche, #why) .p-why:first-child { grid-row: auto; min-height: 320px; }
   .p-values { grid-template-columns: 1fr 1fr; gap: 0 18px; }
   .p-step { min-height: 0; }
   .p-steps { padding-left: 48px; }
@@ -745,6 +799,8 @@ html:not(.motion) .p-progress { display: none; }
   .p-viz-dots i { width: 46px; height: 46px; }
   .p-values { grid-template-columns: 1fr; }
   .p-btn-xl { width: 100%; }
+  /* i testi di servizio da 11-12 px sul telefono erano troppo piccoli */
+  .p-scroll, .p-stat-body > .p-src, .p-founder .role, .p-micro { font-size: .8125rem; }
 }
 
 /* ============================================================
