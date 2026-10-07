@@ -16,7 +16,8 @@
   if (!motion) root.classList.remove("motion");
 
   var isEn = (root.lang || "").toLowerCase().indexOf("en") === 0;
-  var hasIntro = !!document.querySelector(".p-intro");
+  // l'apertura si vede una volta per visita: la classe .no-intro la mette l'<head> quando è già stata vista
+  var hasIntro = !!document.querySelector(".p-intro") && !root.classList.contains("no-intro");
 
   var weave = initWeave();
   if (!motion) return;
@@ -86,7 +87,7 @@
        Sulle pagine senza apertura: solo l'ingresso del titolo.
        ============================================================ */
     (function () {
-      var intro = document.querySelector(".p-intro");
+      var intro = hasIntro ? document.querySelector(".p-intro") : null;
       var h1 = document.querySelector(".p-h1");
       if (!h1) return;
       var h1Split = Split ? Split.create(h1, { type: "lines", mask: "lines", linesClass: "p-line" }) : null;
@@ -149,11 +150,22 @@
         .fromTo("[data-hero-item]:not(.p-kicker)", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 1.1, stagger: 0.09 }, HERO + 0.35)
         .add(endIntro, END + 0.65)
         .add(function () { if (h1Split) h1Split.revert(); });
+      // appena lo sfondo dell'apertura è trasparente, testata e pulsante della hero si possono già cliccare;
+      // lo scorrimento riparte quando il tessuto è al suo posto
+      tl.set(intro, { pointerEvents: "none" }, S + 0.95)
+        .call(function () { if (lenis) lenis.start(); }, null, END);
+      // Un clic, lo scroll o un tasto durante l'apertura: accelera fino alla fine, senza tagli
+      var hurryOn = ["wheel", "touchstart", "keydown", "pointerdown"];
+      function hurry() {
+        if (tl.progress() < 1 && tl.timeScale() < 2) gsap.to(tl, { timeScale: 8, duration: 0.25, ease: "power1.in" });
+      }
+      hurryOn.forEach(function (t) { window.addEventListener(t, hurry, { passive: true }); });
       if (deepLink) {
         tl.progress(1);
         endIntro();
       }
       function endIntro() {
+        hurryOn.forEach(function (t) { window.removeEventListener(t, hurry); });
         if (intro.parentNode) intro.parentNode.removeChild(intro);
         if (loom && loom.svg.parentNode) loom.svg.parentNode.removeChild(loom.svg);
         if (lenis) lenis.start();

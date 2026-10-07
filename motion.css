@@ -35,6 +35,9 @@ html:not(.motion) .p-progress { display: none; }
 .motion .p-h1 { visibility: hidden; }
 /* la testata scende alla fine dell'apertura, solo nelle home */
 .motion .p-intro ~ .top { transform: translateY(-100%); }
+/* apertura già vista in questa visita (classe messa nell'<head>): niente apertura, testata al suo posto */
+.motion.no-intro .p-intro { display: none; }
+.motion.no-intro .p-intro ~ .top { transform: none; }
 
 /* ============================================================
    APERTURA

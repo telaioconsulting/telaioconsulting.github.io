@@ -33,8 +33,12 @@
       try { if (localStorage.getItem("telaio-theme") === "light") { r.setAttribute("data-theme", "light"); document.querySelector('meta[name="theme-color"]').content = "#F4F5F8"; } } catch (e) {}
       if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
         r.classList.add("motion");
-        // The intro always starts from the top of the page
-        if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+        // The intro plays once per visit: coming back to the home page (also from Italian) skips it
+        var seen = false;
+        try { seen = sessionStorage.getItem("telaio-intro") === "1"; sessionStorage.setItem("telaio-intro", "1"); } catch (e) {}
+        if (seen) r.classList.add("no-intro");
+        // the first time it always starts from the top of the page
+        else if ("scrollRestoration" in history) history.scrollRestoration = "manual";
       }
       // If the scripts don't run, fall back to the static page (everything visible).
       setTimeout(function () {

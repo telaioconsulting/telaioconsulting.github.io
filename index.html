@@ -34,8 +34,12 @@
       try { if (localStorage.getItem("telaio-theme") === "light") { r.setAttribute("data-theme", "light"); document.querySelector('meta[name="theme-color"]').content = "#F4F5F8"; } } catch (e) {}
       if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
         r.classList.add("motion");
-        // L'apertura parte sempre dall'inizio della pagina
-        if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+        // L'apertura si vede una volta per visita: tornando alla home (anche dall'inglese) si salta
+        var seen = false;
+        try { seen = sessionStorage.getItem("telaio-intro") === "1"; sessionStorage.setItem("telaio-intro", "1"); } catch (e) {}
+        if (seen) r.classList.add("no-intro");
+        // la prima volta parte sempre dall'inizio della pagina
+        else if ("scrollRestoration" in history) history.scrollRestoration = "manual";
       }
       // Se gli script non partono, si torna alla pagina statica (tutto visibile).
       setTimeout(function () {
