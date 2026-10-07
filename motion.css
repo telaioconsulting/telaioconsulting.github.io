@@ -239,6 +239,17 @@ html:not(.motion) .p-progress { display: none; }
 .p-stat-body > .p-src { margin-top: 14px; font-family: var(--f-mono); font-size: 11px; line-height: 1.4; }
 .p-src a { color: var(--weft); }
 
+/* ---- Numeri tessuti (motion.js): il canvas dei fili sta sopra la cifra; il testo vero resta sotto,
+   col valore finale. I canvas ereditano dal numero le cifre tabellari; la spaziatura la mette motion.js. ---- */
+.motion .p-stat-num { position: relative; }
+.p-woven, .p-woven-aux { letter-spacing: 0; font-variant-numeric: tabular-nums; }
+.p-woven { position: absolute; left: 0; top: 0; z-index: 1; display: block; pointer-events: none; }
+/* canvas di lavoro e misure: nella pagina (per ereditare il carattere), ma invisibili e fuori dal flusso */
+.p-woven-aux, .p-woven-meas { position: absolute; left: 0; top: 0; visibility: hidden; pointer-events: none; }
+.p-woven-aux { width: 1px; height: 1px; }
+.p-woven-meas { white-space: nowrap; }
+/* ---- fine numeri tessuti ---- */
+
 .p-viz { margin-bottom: 26px; }
 .p-viz-cols { display: flex; align-items: flex-end; gap: 14px; height: 132px; }
 .p-col { width: 66px; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; gap: 8px; }
