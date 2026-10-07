@@ -453,6 +453,106 @@ html:not(.motion) .p-manifesto-text em {
 .p-method-foot { margin-top: clamp(24px, 4vw, 48px); }
 .p-method-foot .arrow-link { margin-top: 16px; }
 
+/* ============================================================
+   IL TELAIO RACCONTA — «Come lavoriamo» nella home (initRacconto in motion.js)
+   Base, senza JavaScript: titolo, i quattro passi in elenco, pulsante, e accanto il riquadro.
+   .p-rac-still (riduci movimento): accanto ai passi il tessuto finito, disegnato fermo.
+   .p-rac-live (con le animazioni): la sezione si ferma e la tela tesse mentre scorri;
+   un passo alla volta, col contatore. Su telefono e tablet il titolo resta sopra la scena.
+   ============================================================ */
+.p-rac-grid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(36px, 6vw, 104px); align-items: start; }
+.p-rac-side { container-type: inline-size; }
+.p-rac-side .p-h2 { font-size: clamp(2.3rem, min(5.4vw, 14cqi), 4.6rem); }
+.p-rac-now, .p-rac-canvas, .p-rac-glow { display: none; }
+.p-rac-steps { list-style: none; margin: clamp(32px, 4vw, 52px) 0 0; padding: 0; }
+.p-rac-step { display: flex; flex-direction: column; gap: 10px; padding: 24px 0; border-top: 1px solid var(--line); }
+.p-rac-step-n { font-family: var(--f-mono); font-size: var(--step--1); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--weft); }
+.p-rac-step h3 { font-size: clamp(1.6rem, 2.6vw, 2.3rem); letter-spacing: -.035em; max-width: 19ch; }
+.p-rac-step p { color: var(--muted); font-size: var(--step-1); line-height: 1.5; max-width: 42ch; }
+.p-rac-cta { margin-top: clamp(24px, 3vw, 36px); }
+.p-rac-stage { position: sticky; top: 112px; }
+.p-rac-callout { max-width: 46ch; }
+@media (min-width: 900px) and (max-height: 820px) { .p-rac-stage { position: relative; top: auto; } }
+/* bagliore blu dietro il tessuto (più tenue nel tema chiaro) */
+.p-rac-glow { pointer-events: none; background: radial-gradient(closest-side, rgba(19, 7, 237, .34), rgba(19, 7, 237, .12) 48%, rgba(19, 7, 237, 0)); }
+:root[data-theme="light"] .p-rac-glow { background: radial-gradient(closest-side, rgba(19, 7, 237, .14), rgba(19, 7, 237, .05) 48%, rgba(19, 7, 237, 0)); }
+
+/* ---- Riduci movimento: il tessuto finito, fermo, col marchio intessuto in blu ---- */
+.p-rac-still .p-rac-canvas { display: block; position: relative; z-index: 1; width: 100%; aspect-ratio: 1 / 1.04; max-width: 600px; margin-inline: auto; }
+.p-rac-still .p-rac-glow { display: block; position: absolute; inset: 4% 4% auto; aspect-ratio: 1; z-index: 0; }
+.p-rac-still .p-rac-callout { position: relative; z-index: 1; margin: 20px auto 0; }
+
+/* ---- Scena: la sezione si ferma, la tela racconta i quattro passi ---- */
+/* fondo pieno (lo stesso della pagina): la trama delle sezioni, che scorrerebbe sotto la scena ferma, qui non si disegna */
+.p-sec.p-rac-live { padding-block: 0; background: var(--ground); }
+/* la scena si ferma sotto la testata (64 px, sempre visibile): così anche un link a #come-lavoriamo arriva sulla scena intera */
+.p-rac-live .p-rac-pin { position: relative; height: calc(100vh - 64px); height: calc(100svh - 64px); overflow: hidden; }
+.p-rac-live .p-rac-canvas { display: block; position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; pointer-events: none; }
+/* il bagliore lo muove motion.js (solo transform e opacity) */
+.p-rac-live .p-rac-glow { display: block; position: absolute; left: 0; top: 0; z-index: 0; width: 600px; height: 600px; border-radius: 50%; opacity: 0; will-change: transform, opacity; }
+.p-rac-live .p-rac-grid {
+  position: relative; z-index: 1; height: 100%;
+  grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); align-items: stretch;
+  padding-block: clamp(16px, 4.5vh, 48px);
+}
+.p-rac-live .p-rac-side { display: flex; flex-direction: column; justify-content: center; min-height: 0; }
+.p-rac-live .p-rac-side .p-h2 { font-size: clamp(2rem, min(3.6vw, 6.2vh, 12cqi), 3.6rem); max-width: 15ch; }
+.p-rac-live .p-rac-now { display: block; margin-top: clamp(16px, 4.4vh, 48px); }
+.p-rac-live .p-counter { margin: 0; }
+.p-rac-live .p-counter-win { font-size: clamp(3.8rem, min(8vw, 12.5vh), 8.2rem); }
+.p-rac-live .p-counter-tot { font-size: clamp(1.15rem, min(2vw, 3.2vh), 1.8rem); }
+/* quanto manca alla fine della scena: un tratto per passo */
+.p-rac-bars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; max-width: 280px; margin-top: clamp(10px, 1.8vh, 18px); }
+.p-rac-bars span { height: 2px; border-radius: 2px; background: var(--line-strong); overflow: hidden; }
+.p-rac-bars i { display: block; height: 100%; background: var(--brand); transform: scaleX(0); transform-origin: 0 50%; }
+/* un passo alla volta, tutti nella stessa cella: l'altezza resta quella del più lungo (niente salti) */
+.p-rac-live .p-rac-steps { display: grid; margin-top: clamp(16px, 3.4vh, 40px); }
+.p-rac-live .p-rac-step { grid-area: 1 / 1; padding: 0; border: 0; }
+.p-rac-live .p-rac-step h3 { font-size: clamp(1.55rem, min(2.5vw, 4.3vh), 2.35rem); }
+.p-rac-live .p-rac-step p { font-size: clamp(1rem, min(1.25vw, 2.1vh), 1.15rem); }
+.p-rac-live .p-rac-cta { margin-top: clamp(18px, 4.4vh, 48px); }
+.p-rac-live .p-rac-stage { position: relative; top: auto; min-height: 0; }
+/* la frase sotto il marchio, alla fine: la posizione la calcola motion.js */
+.p-rac-live .p-rac-callout {
+  position: absolute; left: 0; right: 0; top: 0; margin-inline: auto; width: min(38ch, 94%);
+  text-align: center; opacity: 0; transform: translateY(10px);
+  background: color-mix(in srgb, var(--brand) 9%, color-mix(in srgb, var(--surface) 82%, transparent));
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+}
+.p-rac-live .p-rac-foot { margin-top: 0; padding-top: clamp(20px, 3vw, 32px); }
+/* la trama delle sezioni qui raddoppierebbe i fili del telaio, e scorrerebbe sotto la scena ferma: si spegne
+   (il livello .p-trama sta sopra il fondo della sezione, quindi va spento anche con il fondo pieno) */
+.p-rac-live > .p-trama { display: none; }
+
+/* telefono e tablet: una colonna; la tela in alto, sotto il passo attivo e il pulsante */
+@media (max-width: 899px) {
+  .p-rac-grid { grid-template-columns: 1fr; }
+  .p-rac-stage { position: relative; top: auto; }
+  .p-rac-still .p-rac-stage { margin-top: 12px; }
+  .p-rac-live .p-rac-slot { padding-top: clamp(64px, 12vw, 104px); }
+  .p-rac-live .p-rac-grid {
+    grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) auto; gap: 0;
+    padding-top: 0; padding-bottom: clamp(14px, 2.6vh, 28px);
+  }
+  .p-rac-live .p-rac-stage { grid-row: 1; }
+  .p-rac-live .p-rac-side { grid-row: 2; justify-content: flex-end; }
+  .p-rac-live .p-rac-now { display: flex; align-items: flex-end; gap: 16px; margin-top: 0; }
+  /* sotto i 900 px il contatore del sito è nascosto: qui serve, in piccolo accanto ai tratti */
+  .p-rac-live .p-counter { display: flex; gap: 6px; }
+  .p-rac-live .p-counter-win { font-size: clamp(2.6rem, 11vw, 4.4rem); }
+  .p-rac-live .p-counter-tot { font-size: 1rem; padding-top: .35em; }
+  .p-rac-live .p-rac-bars { flex: 1; max-width: none; margin: 0 0 .7em; }
+  .p-rac-live .p-rac-steps { margin-top: 10px; }
+  .p-rac-live .p-rac-step { gap: 6px; }
+  .p-rac-live .p-rac-step-n { font-size: .75rem; }
+  .p-rac-live .p-rac-step h3 { font-size: clamp(1.3rem, 5.4vw, 1.9rem); max-width: 22ch; }
+  .p-rac-live .p-rac-step p { font-size: clamp(.95rem, 3.9vw, 1.05rem); line-height: 1.46; max-width: 52ch; }
+  .p-rac-live .p-rac-cta { margin-top: 14px; }
+  .p-rac-live .p-rac-cta .btn { width: 100%; padding-block: 15px; }
+  .p-rac-live .p-rac-callout { font-size: .875rem; line-height: 1.45; padding: 12px 16px; }
+}
+/* ---- fine «Il telaio racconta» ---- */
+
 /* ---- Perché Telaio ---- */
 .p-why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
 .p-why, .p-founder {

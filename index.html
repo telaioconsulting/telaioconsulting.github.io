@@ -406,30 +406,41 @@
       </div>
     </section>
 
-    <!-- 4 · COME LAVORIAMO (filo che si tesse allo scroll) -->
-    <section id="come-lavoriamo" class="p-sec p-method">
-      <div class="wrap p-method-grid">
-        <div class="p-method-side">
-          <p class="eyebrow" data-reveal>Come lavoriamo</p>
-          <h2 class="p-h2" data-split>Quattro passi. Alla fine, uno strumento che lavora per te.</h2>
-          <div class="p-counter" aria-hidden="true">
-            <span class="p-counter-win"><span class="p-counter-reel"><i>01</i><i>02</i><i>03</i><i>04</i></span></span>
-            <span class="p-counter-tot">/04</span>
+    <!-- 4 · COME LAVORIAMO: il telaio racconta i quattro passi.
+         La sezione si ferma mentre scorri e sulla tela si tesse il tessuto, fino al marchio (motion.js, initRacconto).
+         Senza animazioni: i quattro passi in elenco e, accanto, il tessuto finito disegnato fermo. -->
+    <section id="come-lavoriamo" class="p-sec p-method p-racconto">
+      <div class="wrap p-rac-slot"></div>
+      <div class="p-rac-pin">
+        <div class="wrap p-rac-grid">
+          <div class="p-rac-side">
+            <header class="p-rac-head">
+              <p class="eyebrow" data-reveal>Come lavoriamo</p>
+              <h2 class="p-h2" data-split>Quattro passi. Alla fine, uno strumento che lavora per te.</h2>
+            </header>
+            <div class="p-rac-now" aria-hidden="true">
+              <div class="p-counter">
+                <span class="p-counter-win"><span class="p-counter-reel"><i>01</i><i>02</i><i>03</i><i>04</i></span></span>
+                <span class="p-counter-tot">/04</span>
+              </div>
+              <div class="p-rac-bars"><span><i></i></span><span><i></i></span><span><i></i></span><span><i></i></span></div>
+            </div>
+            <ol class="p-rac-steps">
+              <li class="p-rac-step"><span class="p-rac-step-n">Passo 1</span><h3>Partiamo da un problema reale</h3><p>Capiamo dove perdi tempo, soldi o occasioni. Scegliamo insieme il problema da risolvere per primo.</p></li>
+              <li class="p-rac-step"><span class="p-rac-step-n">Passo 2</span><h3>Scegliamo gli strumenti giusti</h3><p>Ti proponiamo tre strade. Ti diciamo quale sceglieremmo e perché, con tempi, costi e limiti scritti prima di iniziare.</p></li>
+              <li class="p-rac-step"><span class="p-rac-step-n">Passo 3</span><h3>Li mettiamo al lavoro</h3><p>Prepariamo lo strumento, lo colleghiamo a quello che usi già e lo proviamo sul campo con le tue persone. In 4 settimane hai il primo strumento AI in uso.</p></li>
+              <li class="p-rac-step"><span class="p-rac-step-n">Passo 4</span><h3>Restiamo finché producono risultati</h3><p>Guardiamo insieme cosa cambia, sistemiamo quello che non va e decidiamo il passo successivo.</p></li>
+            </ol>
+            <div class="p-rac-cta"><a class="btn btn-primary p-btn-xl" data-magnetic href="/check-up-ai/" data-cta="checkup" data-placement="method">Prenota il check-up AI <span class="p-arr" aria-hidden="true">→</span></a></div>
           </div>
-          <div data-reveal><a class="btn btn-primary p-btn-xl" data-magnetic href="/check-up-ai/" data-cta="checkup" data-placement="method">Prenota il check-up AI <span class="p-arr" aria-hidden="true">→</span></a></div>
-        </div>
-        <div class="p-steps">
-          <svg class="p-thread" aria-hidden="true"><path class="bg"/><path class="fg"/></svg>
-          <ol class="p-steps-list">
-          <li class="p-step"><span class="p-step-node" aria-hidden="true"></span><span class="p-step-n">Passo 1</span><h3>Partiamo da un problema reale</h3><p>Capiamo dove perdi tempo, soldi o occasioni. Scegliamo insieme il problema da risolvere per primo.</p></li>
-          <li class="p-step"><span class="p-step-node" aria-hidden="true"></span><span class="p-step-n">Passo 2</span><h3>Scegliamo gli strumenti giusti</h3><p>Ti proponiamo tre strade. Ti diciamo quale sceglieremmo e perché, con tempi, costi e limiti scritti prima di iniziare.</p></li>
-          <li class="p-step"><span class="p-step-node" aria-hidden="true"></span><span class="p-step-n">Passo 3</span><h3>Li mettiamo al lavoro</h3><p>Prepariamo lo strumento, lo colleghiamo a quello che usi già e lo proviamo sul campo con le tue persone. In 4 settimane hai il primo strumento AI in uso.</p></li>
-          <li class="p-step"><span class="p-step-node" aria-hidden="true"></span><span class="p-step-n">Passo 4</span><h3>Restiamo finché producono risultati</h3><p>Guardiamo insieme cosa cambia, sistemiamo quello che non va e decidiamo il passo successivo.</p></li>
-          </ol>
+          <div class="p-rac-stage">
+            <div class="p-rac-glow" aria-hidden="true"></div>
+            <canvas class="p-rac-canvas" aria-hidden="true"></canvas>
+            <div class="callout p-rac-callout">Hai un solo referente: Telaio. Rispondiamo del risultato, dall'analisi alla soluzione che funziona, e anche dopo.</div>
+          </div>
         </div>
       </div>
-      <div class="wrap p-method-foot">
-        <div class="callout" data-reveal>Hai un solo referente: Telaio. Rispondiamo del risultato, dall'analisi alla soluzione che funziona, e anche dopo.</div>
+      <div class="wrap p-method-foot p-rac-foot">
         <p data-reveal><a class="arrow-link" href="/come-lavoriamo/">Come lavoriamo, nel dettaglio →</a></p>
       </div>
     </section>
