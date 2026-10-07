@@ -771,56 +771,398 @@
       });
     }
 
-    /* ---- Sezioni: la trama del tessuto, appena accennata, si accende attorno al mouse ----
-       Col mouse la luce lo segue con un po' di ritardo; sul telefono è una fascia a metà schermo.
-       Si aggiorna solo quando il mouse o la pagina si muovono, e solo nelle sezioni vicine allo schermo. */
+    /* ============================================================
+       SEZIONI: LA TRAMA CHE SI PIEGA
+       La trama del tessuto (ordito e trama ogni 44 px, nodi agli incroci), appena accennata, su un canvas:
+       · attorno al mouse si accende (fili più chiari, nodi, alone blu) e i fili si scostano come stoffa premuta;
+         quando il mouse lascia la trama tornano al loro posto, lì dov'erano premuti, con un piccolo rimbalzo,
+         e la luce resta lì e si spegne piano
+       · scorrendo veloce i fili orizzontali ondeggiano, tanto più quanto più è veloce, poi si fermano
+       · sul telefono niente mouse: una fascia di luce a metà schermo e l'ondulazione
+       · sul blocco blu del check-up solo la luce bianca (ha già il suo reticolo); sotto la hero la trama entra sfumando
+       Il canvas non è fisso: sta nella pagina, alto quanto lo schermo più un margine, e si sposta a scatti di 44 px,
+       così i fili restano attaccati al testo anche quando il telefono scorre per conto suo.
+       Lavora solo quando qualcosa si muove: mouse e pagina fermi, niente calcoli e niente disegni.
+       ============================================================ */
     (function () {
-      var layers = gsap.utils.toArray("main > section:not(.p-hero)").filter(function (s) {
+      var main = document.querySelector("main"), header = document.querySelector(".top");
+      // le sezioni come prima: figlie di <main> (anche dentro il contenitore di un blocco fermo), non la hero, posizionate
+      var secs = main ? gsap.utils.toArray("main > section:not(.p-hero), main > .pin-spacer > section:not(.p-hero)").filter(function (s) {
         return getComputedStyle(s).position !== "static";
-      }).map(function (s) {
-        var l = document.createElement("div");
-        l.className = "p-trama"; l.setAttribute("aria-hidden", "true");
-        s.classList.add("p-has-trama"); s.appendChild(l);
-        return { s: s, l: l };
+      }) : [];
+      // i blocchi col loro fondo (il blu del check-up) non hanno la trama
+      var webs = secs.filter(function (s) {
+        return !s.classList.contains("p-checkup") && /^(transparent|rgba\(.*,\s*0\))$/.test(getComputedStyle(s).backgroundColor);
       });
-      if (!layers.length) return;
-      // la griglia di ogni sezione parte dalla stessa trama della pagina: i fili non saltano tra una sezione e l'altra
-      function align() {
-        var sy = window.scrollY;
-        layers.forEach(function (o) {
-          var r = o.s.getBoundingClientRect();
-          o.l.style.setProperty("--gx", (-(r.left % 44)).toFixed(1) + "px");
-          o.l.style.setProperty("--gy", (-((r.top + sy) % 44)).toFixed(1) + "px");
-        });
+      var blues = secs.filter(function (s) { return s.classList.contains("p-checkup"); }).map(function (s) {
+        var l = document.createElement("div");
+        l.className = "p-tela-luce"; l.setAttribute("aria-hidden", "true");
+        s.appendChild(l);
+        return { s: s, l: l, top: 0, h: 0, left: 0, tx: null, ty: null };
+      });
+      var cv = document.createElement("canvas"), ctx = cv.getContext ? cv.getContext("2d") : null;
+      if (!ctx || (!webs.length && !blues.length)) return;
+      if (!finePointer) root.classList.add("p-tela-touch");
+      var stage = document.createElement("div");
+      stage.className = "p-tela"; stage.setAttribute("aria-hidden", "true");
+      stage.appendChild(cv);
+      document.body.insertBefore(stage, document.body.firstChild);
+
+      // misure (come la trama di prima): passo, pressione, luce, ondulazione
+      var P = 44, R = 220, A = 16, CORE = 28, LIGHT = 360, GLOW = 260, RIP = 8, KX = Math.PI * 2 / 360, ROW = 0.45, TAU = Math.PI * 2;
+      // spostamento alla distanza r: r/√(r²+CORE²) · (1−(r/R)²)², portato a un massimo di A (nessun filo si incrocia)
+      var NORM = (function () {
+        for (var m = 0, r = 1; r < R; r++) { var u = r / R; m = Math.max(m, r / Math.sqrt(r * r + CORE * CORE) * (1 - u * u) * (1 - u * u)); }
+        return 1 / m;
+      })();
+      var MARGIN = (finePointer ? 3 : 6) * P; // fili disegnati fuori dallo schermo (sul telefono di più: scorre più veloce)
+      var dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+
+      // colori dai token del tema (si rileggono quando il tema cambia)
+      var INK, WEFT, BRAND, C_WARP, C_WEFT, C_DOT;
+      function token(name, fb) {
+        var v = getComputedStyle(root).getPropertyValue(name).trim();
+        return /^#[0-9a-f]{6}$/i.test(v) ? parseInt(v.substr(1, 2), 16) + "," + parseInt(v.substr(3, 2), 16) + "," + parseInt(v.substr(5, 2), 16) : fb;
       }
-      align();
-      ST.addEventListener("refresh", align);
-      var px = -9999, py = -9999, cx = px, cy = py, lastY = -1, lastX = cx, lastYc = cy;
+      function colors() {
+        INK = token("--ink", "245,247,241"); WEFT = token("--weft", "142,157,255"); BRAND = token("--brand", "19,7,237");
+        C_WARP = "rgba(" + INK + ",.34)"; C_WEFT = "rgba(" + WEFT + ",.6)"; C_DOT = "rgb(" + WEFT + ")";
+      }
+      colors();
+
+      var CW = 0, CH = 0, VH = 0, T = -1;          // canvas, altezza dello schermo, cima del canvas nella pagina
+      var bands = [], fades = [], barH = 0;         // tratti con la trama, dove entra sfumando, altezza della testata
+      var px = -9999, py = -9999, inWin = false, seen = false;  // mouse
+      var tx = 0, ty = 0;                           // dove va la luce: il mouse, o l'ultimo punto toccato sulla trama
+      var cx = { x: 0, v: 0 }, cy = { x: 0, v: 0 }; // la luce (nello schermo), con una molla
+      var lit = 0;                                  // quanto è accesa (0-1)
+      var qx = 0, qy = 0;                           // la pressione (nella pagina): segue la luce finché si preme, poi resta lì
+      var amp = { x: 0, v: 0 };                     // quanto preme (molla)
+      var bx = -9999, by = -9999;                   // la luce bianca sul blocco blu: segue il mouse come prima
+      var lastY = window.scrollY, vel = 0, E = 0, phase = 0, dir = 1;  // scorrimento e ondulazione
+      var dirty = true, awake = false;
+
+      /* ---- Misure: all'avvio, al ridimensionamento, quando la pagina cambia altezza e a ogni refresh di ScrollTrigger ---- */
+      function layout() {
+        var d = Math.min(window.devicePixelRatio || 1, 1.5), w = root.clientWidth, h = window.innerHeight;
+        var need = Math.max(h, root.clientHeight) + 2 * MARGIN;
+        VH = h;
+        // il canvas si rifà solo se cambia la larghezza o se serve più alto: la barra del telefono che va e viene non lo ricrea
+        if (w !== CW || need > CH || d !== dpr) {
+          dpr = d; CW = w; CH = need;
+          cv.width = Math.round(CW * dpr); cv.height = Math.round(CH * dpr);
+          cv.style.width = CW + "px"; cv.style.height = CH + "px";
+        }
+        measure();
+      }
+      function measure() {
+        var sy = window.scrollY, out = [], fd = [];
+        webs.forEach(function (s) {
+          // in un blocco fermo conta il suo contenitore, che resta al suo posto nella pagina
+          var el = s.parentNode.classList.contains("pin-spacer") ? s.parentNode : s;
+          var r = el.getBoundingClientRect(), a = Math.round(r.top + sy), b = Math.round(r.bottom + sy), p = out[out.length - 1];
+          // sezioni attaccate: un solo tratto, niente cuciture
+          if (p && a - p[1] <= 1) p[1] = Math.max(p[1], b); else out.push([a, b]);
+          var prev = el.previousElementSibling;
+          if (prev && prev.classList.contains("p-hero")) fd.push(a);
+        });
+        blues.forEach(function (o) {
+          var r = o.s.getBoundingClientRect();
+          o.top = r.top + sy; o.h = r.height; o.left = r.left; o.tx = null;
+        });
+        bands = out; fades = fd;
+        barH = header ? header.offsetHeight : 0;
+        stage.style.height = Math.ceil(main.getBoundingClientRect().bottom + sy) + "px";
+        dirty = true;
+      }
+      // il mouse è sopra un tratto con la trama? (non sulla testata, sul blocco blu, sulla hero o sul piè di pagina)
+      function onGrid() {
+        if (!inWin || py < barH) return false;
+        var d = py + window.scrollY;
+        for (var i = 0; i < bands.length; i++) if (d >= bands[i][0] && d < bands[i][1]) return true;
+        return false;
+      }
+
+      /* ---- Molle e passo: dice se qualcosa si muove ancora ---- */
+      function spring(s, to, w, z, dt) {
+        var n = Math.max(1, Math.ceil(dt / 0.004)), h = dt / n;
+        for (var i = 0; i < n; i++) { s.v += (w * w * (to - s.x) - 2 * z * w * s.v) * h; s.x += s.v * h; }
+      }
+      function still(s, to, eps) {
+        if (Math.abs(to - s.x) < eps && Math.abs(s.v) < eps * 4) { s.x = to; s.v = 0; return true; }
+        return false;
+      }
+      function step(dt) {
+        var moving = false;
+        if (finePointer && seen) {
+          var on = onGrid(), sy0 = window.scrollY;
+          // il mouse torna sulla trama quando tutto è fermo: luce e pressione partono da lì, senza attraversare la pagina
+          if (on && lit < 0.05 && Math.abs(amp.x) < 0.02) { cx.x = px; cy.x = py; cx.v = cy.v = 0; }
+          if (on) { tx = px; ty = py; }
+          // la luce segue il mouse con un po' di ritardo; fuori dalla trama resta sull'ultimo punto e si spegne piano
+          spring(cx, tx, 15, 0.78, dt); spring(cy, ty, 15, 0.78, dt);
+          var sx = still(cx, tx, 0.05), sy = still(cy, ty, 0.05);
+          if (!sx || !sy) moving = true;
+          var li = on ? 1 : 0;
+          lit += (li - lit) * (1 - Math.exp(-dt * (on ? 9 : 2.2)));
+          if (Math.abs(li - lit) < (on ? 0.003 : 0.01)) lit = li; else moving = true;
+          // la pressione entra morbida e segue la luce; lasciata, torna su dov'era (nella pagina) con un piccolo rimbalzo
+          if (on) {
+            if ((Math.abs(amp.x) < 0.02 && Math.abs(amp.v) < 0.1) || amp.x > 0.95) { qx = cx.x; qy = cy.x + sy0; }
+            else {
+              var g = 1 - Math.exp(-dt * 60);
+              qx += (cx.x - qx) * g; qy += (cy.x + sy0 - qy) * g;
+              moving = true;
+            }
+            spring(amp, 1, 12, 0.72, dt);
+          } else spring(amp, 0, 10, 0.52, dt);
+          if (!still(amp, li, 0.001)) moving = true;
+        }
+        var y = window.scrollY, dy = y - lastY;
+        lastY = y;
+        if (dy !== 0) moving = true;
+        // un salto (un link a una sezione) non è velocità
+        if (Math.abs(dy) > VH) dy = 0;
+        vel += (dy / Math.max(dt, 1 / 60) - vel) * (1 - Math.exp(-dt * 18));
+        if (dy === 0 && Math.abs(vel) < 2) vel = 0;
+        if (vel !== 0) moving = true;
+        // l'ondulazione cresce con la velocità (sotto i 500 px/s niente) e si spegne in poco più di un secondo
+        var s = Math.min(1, Math.max(0, (Math.abs(vel) - 500) / 3000));
+        s = s * s * (3 - 2 * s);
+        if (s > E) E += (s - E) * (1 - Math.exp(-dt * 9));
+        else E = Math.max(s, E * Math.exp(-dt * 2.6));
+        if (E < 0.004 && s === 0) E = 0;
+        if (dy) dir = dy > 0 ? 1 : -1;
+        if (E > 0) { phase += (dt * 5.5 + Math.abs(dy) * 0.0035) * dir; moving = true; }
+        return moving;
+      }
+
+      /* ---- Disegno. Due passate: la trama appena accennata con un'opacità semplice e, solo nel quadrato della luce,
+         la trama piena con la luce già dentro il colore (sfumature radiali: si colorano solo i pixel dei fili).
+         Se si muove solo il mouse si ridisegna solo attorno alla luce e alla pressione, di adesso e di prima. ---- */
+      var ox = 0, oy = 0, lx = 0, ly = 0, ex = 0, ey = 0, k = 0, dent = false, rip = 0, R2 = R * R;
+      var prevBox = null, prevRip = false, m0 = 1, m1 = 0.5, mb = 0.12;
+      // spostamento della pressione nel punto (x, y): via dal centro, quasi pieno vicino al polpastrello, poi sempre meno
+      function push(x, y) {
+        var dx = x - ex, dy = y - ey, d2 = dx * dx + dy * dy;
+        if (!dent || d2 >= R2) { ox = 0; oy = 0; return; }
+        var f = 1 - d2 / R2, s = k * f * f / Math.sqrt(d2 + CORE * CORE);
+        ox = dx * s; oy = dy * s;
+      }
+      function wave(x, j) { return rip ? rip * Math.sin(x * KX - phase + j * ROW) : 0; }
+      // rettangoli [x0, y0, x1, y1]: unione, intersezione, bordi sui pixel veri dello schermo (niente cuciture)
+      function join(a, b) { return !a ? b : !b ? a : [Math.min(a[0], b[0]), Math.min(a[1], b[1]), Math.max(a[2], b[2]), Math.max(a[3], b[3])]; }
+      function cut(a, b) {
+        if (!a || !b) return null;
+        var r = [Math.max(a[0], b[0]), Math.max(a[1], b[1]), Math.min(a[2], b[2]), Math.min(a[3], b[3])];
+        return r[2] > r[0] && r[3] > r[1] ? r : null;
+      }
+      function snap(r) { return [Math.floor(r[0] * dpr) / dpr, Math.floor(r[1] * dpr) / dpr, Math.ceil(r[2] * dpr) / dpr, Math.ceil(r[3] * dpr) / dpr]; }
+      function rect(r) { ctx.beginPath(); ctx.rect(r[0], r[1], r[2] - r[0], r[3] - r[1]); }
+
+      // fili e nodi dentro il rettangolo r, coi colori dati. I punti delle curve stanno su una griglia fissa (4 o 5 px):
+      // ridisegnando un pezzo, le curve coincidono con quelle intorno
+      function weave(r, cWarp, cWeft, cDot) {
+        var pad = A + RIP + 6, i, j, x, y, half, a, z, h, v, X, Y;
+        var i0 = Math.max(0, Math.ceil((r[0] - pad) / P)), i1 = Math.floor((r[2] + pad) / P);
+        var j0 = Math.ceil((T + r[1] - pad) / P), j1 = Math.floor((T + r[3] + pad) / P);
+        var xl = r[0] - 2, xr = r[2] + 2, yt = r[1] - 2, yb = r[3] + 2;
+        // ordito (fili verticali): dritti, piegati solo dove passa la pressione
+        ctx.beginPath();
+        for (i = i0; i <= i1; i++) {
+          x = i * P + 0.5; h = x - ex;
+          if (dent && h * h < R2) {
+            half = Math.sqrt(R2 - h * h); a = ey - half; z = ey + half;
+            if (a > yt) { ctx.moveTo(x, yt); ctx.lineTo(x, a); y = a; } else { push(x, yt); ctx.moveTo(x + ox, yt + oy); y = yt; }
+            for (y = Math.floor(y / 4) * 4 + 4; y < z && y < yb; y += 4) { push(x, y); ctx.lineTo(x + ox, y + oy); }
+            if (z < yb) { ctx.lineTo(x, z); ctx.lineTo(x, yb); } else { push(x, yb); ctx.lineTo(x + ox, yb + oy); }
+          } else { ctx.moveTo(x, yt); ctx.lineTo(x, yb); }
+        }
+        ctx.strokeStyle = cWarp; ctx.stroke();
+        // trama (fili orizzontali): la pressione e, quando si scorre veloce, l'ondulazione
+        ctx.beginPath();
+        for (j = j0; j <= j1; j++) {
+          y = j * P - T + 0.5; v = y - ey;
+          if (rip) {
+            x = Math.floor(xl / 5) * 5; push(x, y); ctx.moveTo(x + ox, y + oy + wave(x, j));
+            while (x < xr) { x += 5; push(x, y); ctx.lineTo(x + ox, y + oy + wave(x, j)); }
+          } else if (dent && v * v < R2) {
+            half = Math.sqrt(R2 - v * v); a = ex - half; z = ex + half;
+            if (a > xl) { ctx.moveTo(xl, y); ctx.lineTo(a, y); x = a; } else { push(xl, y); ctx.moveTo(xl + ox, y + oy); x = xl; }
+            for (x = Math.floor(x / 4) * 4 + 4; x < z && x < xr; x += 4) { push(x, y); ctx.lineTo(x + ox, y + oy); }
+            if (z < xr) { ctx.lineTo(z, y); ctx.lineTo(xr, y); } else { push(xr, y); ctx.lineTo(xr + ox, y + oy); }
+          } else { ctx.moveTo(xl, y); ctx.lineTo(xr, y); }
+        }
+        ctx.strokeStyle = cWeft; ctx.stroke();
+        // nodi agli incroci, che seguono i fili
+        ctx.beginPath();
+        for (j = j0; j <= j1; j++) {
+          y = j * P - T + 0.5;
+          for (i = i0; i <= i1; i++) {
+            x = i * P + 0.5; push(x, y);
+            X = x + ox; Y = y + oy + wave(x, j);
+            ctx.moveTo(X + 2, Y); ctx.arc(X, Y, 2, 0, TAU);
+          }
+        }
+        ctx.fillStyle = cDot; ctx.fill();
+      }
+      // la luce come sfumatura radiale: colore c con opacità a, per la maschera di prima (piena, metà a 162 px, 12% da 360 px)
+      function mask(r) { return r < 162 ? m0 + (m1 - m0) * r / 162 : r < LIGHT ? m1 + (mb - m1) * (r - 162) / (LIGHT - 162) : mb; }
+      function lightGrad(c, a) {
+        var g = ctx.createRadialGradient(lx, ly, 0, lx, ly, LIGHT);
+        g.addColorStop(0, "rgba(" + c + "," + (a * m0).toFixed(4) + ")");
+        g.addColorStop(0.45, "rgba(" + c + "," + (a * m1).toFixed(4) + ")");
+        g.addColorStop(1, "rgba(" + c + "," + (a * mb).toFixed(4) + ")");
+        return g;
+      }
+      // l'alone blu: 18% al centro, sparisce a 182 px, anche lui sotto la maschera
+      function glowGrad() {
+        var g = ctx.createRadialGradient(lx, ly, 0, lx, ly, GLOW * 0.7);
+        for (var n = 0; n <= 4; n++) g.addColorStop(n / 4, "rgba(" + BRAND + "," + (0.18 * lit * (1 - n / 4) * mask(n / 4 * GLOW * 0.7)).toFixed(4) + ")");
+        return g;
+      }
+      // sfumatura ellittica centrata nella luce (la fascia del telefono), dentro il rettangolo r
+      function ellipse(rx, ry, stops, r, op) {
+        var s = rx / ry, g;
+        ctx.save();
+        ctx.globalCompositeOperation = op;
+        ctx.translate(lx, ly); ctx.scale(s, 1);
+        g = ctx.createRadialGradient(0, 0, 0, 0, 0, ry);
+        for (var n = 0; n < stops.length; n += 2) g.addColorStop(stops[n], stops[n + 1]);
+        ctx.fillStyle = g;
+        ctx.fillRect((r[0] - lx) / s - 1, r[1] - ly, (r[2] - r[0]) / s + 2, r[3] - r[1]);
+        ctx.restore();
+      }
+
+      function draw() {
+        var sy = window.scrollY, b, a, z, n, any = false;
+        var top = Math.max(0, Math.floor((sy - MARGIN) / P) * P), moved = top !== T;
+        if (moved) { T = top; cv.style.transform = "translate3d(0," + T + "px,0)"; }
+        // la luce (lx, ly) e la pressione (ex, ey), in coordinate del canvas
+        if (finePointer) { lx = cx.x; ly = cy.x + sy - T; ex = qx; ey = qy - T; }
+        else { lx = CW / 2; ly = sy + VH / 2 - T; }
+        dent = finePointer && seen && Math.abs(amp.x) > 0.004;
+        k = amp.x * A * NORM;
+        rip = E * RIP;
+        var lightOn = !finePointer || lit > 0.003;
+        // mentre i fili ondeggiano tutta la trama prende un po' più di luce (fino al 20%), poi torna al 12%
+        var base = 0.12 + 0.08 * E;
+        // dove ridisegnare: tutto se il canvas si è spostato, se i fili ondeggiano o se è cambiata la pagina;
+        // altrimenti solo attorno alla luce e alla pressione, di adesso e del fotogramma prima
+        var lightBox = !lightOn ? null : finePointer ? [lx - LIGHT, ly - LIGHT, lx + LIGHT, ly + LIGHT] : [0, ly - 262, CW, ly + 262];
+        var box = join(lightBox, dent ? [ex - R - 4, ey - R - 4, ex + R + 4, ey + R + 4] : null);
+        var full = dirty || moved || rip > 0 || prevRip;
+        var r = cut(full ? [0, 0, CW, CH] : join(prevBox, box), [0, 0, CW, CH]);
+        prevBox = box; prevRip = rip > 0;
+        if (!r) return;
+        r = snap(r);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.globalCompositeOperation = "source-over"; ctx.globalAlpha = 1; ctx.lineWidth = 1;
+        ctx.clearRect(r[0], r[1], r[2] - r[0], r[3] - r[1]);
+        // solo dentro i tratti con la trama
+        ctx.save();
+        ctx.beginPath();
+        for (b = 0; b < bands.length; b++) {
+          a = Math.max(Math.floor((bands[b][0] - T) * dpr) / dpr, r[1]); z = Math.min(Math.ceil((bands[b][1] - T) * dpr) / dpr, r[3]);
+          if (z > a) { ctx.rect(r[0], a, r[2] - r[0], z - a); any = true; }
+        }
+        if (!any) { ctx.restore(); return; }
+        ctx.clip();
+        var lr = lightBox ? cut(lightBox, r) : null;
+        if (lr) lr = snap(lr);
+        // 1. la trama appena accennata, fuori dal quadrato della luce
+        ctx.save();
+        if (lr) { rect(r); ctx.rect(lr[0], lr[1], lr[2] - lr[0], lr[3] - lr[1]); ctx.clip("evenodd"); }
+        ctx.globalAlpha = base;
+        weave(r, C_WARP, C_WEFT, C_DOT);
+        ctx.restore();
+        // 2. nel quadrato della luce
+        if (lr) {
+          ctx.save();
+          rect(lr); ctx.clip();
+          if (finePointer) {
+            m0 = Math.max(base, 0.12 + 0.88 * lit); m1 = Math.max(base, 0.12 + 0.38 * lit); mb = base;
+            weave(lr, lightGrad(INK, 0.34), lightGrad(WEFT, 0.6), lightGrad(WEFT, 1));
+            ctx.fillStyle = glowGrad(); ctx.fillRect(lx - GLOW * 0.7, ly - GLOW * 0.7, GLOW * 1.4, GLOW * 1.4);
+          } else {
+            // telefono: la fascia più tenue (picco al 60%), con l'alone e poi la maschera ellittica
+            weave(lr, C_WARP, C_WEFT, C_DOT);
+            ellipse(0.9 * CW, 200, [0, "rgba(" + BRAND + ",.18)", 0.7, "rgba(" + BRAND + ",0)", 1, "rgba(" + BRAND + ",0)"], lr, "source-over");
+            ellipse(1.2 * CW, 260, [0, "rgba(0,0,0,.6)", 0.45, "rgba(0,0,0," + Math.max(base, 0.3).toFixed(3) + ")", 1, "rgba(0,0,0," + base.toFixed(3) + ")"], lr, "destination-in");
+          }
+          ctx.restore();
+        }
+        // 3. subito sotto la hero la trama entra sfumando (180 px), senza un bordo netto
+        for (n = 0; n < fades.length; n++) {
+          var fr = cut([r[0], fades[n] - T, r[2], fades[n] - T + 180], r), lg;
+          if (!fr) continue;
+          fr = snap(fr);
+          ctx.save();
+          rect(fr); ctx.clip();
+          ctx.globalCompositeOperation = "destination-in";
+          lg = ctx.createLinearGradient(0, fades[n] - T, 0, fades[n] - T + 180);
+          lg.addColorStop(0, "rgba(0,0,0,0)"); lg.addColorStop(1, "rgba(0,0,0,1)");
+          ctx.fillStyle = lg; ctx.fillRect(fr[0], fr[1], fr[2] - fr[0], fr[3] - fr[1]);
+          ctx.restore();
+        }
+        ctx.restore();
+      }
+
+      // la luce bianca del blocco blu: segue il mouse con un po' di ritardo (sul telefono la fascia a metà schermo);
+      // le posizioni dei blocchi sono già misurate: qui solo scritture
+      function blueStep(dt) {
+        if (!blues.length) return false;
+        var moving = false, sy = window.scrollY, vh = window.innerHeight;
+        if (finePointer) {
+          if (!seen) return false;
+          if (bx < -9000) { bx = px; by = py; }
+          var f = 1 - Math.exp(-11.9 * dt);
+          bx += (px - bx) * f; by += (py - by) * f;
+          moving = Math.abs(px - bx) > 0.5 || Math.abs(py - by) > 0.5;
+        } else { bx = window.innerWidth / 2; by = vh / 2; }
+        blues.forEach(function (o) {
+          var top = o.top - sy;
+          if (top > vh + 400 || top + o.h < -400) return;
+          var x = Math.round(bx - o.left), y = Math.round(by - top);
+          if (x === o.tx && y === o.ty) return;
+          o.tx = x; o.ty = y;
+          o.l.style.setProperty("--tx", x + "px"); o.l.style.setProperty("--ty", y + "px");
+        });
+        return moving;
+      }
+
+      // il giro sul ticker di GSAP (lo stesso di Lenis): ci si aggancia quando qualcosa si muove e ci si stacca da fermi
+      function tick(time, dtMs) {
+        var dt = Math.min(dtMs || 16, 50) / 1000, moving = step(dt);
+        if (moving || dirty) { draw(); dirty = false; }
+        if (blueStep(dt)) moving = true;
+        if (!moving) { awake = false; gsap.ticker.remove(tick); }
+      }
+      function wake() { if (!awake) { awake = true; gsap.ticker.add(tick); } }
+
       if (finePointer) {
         window.addEventListener("pointermove", function (e) {
+          if (e.pointerType === "touch") return;
           px = e.clientX; py = e.clientY;
-          if (cx < -9000) { cx = px; cy = py; } // la prima volta la luce compare lì, senza attraversare la pagina
+          // la prima volta la luce compare lì, senza attraversare la pagina
+          if (!seen) { cx.x = tx = px; cy.x = ty = py; }
+          inWin = true; seen = true;
+          wake();
         }, { passive: true });
+        // il mouse esce dalla finestra: la stoffa torna ferma
+        document.addEventListener("mouseout", function (e) { if (!e.relatedTarget) { inWin = false; wake(); } });
+        window.addEventListener("blur", function () { inWin = false; wake(); });
       }
-      else root.classList.add("p-trama-touch");
-      window.addEventListener("resize", function () { lastY = -1; });
-      gsap.ticker.add(function (time, dtMs) {
-        // stesso ritardo a 60 e a 120 Hz (0,18 per fotogramma a 60 Hz)
-        var k = 1 - Math.exp(-11.9 * Math.min(dtMs, 100) / 1000);
-        if (finePointer) { cx += (px - cx) * k; cy += (py - cy) * k; }
-        else { cx = window.innerWidth / 2; cy = window.innerHeight / 2; }
-        var y = window.scrollY;
-        if (y === lastY && Math.abs(cx - lastX) < 0.5 && Math.abs(cy - lastYc) < 0.5) return;
-        lastY = y; lastX = cx; lastYc = cy;
-        // prima tutte le misure, poi tutte le scritture: niente ricalcoli dello stile a ogni sezione
-        var vh = window.innerHeight, rs = layers.map(function (o) { return o.s.getBoundingClientRect(); });
-        layers.forEach(function (o, i) {
-          var r = rs[i];
-          if (r.bottom < -400 || r.top > vh + 400) return;
-          o.l.style.setProperty("--tx", Math.round(cx - r.left) + "px");
-          o.l.style.setProperty("--ty", Math.round(cy - r.top) + "px");
-        });
-      });
+      window.addEventListener("scroll", wake, { passive: true });
+      if (lenis) lenis.on("scroll", wake);
+      window.addEventListener("resize", function () { layout(); wake(); });
+      ST.addEventListener("refresh", function () { measure(); wake(); });
+      // una risposta delle FAQ che si apre cambia l'altezza della pagina: si rimisurano subito i tratti con la trama
+      if (window.ResizeObserver) new ResizeObserver(function () { measure(); wake(); }).observe(main);
+      // cambio tema: nuovi colori, ridisegnata subito (così entra già giusta nella dissolvenza del tema)
+      document.addEventListener("telaio:tema", function () { colors(); dirty = true; draw(); dirty = false; wake(); });
+      layout();
+      wake();
     })();
 
     // Arrivo su una sezione: si scorre lì a posizioni ricalcolate (le sezioni bloccate allungano la pagina)
