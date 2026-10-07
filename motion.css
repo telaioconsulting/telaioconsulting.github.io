@@ -190,36 +190,20 @@ html:not(.motion) .p-progress { display: none; }
 }
 .p-h2 .p-line { padding-bottom: .05em; }
 
-/* ---- Trama delle sezioni: la griglia del tessuto, appena accennata, si accende attorno al mouse.
-   Il livello lo aggiunge motion.js (solo con motion); --tx e --ty sono il punto luce dentro la sezione.
-   Sul telefono la luce è una fascia a metà schermo e la trama ci scorre sotto. ---- */
-.p-has-trama { isolation: isolate; }
-.p-trama {
-  /* --gx/--gy (da motion.js) allineano la griglia alla pagina: tra una sezione e l'altra i fili continuano */
-  --tx: -999px; --ty: -999px; --gx: 0px; --gy: 0px;
-  --spot: 360px circle; --glow: 260px circle; --peak: #000; --mid: rgba(0, 0, 0, .5);
+/* ---- Trama delle sezioni: la griglia del tessuto disegnata su un canvas (motion.js, solo con motion).
+   .p-tela copre la pagina fino in fondo a <main>, sotto a tutto: le sezioni senza fondo la lasciano vedere,
+   i blocchi col loro fondo la coprono. Il canvas dentro è alto quanto lo schermo più un margine e lo sposta
+   motion.js a scatti di 44 px; l'altezza di .p-tela la scrive motion.js. ---- */
+.p-tela { position: absolute; left: 0; top: 0; width: 100%; z-index: -1; overflow: hidden; contain: strict; pointer-events: none; }
+.p-tela canvas { position: absolute; left: 0; top: 0; display: block; will-change: transform; }
+/* sul blocco blu del check-up c'è già il suo reticolo che scorre: solo la luce bianca, niente secondo reticolo.
+   --tx e --ty (da motion.js) sono il punto luce dentro il blocco; sul telefono è una fascia a metà schermo */
+.p-tela-luce {
+  --tx: -999px; --ty: -999px;
   position: absolute; inset: 0; z-index: -1; pointer-events: none;
-  background-image:
-    radial-gradient(var(--glow) at var(--tx) var(--ty), color-mix(in srgb, var(--brand) 18%, transparent), transparent 70%),
-    radial-gradient(circle, var(--weft) 0 1.7px, transparent 2.3px),
-    repeating-linear-gradient(90deg, color-mix(in srgb, var(--ink) 34%, transparent) 0 1px, transparent 1px 44px),
-    repeating-linear-gradient(0deg, color-mix(in srgb, var(--weft) 60%, transparent) 0 1px, transparent 1px 44px);
-  background-size: auto, 44px 44px, auto, auto;
-  background-position: 0 0, calc(var(--gx) - 22px) calc(var(--gy) - 22px), var(--gx) var(--gy), var(--gx) var(--gy);
-  -webkit-mask-image: radial-gradient(var(--spot) at var(--tx) var(--ty), var(--peak) 0%, var(--mid) 45%, rgba(0, 0, 0, .12) 100%);
-          mask-image: radial-gradient(var(--spot) at var(--tx) var(--ty), var(--peak) 0%, var(--mid) 45%, rgba(0, 0, 0, .12) 100%);
+  background: radial-gradient(260px circle at var(--tx) var(--ty), rgba(255, 255, 255, .16), rgba(255, 255, 255, .055) 35%, transparent 70%);
 }
-/* sul telefono la fascia accesa resta sotto il testo mentre si legge: più tenue */
-.p-trama-touch .p-trama { --spot: 120% 260px; --glow: 90% 200px; --peak: rgba(0, 0, 0, .6); --mid: rgba(0, 0, 0, .3); }
-/* subito sotto la hero la trama entra sfumando, senza un bordo netto */
-.p-hero + .p-has-trama > .p-trama {
-  -webkit-mask-image: radial-gradient(var(--spot) at var(--tx) var(--ty), var(--peak) 0%, var(--mid) 45%, rgba(0, 0, 0, .12) 100%), linear-gradient(180deg, transparent, #000 180px);
-  -webkit-mask-composite: source-in;
-          mask-image: radial-gradient(var(--spot) at var(--tx) var(--ty), var(--peak) 0%, var(--mid) 45%, rgba(0, 0, 0, .12) 100%), linear-gradient(180deg, transparent, #000 180px);
-          mask-composite: intersect;
-}
-/* sul blocco blu del check-up c'è già il suo reticolo che scorre: solo la luce, niente secondo reticolo */
-.p-checkup .p-trama { background-image: radial-gradient(var(--glow) at var(--tx) var(--ty), rgba(255, 255, 255, .16), transparent 70%); }
+.p-tela-touch .p-tela-luce { background: radial-gradient(90% 200px at var(--tx) var(--ty), rgba(255, 255, 255, .1), transparent 70%); }
 
 /* ---- Numeri ---- */
 .p-stat-list { border-top: 1px solid var(--line); }
