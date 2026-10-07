@@ -56,9 +56,26 @@
         try { target = document.querySelector(a.hash); } catch (err) {}
         if (!target) return;
         e.preventDefault();
-        lenis.scrollTo(target, { offset: -64, duration: 1.4 });
+        // arrivati, il focus passa alla sezione: tastiera e lettori di schermo ripartono da lì
+        lenis.scrollTo(target, { offset: -82, duration: 1.4, onComplete: function () {
+          if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
+          target.focus({ preventScroll: true });
+        } });
         history.pushState(null, "", a.hash);
       });
+    }
+
+    /* ---- Quando la pagina cambia altezza (una risposta delle FAQ che si apre, il calendario che arriva)
+       ScrollTrigger ricalcola le posizioni: altrimenti le animazioni più in basso partono in anticipo ---- */
+    var main = document.querySelector("main");
+    if (main && window.ResizeObserver) {
+      var mainH = main.offsetHeight, refreshT = 0;
+      new ResizeObserver(function () {
+        if (main.offsetHeight === mainH) return;
+        mainH = main.offsetHeight;
+        clearTimeout(refreshT);
+        refreshT = setTimeout(function () { ST.refresh(); }, 200);
+      }).observe(main);
     }
 
     /* ---- Barra di avanzamento ---- */
@@ -267,6 +284,10 @@
     gsap.utils.toArray("[data-count]").forEach(function (el) {
       var to = parseFloat(el.getAttribute("data-count")), dec = parseInt(el.getAttribute("data-decimals") || "0", 10), o = { v: 0 };
       function fmt(v) { var s = v.toFixed(dec); return isEn ? s : s.replace(".", ","); }
+      // chi usa un lettore di schermo sente subito il valore vero, non lo 0 da cui parte il conteggio
+      var sr = document.createElement("span");
+      sr.className = "p-sr"; sr.textContent = fmt(to);
+      el.setAttribute("aria-hidden", "true"); el.parentNode.insertBefore(sr, el);
       el.textContent = fmt(0);
       gsap.to(o, {
         v: to, duration: 2.2, ease: "power3.out",
@@ -280,7 +301,7 @@
       add(".p-stat-num", { yPercent: 25, opacity: 0, duration: 1.2 }, 0);
       add(".p-col i", { scaleY: 0, duration: 1.3, stagger: 0.18 }, 0.2);
       add(".p-hrow em", { scaleX: 0, duration: 1.5, stagger: 0.18 }, 0.2);
-      add(".p-viz-dots i", { scale: 0, duration: 0.9, stagger: 0.14, ease: "back.out(2.2)" }, 0.2);
+      add(".p-viz-dots i", { scale: 0.6, opacity: 0, duration: 0.9, stagger: 0.14, ease: "back.out(1.4)" }, 0.2);
       add(".p-stat-body > p", { y: 24, opacity: 0, duration: 1, stagger: 0.08 }, 0.35);
     });
 
@@ -407,7 +428,8 @@
       });
     }
     if (document.querySelector(".p-orb")) {
-      gsap.from(".p-orb", { scale: 0, rotation: -90, duration: 1.4, ease: "expo.out", scrollTrigger: { trigger: ".p-orb", start: "top 92%", toggleActions: "play none none none" } });
+      // entra da piccolo e trasparente, non dal nulla (scale 0 sembra spuntare da un punto)
+      gsap.from(".p-orb", { scale: 0.8, opacity: 0, rotation: -30, duration: 1.1, ease: "expo.out", scrollTrigger: { trigger: ".p-orb", start: "top 92%", toggleActions: "play none none none" } });
     }
     if (document.querySelector(".p-bigword")) {
       gsap.fromTo(".p-bigword span", { yPercent: 100 }, {
@@ -431,16 +453,21 @@
         });
         el.addEventListener("pointerleave", function () { rx(0); ry(0); });
       });
+      // Il pulsante segue il mouse in modo morbido; il rimbalzo elastico solo quando lo lasci andare
+      // (rifatto a ogni movimento faceva tremolare il pulsante).
       gsap.utils.toArray("[data-magnetic]").forEach(function (el) {
-        var k = el.classList.contains("p-orb") ? 0.4 : 0.22;
-        var xTo = gsap.quickTo(el, "x", { duration: 0.9, ease: "elastic.out(1, 0.35)" });
-        var yTo = gsap.quickTo(el, "y", { duration: 0.9, ease: "elastic.out(1, 0.35)" });
+        var k = el.classList.contains("p-orb") ? 0.4 : 0.22, back = null;
+        var xTo = gsap.quickTo(el, "x", { duration: 0.45, ease: "power3.out" });
+        var yTo = gsap.quickTo(el, "y", { duration: 0.45, ease: "power3.out" });
         el.addEventListener("pointermove", function (e) {
+          if (back) { back.kill(); back = null; }
           var r = el.getBoundingClientRect();
           xTo((e.clientX - r.left - r.width / 2) * k);
           yTo((e.clientY - r.top - r.height / 2) * k);
         });
-        el.addEventListener("pointerleave", function () { xTo(0); yTo(0); });
+        el.addEventListener("pointerleave", function () {
+          back = gsap.to(el, { x: 0, y: 0, duration: 0.9, ease: "elastic.out(1, 0.4)", overwrite: "auto" });
+        });
       });
     }
 
@@ -457,6 +484,17 @@
         return { s: s, l: l };
       });
       if (!layers.length) return;
+      // la griglia di ogni sezione parte dalla stessa trama della pagina: i fili non saltano tra una sezione e l'altra
+      function align() {
+        var sy = window.scrollY;
+        layers.forEach(function (o) {
+          var r = o.s.getBoundingClientRect();
+          o.l.style.setProperty("--gx", (-(r.left % 44)).toFixed(1) + "px");
+          o.l.style.setProperty("--gy", (-((r.top + sy) % 44)).toFixed(1) + "px");
+        });
+      }
+      align();
+      ST.addEventListener("refresh", align);
       var px = -9999, py = -9999, cx = px, cy = py, lastY = -1, lastX = cx, lastYc = cy;
       if (finePointer) {
         window.addEventListener("pointermove", function (e) {
@@ -466,15 +504,18 @@
       }
       else root.classList.add("p-trama-touch");
       window.addEventListener("resize", function () { lastY = -1; });
-      gsap.ticker.add(function () {
-        if (finePointer) { cx += (px - cx) * 0.18; cy += (py - cy) * 0.18; }
+      gsap.ticker.add(function (time, dtMs) {
+        // stesso ritardo a 60 e a 120 Hz (0,18 per fotogramma a 60 Hz)
+        var k = 1 - Math.exp(-11.9 * Math.min(dtMs, 100) / 1000);
+        if (finePointer) { cx += (px - cx) * k; cy += (py - cy) * k; }
         else { cx = window.innerWidth / 2; cy = window.innerHeight / 2; }
         var y = window.scrollY;
         if (y === lastY && Math.abs(cx - lastX) < 0.5 && Math.abs(cy - lastYc) < 0.5) return;
         lastY = y; lastX = cx; lastYc = cy;
-        var vh = window.innerHeight;
-        layers.forEach(function (o) {
-          var r = o.s.getBoundingClientRect();
+        // prima tutte le misure, poi tutte le scritture: niente ricalcoli dello stile a ogni sezione
+        var vh = window.innerHeight, rs = layers.map(function (o) { return o.s.getBoundingClientRect(); });
+        layers.forEach(function (o, i) {
+          var r = rs[i];
           if (r.bottom < -400 || r.top > vh + 400) return;
           o.l.style.setProperty("--tx", Math.round(cx - r.left) + "px");
           o.l.style.setProperty("--ty", Math.round(cy - r.top) + "px");
@@ -485,7 +526,7 @@
     // Arrivo su una sezione: si scorre lì a posizioni ricalcolate (le sezioni bloccate allungano la pagina)
     if (deepLink) {
       ST.refresh();
-      if (lenis) lenis.scrollTo(deepLink, { offset: -64, immediate: true, force: true });
+      if (lenis) lenis.scrollTo(deepLink, { offset: -82, immediate: true, force: true });
       else deepLink.scrollIntoView();
     }
 
@@ -510,6 +551,9 @@
     function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
 
     function resize() {
+      // sul telefono la barra degli indirizzi che compare e sparisce manda "resize" senza cambiare la hero:
+      // in quel caso il tessuto non si ricostruisce (e le navette non ripartono a metà)
+      if (W && canvas.clientWidth === W && canvas.clientHeight === H) return;
       var dpr = Math.min(window.devicePixelRatio || 1, 1.75);
       W = canvas.clientWidth; H = canvas.clientHeight;
       canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);

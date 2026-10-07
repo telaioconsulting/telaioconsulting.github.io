@@ -160,6 +160,9 @@ body {
   overflow-x: hidden;
   transition: background .35s ease, color .35s ease;
 }
+/* dove c'è la dissolvenza di pagina (startViewTransition in script.js) basta quella */
+@supports (view-transition-name: none) { body { transition: none; } }
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: .3s; }
 
 h1, h2, h3 {
   font-family: var(--f-display);
@@ -173,7 +176,18 @@ p { margin: 0; }
 a { color: var(--brand); text-underline-offset: 3px; }
 strong, b { font-weight: 600; color: var(--ink); }
 
-:focus-visible { outline: 2.5px solid var(--brand); outline-offset: 2px; border-radius: 2px; }
+/* bordo di focus in blu chiaro (--weft): il blu del marchio sul fondo scuro non arrivava al contrasto minimo */
+:focus-visible { outline: 2.5px solid var(--weft); outline-offset: 2px; border-radius: 2px; }
+html { -webkit-tap-highlight-color: transparent; }
+a, button, summary { touch-action: manipulation; }
+
+/* Link «Vai al contenuto»: invisibile finché non lo raggiunge il tasto Tab */
+.skip {
+  position: absolute; left: 12px; top: -80px; z-index: 400;
+  padding: 12px 16px; border-radius: var(--r-sm);
+  background: var(--ink); color: var(--ground); font-weight: 600; text-decoration: none;
+}
+.skip:focus { top: 12px; }
 
 /* ---- Utility ---- */
 .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 clamp(20px, 5vw, 48px); }
@@ -243,7 +257,7 @@ html:not(.js) .no-js-only { display: block; }
   background: var(--surface); color: var(--muted);
   border: 1px solid var(--line); border-radius: var(--r-sm);
   cursor: pointer; font-size: 18px; line-height: 1;
-  transition: color .15s, border-color .15s;
+  transition: color .15s, border-color .15s, scale .12s ease-out;
 }
 .icon-btn:hover { color: var(--ink); border-color: var(--line-strong); }
 .menu-btn { display: none; }
@@ -265,17 +279,21 @@ html:not(.js) .no-js-only { display: block; }
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   padding: 13px 22px; border-radius: var(--r-sm); border: 1.5px solid transparent;
   text-decoration: none; cursor: pointer; line-height: 1;
-  transition: transform .15s ease, background .18s ease, box-shadow .2s ease;
+  transition: transform .15s ease, background .18s ease, box-shadow .2s ease, scale .12s ease-out;
+  -webkit-user-select: none; user-select: none;
 }
-.btn:active { transform: translateY(0); }
+/* risposta al tocco: il pulsante si abbassa appena (scale, non transform: GSAP usa transform sui pulsanti magnetici) */
+.btn:active, .icon-btn:active { scale: .97; }
 .btn-sm { padding: 9px 15px; font-size: var(--step--1); white-space: nowrap; }
 .btn-primary { background: var(--brand); color: #fff; position: relative; overflow: hidden; }
 .btn-primary::after {
   content: ""; position: absolute; inset: 0; pointer-events: none; transform: translateX(-130%);
   background: linear-gradient(105deg, transparent 32%, rgba(255,255,255,.38) 50%, transparent 68%);
 }
-.btn-primary:hover::after { transform: translateX(130%); transition: transform .7s ease; }
-.btn-primary:hover { background: var(--brand-lift); transform: translateY(-1px); box-shadow: 0 10px 30px -10px rgba(19,7,237,.8); }
+@media (hover: hover) {
+  .btn-primary:hover::after { transform: translateX(130%); transition: transform .7s ease; }
+  .btn-primary:hover { background: var(--brand-lift); transform: translateY(-1px); box-shadow: 0 10px 30px -10px rgba(19,7,237,.8); }
+}
 .btn-block { width: 100%; }
 
 /* ============================================================
@@ -540,9 +558,10 @@ html:not(.js) .no-js-only { display: block; }
   background: color-mix(in srgb, var(--ground) 90%, transparent);
   backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
   border-top: 1px solid var(--line);
-  transform: translateY(130%); transition: transform .3s var(--ease);
+  /* nascosta anche al tasto Tab e ai lettori di schermo, non solo spostata fuori dallo schermo */
+  transform: translateY(130%); visibility: hidden; transition: transform .3s var(--ease), visibility 0s .3s;
 }
-.mobile-bar.show { transform: none; }
+.mobile-bar.show { transform: none; visibility: visible; transition: transform .3s var(--ease); }
 
 /* ============================================================
    FOOTER

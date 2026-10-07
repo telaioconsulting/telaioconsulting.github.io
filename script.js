@@ -27,13 +27,18 @@
       root.removeAttribute("data-theme");
       if (themeBtn) { themeBtn.textContent = "◐"; themeBtn.setAttribute("aria-label", isEn ? "Switch to light theme" : "Passa al tema chiaro"); }
     }
+    // anche la barra del browser sul telefono prende il colore del tema
+    var tc = document.querySelector('meta[name="theme-color"]');
+    if (tc) tc.content = theme === "light" ? "#F4F5F8" : "#090C08";
     if (typeof window.__loomRedraw === "function") window.__loomRedraw();
   }
   try { if (localStorage.getItem(STORAGE_KEY) === "light") applyTheme("light"); } catch (e) {}
   if (themeBtn) {
     themeBtn.addEventListener("click", function () {
       var next = root.getAttribute("data-theme") === "light" ? "dark" : "light";
-      applyTheme(next);
+      // tutta la pagina passa al nuovo tema in dissolvenza, insieme (dove il browser lo permette)
+      if (document.startViewTransition && !reduce) document.startViewTransition(function () { applyTheme(next); });
+      else applyTheme(next);
       try { localStorage.setItem(STORAGE_KEY, next); } catch (e) {}
     });
   }
@@ -48,6 +53,13 @@
       menuBtn.setAttribute("aria-expanded", open ? "true" : "false");
     });
     nav.addEventListener("click", function (ev) { if (ev.target.tagName === "A") closeMenu(); });
+    // si chiude anche con Esc o toccando fuori dal menu
+    document.addEventListener("keydown", function (ev) {
+      if (ev.key === "Escape" && nav.classList.contains("open")) { closeMenu(); menuBtn.focus(); }
+    });
+    document.addEventListener("click", function (ev) {
+      if (nav.classList.contains("open") && !nav.contains(ev.target) && !menuBtn.contains(ev.target)) closeMenu();
+    });
   }
   window.addEventListener("resize", function () { if (window.innerWidth > 1120) closeMenu(); });
 
@@ -105,22 +117,30 @@
   (function () {
     var bar = document.querySelector(".mobile-bar");
     if (!bar) return;
-    var booking = document.querySelector("[data-booking], .booking-box");
-    var bookingInView = false;
+    // La barra si nasconde quando sullo schermo c'è già un pulsante del check-up, il riquadro
+    // di prenotazione o il fondo della pagina: mai due pulsanti uguali uno sopra l'altro.
+    var hiders = [].slice.call(document.querySelectorAll("[data-booking], .booking-box, a[data-cta='checkup'], .p-final, footer"))
+      .filter(function (el) { return !bar.contains(el) && !(el.closest && el.closest(".top")); });
+    var inView = 0;
     function update() {
       var past = (window.scrollY || window.pageYOffset || 0) > 300;
       var menuOpen = nav && nav.classList.contains("open");
-      if (past && !bookingInView && !menuOpen) bar.classList.add("show");
+      if (past && !inView && !menuOpen) bar.classList.add("show");
       else bar.classList.remove("show");
     }
     window.addEventListener("scroll", update, { passive: true });
     window.addEventListener("resize", update);
     if (menuBtn) menuBtn.addEventListener("click", function () { setTimeout(update, 0); });
-    if (booking && "IntersectionObserver" in window) {
-      new IntersectionObserver(function (es) {
-        es.forEach(function (e) { bookingInView = e.isIntersecting; });
+    if (hiders.length && "IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function (es) {
+        es.forEach(function (e) {
+          if (e.isIntersecting === !!e.target.__inView) return;
+          e.target.__inView = e.isIntersecting;
+          inView += e.isIntersecting ? 1 : -1;
+        });
         update();
-      }, { threshold: 0 }).observe(booking);
+      }, { threshold: 0 });
+      hiders.forEach(function (el) { io.observe(el); });
     }
     update();
   })();
