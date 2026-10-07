@@ -488,7 +488,8 @@ html:not(.motion) .p-manifesto-text em {
 .p-rac-still .p-rac-callout { position: relative; z-index: 1; margin: 20px auto 0; }
 
 /* ---- Scena: la sezione si ferma, la tela racconta i quattro passi ---- */
-.p-sec.p-rac-live { padding-block: 0; }
+/* fondo pieno (lo stesso della pagina): la trama delle sezioni, che scorrerebbe sotto la scena ferma, qui non si disegna */
+.p-sec.p-rac-live { padding-block: 0; background: var(--ground); }
 /* la scena si ferma sotto la testata (64 px, sempre visibile): così anche un link a #come-lavoriamo arriva sulla scena intera */
 .p-rac-live .p-rac-pin { position: relative; height: calc(100vh - 64px); height: calc(100svh - 64px); overflow: hidden; }
 .p-rac-live .p-rac-canvas { display: block; position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; pointer-events: none; }
@@ -524,7 +525,8 @@ html:not(.motion) .p-manifesto-text em {
   -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
 }
 .p-rac-live .p-rac-foot { margin-top: 0; padding-top: clamp(20px, 3vw, 32px); }
-/* la trama delle sezioni qui raddoppierebbe i fili del telaio, e scorrerebbe sotto la scena ferma: si spegne */
+/* la trama delle sezioni qui raddoppierebbe i fili del telaio, e scorrerebbe sotto la scena ferma: si spegne
+   (il livello .p-trama sta sopra il fondo della sezione, quindi va spento anche con il fondo pieno) */
 .p-rac-live > .p-trama { display: none; }
 
 /* telefono e tablet: una colonna; la tela in alto, sotto il passo attivo e il pulsante */
