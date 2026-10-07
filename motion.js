@@ -20,6 +20,7 @@
   var hasIntro = !!document.querySelector(".p-intro") && !root.classList.contains("no-intro");
 
   var weave = initWeave();
+  var racconto = initRacconto(); // «Come lavoriamo» nella home: il telaio racconta i passi (fermo senza animazioni)
   if (!motion) return;
 
   // Arrivo diretto su una sezione (es. /en/#faq): niente apertura, si va dritti lì.
@@ -408,6 +409,9 @@
       sync();
     })();
 
+    /* ---- Il telaio racconta: «Come lavoriamo» nella home si ferma e si tesse mentre scorri (initRacconto) ---- */
+    if (racconto) racconto.scena();
+
     /* ---- Check-up: la barra dei 30 minuti si riempie un pezzo alla volta ---- */
     gsap.utils.toArray(".p-timeline").forEach(function (bar) {
       gsap.from(bar.querySelectorAll(".p-tl-seg i"), {
@@ -542,6 +546,681 @@
       else deepLink.scrollIntoView();
     }
 
+  }
+
+  /* ============================================================
+     IL TELAIO RACCONTA — «Come lavoriamo» nella home
+     La sezione resta ferma mentre scorri e sulla tela si tesse in quattro fasi, una per passo:
+     1. i fili dell'ordito scendono sul telaio
+     2. una navetta di luce passa la trama, sopra e sotto
+     3. il tessuto si stringe, si inclina e prende luce (come la stoffa della hero)
+     4. il tessuto si raccoglie nel marchio, in blu
+     Il marchio è un pezzo di tessuto 2×2 (due fili per verso, uno sopra e uno sotto): la stessa regola
+     disegna il tessuto e il marchio, così l'uno diventa l'altro senza stacchi. Ogni filo è fatto di tratti
+     con le punte tonde che s'interrompono dove passa sotto un altro filo, come i quattro tratti del marchio.
+     initRacconto() prepara la sezione: senza animazioni disegna il tessuto finito, fermo, col marchio
+     intessuto in blu; con le animazioni dà alla sezione l'assetto della scena e boot() chiama scena().
+     I colori seguono il tema (evento telaio:tema da script.js).
+     ============================================================ */
+  function initRacconto() {
+    var sec = document.querySelector(".p-racconto");
+    var canvas = sec && sec.querySelector(".p-rac-canvas");
+    if (!canvas || !canvas.getContext) return null;
+    var ctx = canvas.getContext("2d");
+    var still = !motion;
+    var pin = sec.querySelector(".p-rac-pin"), stage = sec.querySelector(".p-rac-stage");
+    var glow = sec.querySelector(".p-rac-glow"), callout = sec.querySelector(".p-rac-callout");
+    var head = sec.querySelector(".p-rac-head"), side = sec.querySelector(".p-rac-side"), slot = sec.querySelector(".p-rac-slot");
+    var steps = sec.querySelectorAll(".p-rac-step"), reel = sec.querySelector(".p-counter-reel");
+    var bars = sec.querySelectorAll(".p-rac-bars i");
+
+    /* ---- Piccoli aiuti ---- */
+    function c01(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+    function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
+    function lerp(a, b, t) { return a + (b - a) * t; }
+    function smooth(v) { v = c01(v); return v * v * (3 - 2 * v); }
+    function outCubic(v) { v = c01(v); return 1 - (1 - v) * (1 - v) * (1 - v); }
+    function inOutCubic(v) { v = c01(v); return v < 0.5 ? 4 * v * v * v : 1 - Math.pow(-2 * v + 2, 3) / 2; }
+    function inOutQuad(v) { v = c01(v); return v < 0.5 ? 2 * v * v : 1 - Math.pow(-2 * v + 2, 2) / 2; }
+
+    /* ---- Colori: grigio dell'ordito, blu chiaro della trama, blu del marchio ----
+       base = il filo dove scende sotto (più scuro), crest = dove passa sopra, spec = il riflesso.
+       Nel tema chiaro la luce non si somma (sul fondo chiaro sparirebbe): si dipinge in blu. */
+    function palette() {
+      return root.getAttribute("data-theme") === "light" ? {
+        warp: { base: [118, 124, 136], crest: [162, 168, 180], spec: [250, 251, 253] },
+        weft: { base: [26, 36, 142], crest: [80, 98, 216], spec: [226, 231, 255] },
+        frame: "#BDC2CE", dot: "#A4AAB8", ground: "#F4F5F8", add: "source-over",
+        pool: "19,7,237", poolA: 0.3, trail0: "rgba(255,255,255,0)", trail: "255,255,255", trailA: 0.9,
+        halo: "19,7,237", haloA: 0.3, core: "#1307ED", bead: "19,7,237", beadA: 0.35, beadCore: "#1307ED", markGlow: 0.45
+      } : {
+        warp: { base: [84, 89, 78], crest: [155, 160, 147], spec: [238, 240, 234] },
+        weft: { base: [58, 68, 160], crest: [142, 157, 255], spec: [232, 236, 255] },
+        frame: "#4A5041", dot: "#5C6351", ground: "#090C08", add: "lighter",
+        pool: "214,220,255", poolA: 0.6, trail0: "rgba(142,157,255,0)", trail: "226,231,255", trailA: 0.95,
+        halo: "63,54,245", haloA: 0.8, core: "#fff", bead: "142,157,255", beadA: 0.55, beadCore: "#E8ECFF", markGlow: 0.9
+      };
+    }
+    var PAL = palette();
+    // il marchio finito è piatto, come il logo
+    var BRAND = { base: [19, 7, 237], crest: [19, 7, 237], spec: [19, 7, 237] };
+    var tmpC = [0, 0, 0];
+    function rgb(c) { return "rgb(" + (c[0] | 0) + "," + (c[1] | 0) + "," + (c[2] | 0) + ")"; }
+    function mixC(a, b, t) { tmpC[0] = lerp(a[0], b[0], t); tmpC[1] = lerp(a[1], b[1], t); tmpC[2] = lerp(a[2], b[2], t); return tmpC; }
+
+    /* ---- Misure (rifatte a ogni cambio di misura) ---- */
+    var W = 0, H = 0, dpr = 1, stacked = false; // stacked: una colonna (telefono, tablet)
+    var N = 16, B = 400, S = 25;      // fili per verso, lato del tessuto, passo tra i fili
+    var cx0 = 0, cy0 = 0, markCY = 0; // centro del tessuto e del marchio sulla tela
+    var M = 240;                       // lato del marchio (come il viewBox 64×64 del simbolo #mk)
+    var i0 = 7, i1 = 8;                // i due fili per verso che diventano il marchio
+    var MAXN = 16;
+    var rank = new Float32Array(MAXN);   // distanza dal centro (0 al centro, 1 ai lati)
+    var twang = new Float32Array(MAXN);  // quando il filo è arrivato in fondo (vibra un attimo)
+    var tauPrev = new Float32Array(MAXN), tauNow = new Float32Array(MAXN);
+
+    /* ---- Stato dei fili in ogni fotogramma ---- */
+    // ordito (verticale): posizione, presenza, estremi, spessore, vibrazione
+    var uX = new Float32Array(MAXN), wA = new Float32Array(MAXN), wV0 = new Float32Array(MAXN), wV1 = new Float32Array(MAXN);
+    var wWid = new Float32Array(MAXN), tw = new Float32Array(MAXN);
+    // trama (orizzontale): posizione, presenza, estremi, spessore, avanzamento della riga, testa e verso della navetta
+    var vY = new Float32Array(MAXN), fA = new Float32Array(MAXN), fU0 = new Float32Array(MAXN), fU1 = new Float32Array(MAXN);
+    var fWid = new Float32Array(MAXN), rowR = new Float32Array(MAXN), fHead = new Float32Array(MAXN), fDir = new Float32Array(MAXN);
+    // tratti visibili di ogni filo (coppie inizio/fine lungo il filo)
+    var segW = [], segF = [], segWn = new Int32Array(MAXN), segFn = new Int32Array(MAXN);
+    for (var q0 = 0; q0 < MAXN; q0++) { segW.push(new Float32Array(MAXN * 2 + 4)); segF.push(new Float32Array(MAXN * 2 + 4)); }
+
+    // fasi e luci
+    var gap = 4, ue = 200, tilt = 0, light = 0, k4 = 0, k5 = 0, selMix = 0, frameA = 0, frameDraw = 0, arcA = 1;
+    var shA = 0, shU = 0, shV = 0, shRow = 0, shDir = 1, twangOn = false, sheenOn = false, sheenPh = 0, sheen0 = -1;
+    var glowOp = 0, glowSc = 1, glowR = 300, glowKey = "";
+    var cam = { cx: 0, cy: 0, sc: 1, cg: 1, sg: 0, cf: 1, sf: 0, D: 1000, A: 0, wk: 0.01 };
+    var P3 = [0, 0, 1];
+    // avanzamento: P = la scena (0 → 1 mentre è ferma), E = l'entrata (il telaio si disegna)
+    var P = 0, Pt = 0, E = 0, Et = 0, T = 0, snap = true, dirty = true;
+    var runners = [];
+
+    function build(n) {
+      N = n; i0 = n / 2 - 1; i1 = n / 2;
+      var c = (n - 1) / 2;
+      for (var i = 0; i < n; i++) { rank[i] = Math.abs(i - c) / c; twang[i] = -9; tauPrev[i] = 0; }
+      runners = [];
+      for (var k = 0; k < 3; k++) runners.push(newRunner(true));
+    }
+    function newRunner(first) {
+      return { row: 1 + Math.floor(Math.random() * (N - 2)), u: first ? Math.random() : -0.3, v: 0.2 + Math.random() * 0.14, dir: Math.random() < 0.5 ? 1 : -1 };
+    }
+
+    function resize() {
+      var cw = canvas.clientWidth, ch = canvas.clientHeight;
+      if (!cw || !ch) return;
+      dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+      W = cw; H = ch;
+      canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+      var sx = 0, sy = 0, sw = W, sh = H;
+      stacked = false;
+      if (!still) {
+        var pr = canvas.getBoundingClientRect(), r = stage.getBoundingClientRect();
+        sx = r.left - pr.left; sy = r.top - pr.top; sw = r.width; sh = r.height;
+        stacked = window.innerWidth < 900;
+        B = Math.min(sw * (stacked ? 0.72 : 0.7), sh * (stacked ? 0.64 : 0.6), 470);
+      } else B = Math.min(sw * 0.66, sh * 0.62);
+      var n = B < 330 ? 12 : 16;
+      if (n !== N || !runners.length) build(n);
+      S = B / N;
+      cx0 = sx + sw / 2; cy0 = sy + sh / 2;
+      M = B * (stacked ? 0.6 : 0.62);
+      markCY = cy0;
+      // alla fine: marchio e frase sotto, centrati insieme nella colonna
+      if (!still && callout) {
+        var chH = callout.offsetHeight, gapC = stacked ? 18 : 30, markH = M * 51 / 64;
+        var blockTop = sy + Math.max(8, (sh - (markH + gapC + chH)) / 2);
+        markCY = blockTop + markH / 2;
+        callout.style.top = Math.round(blockTop + markH + gapC - sy) + "px";
+      }
+      // bagliore: un cerchio grande quanto il tessuto
+      glowR = Math.round(B * 1.15);
+      if (!still) { glow.style.width = glow.style.height = glowR * 2 + "px"; glowKey = ""; }
+      cam.D = B * 2.3;
+      cam.wk = 2 * Math.PI / (B * 1.1);
+      dirty = true;
+    }
+
+    /* ---- POSA: dove sta ogni filo per un certo avanzamento P (e tempo T) ---- */
+    function pose() {
+      var a, b, c, d;
+      if (still) { a = 1; b = 1; c = 0.21; d = 0; }
+      else {
+        a = c01((P - 0.012) / 0.17);   // 1 · ordito       (P 0    → 0,2)
+        b = c01((P - 0.212) / 0.29);   // 2 · trama        (P 0,2  → 0,52)
+        c = c01((P - 0.528) / 0.215);  // 3 · al lavoro    (P 0,52 → 0,76)
+        d = c01((P - 0.768) / 0.2);    // 4 · il marchio   (P 0,76 → 1)
+      }
+      var k1 = inOutCubic(c / 0.42);                       // il tessuto si stringe
+      var tIn = still ? 0 : inOutCubic((c - 0.18) / 0.62); // si inclina come la stoffa della hero
+      k4 = inOutCubic((d - 0.08) / 0.6);                   // si raccoglie nel marchio
+      tilt = tIn * (1 - inOutCubic(d / 0.38));             // prima torna di fronte, poi si raccoglie
+      light = smooth((c - 0.42) / 0.4) * (1 - smooth(d / 0.3));
+      k5 = smooth((d - 0.25) / 0.45);                      // prende il blu del marchio mentre si raccoglie
+      selMix = still ? 1 : k5;
+      frameDraw = still ? 1 : outCubic(E);
+      frameA = still ? 1 : c01(E * 2.5) * (1 - smooth(c / 0.38));
+      arcA = still ? 1 : 1 - smooth(k1 / 0.6);
+      // nel disegno fermo il tessuto resta sul telaio: fili un po' stretti, ma niente tagli ai bordi
+      var kt = still ? 0 : k1;
+
+      var half = B / 2, m = 0.13 * B, top = -half - m, bot = half + m;
+      var cmp = 1 - 0.06 * kt;                             // le righe battute si avvicinano
+      var wBase = lerp(Math.max(2.2, S * 0.17), S * 0.3, k1);
+      gap = lerp(lerp(S * 0.15, S * 0.1, k1), M / 64, k4);
+      var mw = M * 7 / 64, mv = M * 22 / 64, mc = M * 8 / 64;
+      var fr = half * cmp + 0.3 * S;                       // l'ordito tagliato ai bordi, con una frangia corta
+      var fr2 = half + 0.3 * S;
+      ue = half + 0.45 * S;                                // la trama esce un poco dal tessuto (cimosa)
+      var i, j, sel, fade;
+
+      // ORDITO: scende dalla trave in alto, dal centro verso i lati
+      twangOn = false;
+      for (i = 0; i < N; i++) {
+        sel = i === i0 || i === i1;
+        var tau = c01((a - rank[i] * 0.5) / 0.5);
+        if (!still && tau >= 0.985 && tauPrev[i] < 0.985 && T - twang[i] > 0.45) twang[i] = T;
+        tauPrev[i] = tau; tauNow[i] = tau;
+        var e = outCubic(tau);
+        var v0 = lerp(top, -fr, kt), v1 = lerp(top + (bot - top) * e, fr, kt);
+        uX[i] = lerp((i - (N - 1) / 2) * S, i <= i0 ? -mc : mc, k4);
+        wV0[i] = lerp(v0, -mv, k4); wV1[i] = lerp(v1, mv, k4);
+        // i fili che non diventano marchio si spengono dai lati verso il centro, mentre scivolano dentro
+        fade = sel ? 1 : 1 - smooth((d - 0.1 - (1 - rank[i]) * 0.22) / 0.26);
+        wA[i] = tau > 0 ? fade : 0;
+        // nel disegno fermo i quattro fili del marchio sono un poco più spessi: si legge il # dentro il tessuto
+        wWid[i] = sel ? lerp(wBase * (still ? 1.4 : 1), mw, k4) : wBase;
+        // appena teso, il filo vibra un attimo
+        var dt = T - twang[i];
+        tw[i] = (dt >= 0 && dt < 1.1 && tilt < 0.001) ? S * 0.2 * Math.sin(dt * 46) * Math.exp(-dt * 5.2) : 0;
+        if (tw[i] !== 0) twangOn = true;
+      }
+
+      // TRAMA: una riga alla volta, avanti e indietro (un solo filo che gira alla cimosa)
+      for (j = 0; j < N; j++) {
+        sel = j === i0 || j === i1;
+        var dir = j % 2 ? -1 : 1;
+        var r = c01(b * N - j);
+        var qq = inOutQuad((r - 0.14) / 0.86);            // 0 → 0,14: la navetta gira; poi attraversa
+        var start = -dir * ue, hd = start + dir * 2 * ue * qq;
+        rowR[j] = r; fDir[j] = dir; fHead[j] = hd;
+        var lo = Math.min(start, hd), hi = Math.max(start, hd);
+        lo = lerp(lo, -fr2, kt); hi = lerp(hi, fr2, kt);
+        fU0[j] = lerp(lo, -mv, k4); fU1[j] = lerp(hi, mv, k4);
+        vY[j] = lerp((j - (N - 1) / 2) * S * cmp, j <= i0 ? -mc : mc, k4);
+        fade = sel ? 1 : 1 - smooth((d - 0.1 - (1 - rank[j]) * 0.22) / 0.26);
+        fA[j] = qq > 0 ? fade : 0;
+        fWid[j] = sel ? lerp(wBase * (still ? 1.4 : 1), mw, k4) : wBase;
+      }
+
+      // NAVETTA: dove sta la testa della trama
+      shA = 0;
+      if (!still && b > 0 && b < 1) {
+        var jr = Math.min(N - 1, Math.floor(b * N)), rr = rowR[jr];
+        shA = smooth(b / 0.012) * (1 - smooth((b - 0.988) / 0.012));
+        shRow = jr; shDir = fDir[jr];
+        if (rr < 0.14 && jr > 0) {
+          var s = fDir[jr - 1], p = Math.PI * rr / 0.14, vc = (vY[jr - 1] + vY[jr]) / 2, rho = (vY[jr] - vY[jr - 1]) / 2;
+          shU = s * ue + s * rho * Math.sin(p); shV = vc - rho * Math.cos(p);
+          shDir = 0;
+        } else { shU = rr < 0.14 ? -ue : fHead[jr]; shV = vY[jr]; }
+      }
+
+      // CAMERA: di fronte nelle fasi 1-2; inclinata, ingrandita e mossa dalle onde nella fase 3
+      var phi = 0.95 * tilt, gam = -0.36 * tilt;
+      cam.cf = Math.cos(phi); cam.sf = Math.sin(phi); cam.cg = Math.cos(gam); cam.sg = Math.sin(gam);
+      // su schermo largo il tessuto inclinato cresce verso destra; su telefono resta nella larghezza dello schermo
+      cam.sc = 1 + (stacked ? -0.05 : 0.32) * tilt;
+      cam.cx = cx0 + (stacked ? 0 : B * 0.05) * tilt;
+      cam.cy = lerp(cy0, markCY, k4) + B * 0.04 * tilt;
+      cam.A = B * 0.075 * tilt;
+
+      // bagliore blu: appena accennato sul telaio, pieno sul tessuto al lavoro, raccolto sul marchio
+      glowOp = still ? 0 : Math.max(0.22 * frameA, light * 0.95, k5 * 0.9);
+      glowSc = lerp(1, 0.55, k5);
+
+      // riflesso sul marchio finito: la prima volta appena si chiude, poi ogni tanto
+      sheenOn = false;
+      if (!still && k5 > 0.995) {
+        if (sheen0 < 0) sheen0 = T + 0.15;
+        var ph = (T - sheen0) % 7;
+        if (T >= sheen0 && ph < 1.5) { sheenOn = true; sheenPh = ph / 1.5; }
+      } else if (k5 < 0.9) sheen0 = -1;
+    }
+
+    /* ---- Il punto del tessuto (u, v) sullo schermo: rotazione, inclinazione, prospettiva ---- */
+    function proj(u, v, wave) {
+      var z = 0;
+      if (wave && cam.A > 0.01) z = cam.A * (Math.sin(u * cam.wk + T * 0.55) * 0.6 + Math.sin(v * cam.wk * 1.3 - T * 0.72 + u * cam.wk * 0.4) * 0.4);
+      var x = u * cam.sc, y = v * cam.sc;
+      var x1 = x * cam.cg - y * cam.sg, y1 = x * cam.sg + y * cam.cg;
+      var y2 = y1 * cam.cf - z * cam.sf, z2 = y1 * cam.sf + z * cam.cf;
+      var k = cam.D / (cam.D - z2);
+      P3[0] = cam.cx + x1 * k; P3[1] = cam.cy + y2 * k; P3[2] = k;
+    }
+    function at(isWarp, idx, t) {
+      if (isWarp) {
+        var u = uX[idx];
+        if (tw[idx] !== 0) { var len = wV1[idx] - wV0[idx]; if (len > 1) u += tw[idx] * Math.sin(Math.PI * (t - wV0[idx]) / len); }
+        proj(u, t, true);
+      } else proj(t, vY[idx], true);
+    }
+
+    /* ---- Sopra e sotto: l'ordito passa sopra dove (i + j) è pari.
+       Così i due fili centrali di ogni verso fanno il marchio: in alto a sinistra sopra il verticale,
+       in alto a destra l'orizzontale, e così via (come i tratti del simbolo #mk). ---- */
+    function warpOver(i, j) { return ((i + j) & 1) === 0; }
+    function isSel(k) { return k === i0 || k === i1; }
+
+    // la trama è già passata sotto/sopra il filo i? (0 → 1 mentre la navetta si allontana: l'ordito si apre)
+    function laid(i, j) {
+      var r = rowR[j];
+      if (r >= 1) return 1;
+      if (r <= 0.14) return 0;
+      var pd = fDir[j] * (fHead[j] - uX[i]) / (0.9 * S);
+      return pd <= 0 ? 0 : smooth(pd);
+    }
+
+    // tratti visibili di un filo: il filo intero meno i tagli dove passa sotto
+    function warpSegs(i, out) {
+      var n = 0, cur = wV0[i], end = wV1[i];
+      if (end - cur < 0.5) return 0;
+      for (var j = 0; j < N; j++) {
+        if (fA[j] <= 0.002 || warpOver(i, j)) continue;
+        if (uX[i] < fU0[j] - 0.5 || uX[i] > fU1[j] + 0.5) continue;
+        // un filo che si sta spegnendo smette presto di interrompere gli altri; il marchio lo tagliano solo i suoi fili
+        var f = laid(i, j) * fA[j] * fA[j] * fA[j];
+        if (k4 > 0 && isSel(i) && !isSel(j)) f *= 1 - smooth(k4 * 3);
+        if (f <= 0.002) continue;
+        var h = (fWid[j] / 2 + gap + wWid[i] / 2) * f;
+        if (h < 0.4) continue; // un taglio invisibile spezzerebbe la luce del filo
+        var a = vY[j] - h, b = vY[j] + h;
+        if (b <= cur) continue;
+        if (a >= end) break;
+        if (a - cur > 0.3) { out[n++] = cur; out[n++] = a; }
+        cur = Math.max(cur, b);
+      }
+      if (end - cur > 0.3) { out[n++] = cur; out[n++] = end; }
+      return n;
+    }
+    function weftSegs(j, out) {
+      var n = 0, cur = fU0[j], end = fU1[j];
+      if (end - cur < 0.5) return 0;
+      for (var i = 0; i < N; i++) {
+        if (wA[i] <= 0.002 || !warpOver(i, j)) continue;
+        if (vY[j] < wV0[i] - 0.5 || vY[j] > wV1[i] + 0.5) continue;
+        var h = (wWid[i] / 2 + gap + fWid[j] / 2) * wA[i] * wA[i] * wA[i];
+        if (k4 > 0 && isSel(j) && !isSel(i)) h *= 1 - smooth(k4 * 3);
+        if (h < 0.4) continue;
+        var a = uX[i] - h, b = uX[i] + h;
+        if (b <= cur) continue;
+        if (a >= end) break;
+        if (a - cur > 0.3) { out[n++] = cur; out[n++] = a; }
+        cur = Math.max(cur, b);
+      }
+      if (end - cur > 0.3) { out[n++] = cur; out[n++] = end; }
+      return n;
+    }
+
+    /* ---- DISEGNO ---- */
+    // un filo, in una delle tre passate: base (scura), cresta (chiara, al centro del tratto), riflesso (sottile)
+    function strokeSegs(isWarp, idx, pass, alpha) {
+      var segs = isWarp ? segW[idx] : segF[idx], n = isWarp ? segWn[idx] : segFn[idx];
+      var w = (isWarp ? wWid[idx] : fWid[idx]) * (pass === 0 ? 1 : pass === 1 ? 0.72 : 0.22);
+      var curved = cam.A > 0.01 || (isWarp && tw[idx] !== 0);
+      var tilted = tilt > 0.001, key = -1, open = false;
+      for (var s = 0; s < n; s += 2) {
+        var a = segs[s], b = segs[s + 1], L = b - a, tr;
+        if (pass === 1) { tr = Math.min(L * 0.16, S * 0.28); a += tr; b -= tr; }
+        else if (pass === 2) { tr = Math.min(L * 0.3, S * 0.42); a += tr; b -= tr; }
+        if (b - a < 0.2) continue;
+        var lw = w * cam.sc, al = alpha;
+        if (tilted) {
+          // più lontano: più sottile e più spento (come la stoffa della hero verso l'orizzonte)
+          at(isWarp, idx, (a + b) / 2);
+          lw *= P3[2];
+          al *= lerp(1, clamp(0.3 + (P3[2] - 0.8) * 1.75, 0.2, 1), tilt);
+        }
+        var kk = tilted ? Math.round(lw * 3) * 64 + Math.round(al * 40) : 0;
+        if (!open || kk !== key) {
+          if (open) ctx.stroke();
+          ctx.beginPath(); ctx.lineWidth = Math.max(0.5, lw); ctx.globalAlpha = al; key = kk; open = true;
+        }
+        var stepsN = curved ? Math.max(2, Math.ceil((b - a) / (S * 0.3))) : 1;
+        for (var k = 0; k <= stepsN; k++) {
+          at(isWarp, idx, a + (b - a) * k / stepsN);
+          if (k) ctx.lineTo(P3[0], P3[1]); else ctx.moveTo(P3[0], P3[1]);
+        }
+      }
+      if (open) ctx.stroke();
+    }
+
+    // only: 0 = tutti, 1 = solo i fili qualsiasi, 2 = solo i quattro del marchio
+    function drawThreads(isWarp, only) {
+      var g = isWarp ? PAL.warp : PAL.weft;
+      for (var pass = 0; pass < 3; pass++) {
+        var gc = pass === 0 ? g.base : pass === 1 ? g.crest : g.spec;
+        var bc = pass === 0 ? BRAND.base : pass === 1 ? BRAND.crest : BRAND.spec;
+        for (var i = 0; i < N; i++) {
+          var sel = i === i0 || i === i1;
+          if ((only === 1 && sel) || (only === 2 && !sel)) continue;
+          if (!(isWarp ? segWn[i] : segFn[i])) continue;
+          var m = sel ? selMix : 0;
+          // diventando marchio la luce del filo si spegne: resta il blu pieno, come nel logo
+          var pa = pass === 2 ? 0.5 * (1 - m) : pass === 1 ? 1 - 0.85 * m : 1;
+          var al = (isWarp ? wA[i] : fA[i]) * pa;
+          if (al < 0.004) continue;
+          ctx.strokeStyle = rgb(m > 0 ? mixC(gc, bc, m) : gc);
+          // il marchio si accende come nell'apertura del sito (alone blu)
+          var gk = still ? 0.55 : k5, glowOn = pass === 0 && sel && gk > 0.01;
+          if (glowOn) { ctx.shadowColor = "rgba(19,7,237," + (PAL.markGlow * gk).toFixed(3) + ")"; ctx.shadowBlur = 22 * gk * dpr; }
+          strokeSegs(isWarp, i, pass, al);
+          if (glowOn) { ctx.shadowBlur = 0; ctx.shadowColor = "rgba(0,0,0,0)"; }
+        }
+      }
+    }
+
+    // le curve della cimosa: la trama è un solo filo che torna indietro a ogni riga
+    function drawArcs() {
+      if (arcA < 0.01) return;
+      for (var pass = 0; pass < 2; pass++) {
+        ctx.strokeStyle = rgb(pass ? PAL.weft.crest : PAL.weft.base);
+        for (var j = 1; j < N; j++) {
+          var p = c01(rowR[j] / 0.14);
+          if (p <= 0) break;
+          var s = fDir[j - 1], vc = (vY[j - 1] + vY[j]) / 2, rho = (vY[j] - vY[j - 1]) / 2;
+          ctx.globalAlpha = arcA * (pass ? 0.9 : 1);
+          ctx.lineWidth = fWid[j] * cam.sc * (pass ? 0.66 : 1);
+          ctx.beginPath();
+          for (var k = 0; k <= 10; k++) {
+            var ang = Math.PI * p * k / 10;
+            proj(s * ue + s * rho * Math.sin(ang), vc - rho * Math.cos(ang), true);
+            if (k) ctx.lineTo(P3[0], P3[1]); else ctx.moveTo(P3[0], P3[1]);
+          }
+          ctx.stroke();
+        }
+      }
+    }
+
+    // il telaio: due travi e due montanti che si disegnano entrando, rombi agli angoli come i nodi dei passi
+    function line(u1, v1, u2, v2) { proj(u1, v1, false); ctx.moveTo(P3[0], P3[1]); proj(u2, v2, false); ctx.lineTo(P3[0], P3[1]); }
+    function drawFrame() {
+      if (frameA < 0.01) return;
+      var half = B / 2, m = 0.13 * B, top = -half - m, bot = half + m, xp = half + 1.6 * S, o = 0.55 * S, f = frameDraw;
+      ctx.globalAlpha = frameA; ctx.lineCap = "butt"; ctx.lineWidth = 1.5; ctx.strokeStyle = PAL.frame;
+      ctx.beginPath();
+      line(-(xp + o) * f, top, (xp + o) * f, top);
+      line(-(xp + o) * f, bot, (xp + o) * f, bot);
+      line(-xp, top - o, -xp, lerp(top - o, bot + o, f));
+      line(xp, top - o, xp, lerp(top - o, bot + o, f));
+      ctx.stroke();
+      // dove si attaccano i fili
+      ctx.fillStyle = PAL.dot;
+      ctx.beginPath();
+      for (var i = 0; i < N; i++) {
+        var u = (i - (N - 1) / 2) * S;
+        if (Math.abs(u) > (xp + o) * f) continue;
+        proj(u, top, false); ctx.moveTo(P3[0] + 1.6, P3[1]); ctx.arc(P3[0], P3[1], 1.6, 0, Math.PI * 2);
+        proj(u, bot, false); ctx.moveTo(P3[0] + 1.6, P3[1]); ctx.arc(P3[0], P3[1], 1.6, 0, Math.PI * 2);
+      }
+      ctx.fill();
+      // rombi agli angoli
+      ctx.globalAlpha = frameA * smooth((f - 0.6) / 0.4);
+      ctx.fillStyle = PAL.ground;
+      for (var c = 0; c < 4; c++) {
+        proj(c & 1 ? xp : -xp, c & 2 ? bot : top, false);
+        var x = P3[0], y = P3[1], r = 5.5;
+        ctx.beginPath(); ctx.moveTo(x, y - r); ctx.lineTo(x + r, y); ctx.lineTo(x, y + r); ctx.lineTo(x - r, y); ctx.closePath();
+        ctx.fill(); ctx.stroke();
+      }
+      ctx.lineCap = "round";
+    }
+
+    // scia di luce lungo una riga di trama, solo sui tratti visibili (sotto l'ordito la luce sparisce)
+    function trail(j, uFrom, uTo, alpha, wMul) {
+      var segs = segF[j], n = segFn[j], a = Math.min(uFrom, uTo), b = Math.max(uFrom, uTo);
+      if (!n || b - a < 0.5) return;
+      proj(uFrom, vY[j], true); var x0 = P3[0], y0 = P3[1];
+      proj(uTo, vY[j], true); var x1 = P3[0], y1 = P3[1], k = P3[2];
+      if (Math.abs(x1 - x0) + Math.abs(y1 - y0) < 1) return;
+      var g = ctx.createLinearGradient(x0, y0, x1, y1);
+      g.addColorStop(0, PAL.trail0);
+      g.addColorStop(1, "rgba(" + PAL.trail + "," + (PAL.trailA * alpha).toFixed(3) + ")");
+      ctx.strokeStyle = g; ctx.globalAlpha = 1; ctx.lineWidth = Math.max(1, fWid[j] * cam.sc * k * wMul);
+      ctx.beginPath();
+      for (var s = 0; s < n; s += 2) {
+        var sa = Math.max(a, segs[s]), sb = Math.min(b, segs[s + 1]);
+        if (sb - sa < 0.3) continue;
+        var st = Math.max(1, Math.ceil((sb - sa) / (S * 0.3)));
+        for (var q = 0; q <= st; q++) {
+          proj(sa + (sb - sa) * q / st, vY[j], true);
+          if (q) ctx.lineTo(P3[0], P3[1]); else ctx.moveTo(P3[0], P3[1]);
+        }
+      }
+      ctx.stroke();
+    }
+    // la testa luminosa (navetta): alone blu e un punto; sotto un filo si attenua
+    function spark(x, y, k, alpha, hidden) {
+      var R = 30 * k;
+      var hg = ctx.createRadialGradient(x, y, 0, x, y, R);
+      hg.addColorStop(0, "rgba(" + PAL.halo + "," + (PAL.haloA * alpha).toFixed(3) + ")");
+      hg.addColorStop(1, "rgba(19,7,237,0)");
+      ctx.globalAlpha = 1; ctx.fillStyle = hg;
+      ctx.beginPath(); ctx.arc(x, y, R, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = alpha * (hidden ? 0.3 : 1); ctx.fillStyle = PAL.core;
+      ctx.beginPath(); ctx.arc(x, y, 2.4 * k, 0, Math.PI * 2); ctx.fill();
+    }
+    function insideSeg(j, u) {
+      var segs = segF[j], n = segFn[j];
+      for (var s = 0; s < n; s += 2) if (u >= segs[s] - 0.5 && u <= segs[s + 1] + 0.5) return true;
+      return false;
+    }
+
+    function render() {
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.globalCompositeOperation = "source-over"; ctx.globalAlpha = 1; ctx.shadowBlur = 0;
+      ctx.clearRect(0, 0, W, H);
+      ctx.lineCap = "round"; ctx.lineJoin = "round";
+      drawFrame();
+
+      var i, j;
+      for (i = 0; i < N; i++) segWn[i] = wA[i] > 0.002 ? warpSegs(i, segW[i]) : 0;
+      for (j = 0; j < N; j++) segFn[j] = fA[j] > 0.002 ? weftSegs(j, segF[j]) : 0;
+
+      // prima l'ordito, poi la trama; quando si forma il marchio i suoi quattro fili vanno sopra a tutto
+      if (k4 > 0.001) {
+        drawThreads(true, 1); drawThreads(false, 1); drawArcs();
+        drawThreads(true, 2); drawThreads(false, 2);
+      } else {
+        drawThreads(true, 0); drawThreads(false, 0); drawArcs();
+      }
+
+      // teste luminose dei fili dell'ordito che scendono
+      ctx.globalCompositeOperation = PAL.add;
+      for (i = 0; i < N; i++) {
+        var tn = tauNow[i];
+        if (tn <= 0 || tn >= 1 || still) continue;
+        proj(uX[i], wV1[i], false);
+        var ga = Math.sin(Math.PI * tn) * frameA;
+        var bg = ctx.createRadialGradient(P3[0], P3[1], 0, P3[0], P3[1], 14);
+        bg.addColorStop(0, "rgba(" + PAL.bead + "," + (PAL.beadA * ga).toFixed(3) + ")"); bg.addColorStop(1, "rgba(" + PAL.bead + ",0)");
+        ctx.globalAlpha = 1; ctx.fillStyle = bg; ctx.beginPath(); ctx.arc(P3[0], P3[1], 14, 0, Math.PI * 2); ctx.fill();
+        ctx.globalAlpha = ga; ctx.fillStyle = PAL.beadCore; ctx.beginPath(); ctx.arc(P3[0], P3[1], 1.9, 0, Math.PI * 2); ctx.fill();
+      }
+
+      // la navetta: la sua luce cade sui fili vicini, lascia una scia sulla trama appena passata
+      if (shA > 0.01) {
+        proj(shU, shV, true);
+        var hx = P3[0], hy = P3[1], hk = P3[2], R = S * 2.8;
+        ctx.globalCompositeOperation = "source-atop";
+        var pool = ctx.createRadialGradient(hx, hy, 0, hx, hy, R);
+        pool.addColorStop(0, "rgba(" + PAL.pool + "," + (PAL.poolA * shA).toFixed(3) + ")"); pool.addColorStop(1, "rgba(" + PAL.pool + ",0)");
+        ctx.globalAlpha = 1; ctx.fillStyle = pool; ctx.fillRect(hx - R, hy - R, R * 2, R * 2);
+        ctx.globalCompositeOperation = PAL.add;
+        if (shDir) trail(shRow, fHead[shRow] - shDir * S * 3.2, fHead[shRow], shA, 0.9);
+        spark(hx, hy, hk, shA, shDir !== 0 && !insideSeg(shRow, shU));
+      }
+
+      // fase 3: navette di luce che corrono sulla trama, come nella hero
+      if (light > 0.01) {
+        ctx.globalCompositeOperation = PAL.add;
+        for (var n = 0; n < runners.length; n++) {
+          var ru = runners[n], j2 = ru.row;
+          if (!segFn[j2]) continue;
+          var lo = fU0[j2], span = fU1[j2] - lo;
+          var hp = ru.dir > 0 ? ru.u : 1 - ru.u, tp = hp - ru.dir * 0.3;
+          var hU = lo + span * hp, tU = lo + span * tp;
+          trail(j2, tU, hU, light, 0.78);
+          if (hp >= 0 && hp <= 1) { proj(hU, vY[j2], true); spark(P3[0], P3[1], P3[2], light * 0.9, !insideSeg(j2, hU)); }
+        }
+      }
+
+      // fase 4: il riflesso che attraversa il marchio, come quello dei pulsanti del sito
+      if (sheenOn) {
+        var e = inOutCubic(sheenPh), span2 = M * 1.25, xc = cam.cx - span2 + e * span2 * 2, yc = cam.cy;
+        ctx.globalCompositeOperation = "source-atop"; ctx.globalAlpha = 1;
+        var sg = ctx.createLinearGradient(xc - M * 0.32, yc - M * 0.09, xc + M * 0.32, yc + M * 0.09);
+        sg.addColorStop(0, "rgba(255,255,255,0)"); sg.addColorStop(0.5, "rgba(255,255,255,0.4)"); sg.addColorStop(1, "rgba(255,255,255,0)");
+        ctx.fillStyle = sg; ctx.fillRect(cam.cx - M * 0.6, cam.cy - M * 0.6, M * 1.2, M * 1.2);
+      }
+      ctx.globalCompositeOperation = "source-over"; ctx.globalAlpha = 1;
+
+      // bagliore (un div sotto la tela: si muove senza ridisegnare niente)
+      if (!still) {
+        var gk2 = Math.round(cam.cx) + "," + Math.round(cam.cy) + "," + glowOp.toFixed(3) + "," + glowSc.toFixed(3);
+        if (gk2 !== glowKey) {
+          glowKey = gk2;
+          glow.style.opacity = glowOp.toFixed(3);
+          glow.style.transform = "translate3d(" + Math.round(cam.cx - glowR) + "px," + Math.round(cam.cy - glowR) + "px,0) scale(" + glowSc.toFixed(3) + ")";
+        }
+      }
+    }
+
+    // cambio di tema: nuovi colori, e si ridisegna subito (la dissolvenza del cambio tema fotografa la tela già nuova)
+    document.addEventListener("telaio:tema", function () {
+      PAL = palette(); dirty = true;
+      if (still) redrawStill();
+      else if (W) { pose(); render(); }
+    });
+
+    /* ---- Senza animazioni: un disegno fermo, rifatto se cambiano misura o tema ---- */
+    function redrawStill() { resize(); if (!W) return; pose(); render(); }
+    if (still) {
+      sec.classList.add("p-rac-still");
+      if ("ResizeObserver" in window) new ResizeObserver(redrawStill).observe(canvas);
+      else window.addEventListener("resize", redrawStill);
+      redrawStill();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(redrawStill);
+      return null;
+    }
+
+    /* ---- Con le animazioni: la sezione prende subito l'assetto della scena (prima che boot misuri la pagina) ---- */
+    sec.classList.add("p-rac-live");
+    // la tela copre tutto il blocco fermo: il tessuto può uscire dalla colonna quando si inclina
+    pin.insertBefore(canvas, pin.firstChild); pin.insertBefore(glow, canvas);
+    // il titolo: nella colonna a sinistra su schermo largo, sopra la scena (fuori dal blocco fermo) sotto i 900 px
+    gsap.matchMedia().add("(max-width: 899px)", function () {
+      slot.appendChild(head);
+      return function () { side.insertBefore(head, side.firstChild); };
+    });
+    // i passi non attivi partono nascosti (restano nella pagina: i lettori di schermo li leggono tutti)
+    for (var s0 = 1; s0 < steps.length; s0++) gsap.set(steps[s0].children, { opacity: 0, y: 24 });
+    steps[0].classList.add("is-on");
+    // contatore, passo e pulsante entrano insieme quando arriva la scena (non uno a uno come i [data-reveal]:
+    // dentro la sezione bloccata la loro soglia può cadere proprio dove la scena si ferma, e non scattare)
+    var parts = sec.querySelectorAll(".p-rac-now, .p-rac-steps, .p-rac-cta");
+    gsap.set(parts, { y: 46, opacity: 0 });
+
+    return { scena: scena };
+
+    /* ---- La scena: sezione bloccata, testo che cambia con la fase, tela che insegue lo scorrimento ---- */
+    function scena() {
+      var cur = 0, barsV = [-1, -1, -1, -1], callOn = false, visible = false, lastP = -1, lastE = -1;
+      var STARTS = [0, 0.2, 0.52, 0.76, 1];
+
+      function setStep(i) {
+        var prev = cur, dir = i > prev ? 1 : -1;
+        cur = i;
+        for (var k = 0; k < steps.length; k++) steps[k].classList.toggle("is-on", k === i);
+        // esce in fretta, entra con calma (expo), nel verso dello scorrimento
+        gsap.to(steps[prev].children, { opacity: 0, y: -14 * dir, filter: "blur(4px)", duration: 0.32, ease: "power2.out", stagger: 0.02, overwrite: true });
+        gsap.fromTo(steps[i].children, { opacity: 0, y: 26 * dir, filter: "blur(6px)" },
+          { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.95, ease: "expo.out", stagger: 0.06, delay: 0.08, overwrite: true });
+        if (reel) gsap.to(reel, { yPercent: -25 * i, duration: 0.9, ease: "expo.out", overwrite: true });
+      }
+      function ui() {
+        var idx = P < STARTS[1] ? 0 : P < STARTS[2] ? 1 : P < STARTS[3] ? 2 : 3;
+        if (idx !== cur) setStep(idx);
+        for (var i = 0; i < bars.length; i++) {
+          var f = c01((P - STARTS[i]) / (STARTS[i + 1] - STARTS[i]));
+          if (Math.abs(f - barsV[i]) > 0.0005) { barsV[i] = f; bars[i].style.transform = "scaleX(" + f.toFixed(4) + ")"; }
+        }
+        if (!callout) return;
+        if (!callOn && P > 0.94) { callOn = true; gsap.to(callout, { opacity: 1, y: 0, duration: 0.9, ease: "expo.out", overwrite: true }); }
+        else if (callOn && P < 0.91) { callOn = false; gsap.to(callout, { opacity: 0, y: 10, duration: 0.3, ease: "power2.out", overwrite: true }); }
+      }
+
+      // Sezione bloccata sotto la testata (64 px, sempre sopra): lo scorrimento diventa l'avanzamento
+      // della scena (più corta su telefono e tablet).
+      // refreshPriority (anche solo 0) fa ricalcolare tutti i trigger nell'ordine della pagina: le comparse
+      // più in basso, create prima delle sezioni bloccate, tengono conto dello spazio che queste aggiungono.
+      ST.create({
+        trigger: pin, start: "top 64px",
+        end: function () { var w = window.innerWidth; return "+=" + Math.round(window.innerHeight * (w >= 900 ? 3.8 : w > 560 ? 3 : 2.6)); },
+        pin: true, anticipatePin: 1, invalidateOnRefresh: true, refreshPriority: 0,
+        onUpdate: function (st) { Pt = st.progress; },
+        onRefresh: function (st) { Pt = st.progress; }
+      });
+      // entrata: il telaio si disegna mentre la sezione arriva; contatore, passo e pulsante salgono insieme
+      var partsIn = false;
+      function showParts() {
+        if (partsIn) return;
+        partsIn = true;
+        gsap.to(parts, { y: 0, opacity: 1, duration: 1.1, ease: "expo.out", stagger: 0.08, overwrite: "auto" });
+      }
+      ST.create({
+        trigger: pin, start: "top 92%", end: "top 15%",
+        onUpdate: function (st) { Et = st.progress; if (st.progress > 0.2) showParts(); },
+        onRefresh: function (st) { Et = st.progress; if (st.progress > 0.2) showParts(); }
+      });
+
+      // si disegna solo quando la sezione è sullo schermo
+      if ("IntersectionObserver" in window) {
+        new IntersectionObserver(function (es) { visible = es[0].isIntersecting; if (visible) dirty = true; }, { rootMargin: "120px 0px" }).observe(sec);
+      } else visible = true;
+      if ("ResizeObserver" in window) new ResizeObserver(function () { resize(); }).observe(pin);
+      window.addEventListener("resize", function () { resize(); });
+      resize();
+
+      gsap.ticker.add(function (time, dtMs) {
+        if (!visible || !W) return;
+        var dt = Math.min(dtMs || 16, 64) / 1000;
+        T += dt;
+        // la tela insegue lo scorrimento con un filo di ritardo (stesso effetto a 60 e a 120 Hz)
+        if (snap) { P = Pt; E = Et; snap = false; }
+        var k = 1 - Math.exp(-dt * 8);
+        P += (Pt - P) * k; if (Math.abs(Pt - P) < 0.00005) P = Pt;
+        E += (Et - E) * k; if (Math.abs(Et - E) < 0.0005) E = Et;
+        ui();
+        pose();
+        if (light > 0.001) {
+          for (var n = 0; n < runners.length; n++) {
+            runners[n].u += runners[n].v * dt;
+            if (runners[n].u > 1.3) runners[n] = newRunner(false);
+          }
+        }
+        var moving = P !== lastP || E !== lastE;
+        lastP = P; lastE = E;
+        if (!(moving || dirty || twangOn || sheenOn || tilt > 0.001 || light > 0.001)) return;
+        dirty = false;
+        render();
+      });
+    }
   }
 
   /* ============================================================

@@ -363,30 +363,39 @@
       </div>
     </section>
 
-    <!-- 4 · HOW WE WORK (a thread weaves as you scroll) -->
-    <section id="how-we-work" class="p-sec p-method">
-      <div class="wrap p-method-grid">
-        <div class="p-method-side">
-          <p class="eyebrow" data-reveal>How we work</p>
-          <h2 class="p-h2" data-split>Four steps. At the end, a tool that works for you.</h2>
-          <div class="p-counter" aria-hidden="true">
-            <span class="p-counter-win"><span class="p-counter-reel"><i>01</i><i>02</i><i>03</i><i>04</i></span></span>
-            <span class="p-counter-tot">/04</span>
+    <!-- 4 · HOW WE WORK: the loom tells the four steps.
+         The section holds still while you scroll and the canvas weaves the fabric, up to the mark (motion.js, initRacconto).
+         Without animation: the four steps as a list and, beside them, the finished fabric drawn still. -->
+    <section id="how-we-work" class="p-sec p-method p-racconto">
+      <div class="wrap p-rac-slot"></div>
+      <div class="p-rac-pin">
+        <div class="wrap p-rac-grid">
+          <div class="p-rac-side">
+            <header class="p-rac-head">
+              <p class="eyebrow" data-reveal>How we work</p>
+              <h2 class="p-h2" data-split>Four steps. At the end, a tool that works for you.</h2>
+            </header>
+            <div class="p-rac-now" aria-hidden="true">
+              <div class="p-counter">
+                <span class="p-counter-win"><span class="p-counter-reel"><i>01</i><i>02</i><i>03</i><i>04</i></span></span>
+                <span class="p-counter-tot">/04</span>
+              </div>
+              <div class="p-rac-bars"><span><i></i></span><span><i></i></span><span><i></i></span><span><i></i></span></div>
+            </div>
+            <ol class="p-rac-steps">
+              <li class="p-rac-step"><span class="p-rac-step-n">Step 1</span><h3>We start from a real problem</h3><p>We find where you lose time, money or opportunities, and pick the first problem to solve together.</p></li>
+              <li class="p-rac-step"><span class="p-rac-step-n">Step 2</span><h3>We choose the right tools</h3><p>We give you three options. We tell you which one we'd pick and why, with time, cost and limits in writing before we start.</p></li>
+              <li class="p-rac-step"><span class="p-rac-step-n">Step 3</span><h3>We put them to work</h3><p>We set up the tool, connect it to what you already use and test it in real work with your team. In 4 weeks your first AI tool is in use.</p></li>
+              <li class="p-rac-step"><span class="p-rac-step-n">Step 4</span><h3>We stay until it delivers</h3><p>We look at what changed, fix what doesn't work and decide the next step with you.</p></li>
+            </ol>
+            <div class="p-rac-cta"><a class="btn btn-primary p-btn-xl" data-magnetic href="/en/ai-check-up/" data-cta="checkup" data-placement="method">Book your AI check-up <span class="p-arr" aria-hidden="true">→</span></a></div>
           </div>
-          <div data-reveal><a class="btn btn-primary p-btn-xl" data-magnetic href="/en/ai-check-up/" data-cta="checkup" data-placement="method">Book your AI check-up <span class="p-arr" aria-hidden="true">→</span></a></div>
+          <div class="p-rac-stage">
+            <div class="p-rac-glow" aria-hidden="true"></div>
+            <canvas class="p-rac-canvas" aria-hidden="true"></canvas>
+            <div class="callout p-rac-callout">You have one point of contact: Telaio. We're accountable for the result, from analysis to a working solution, and after.</div>
+          </div>
         </div>
-        <div class="p-steps">
-          <svg class="p-thread" aria-hidden="true"><path class="bg"/><path class="fg"/></svg>
-          <ol class="p-steps-list">
-            <li class="p-step"><span class="p-step-node" aria-hidden="true"></span><span class="p-step-n">Step 1</span><h3>We start from a real problem</h3><p>We find where you lose time, money or opportunities, and pick the first problem to solve together.</p></li>
-            <li class="p-step"><span class="p-step-node" aria-hidden="true"></span><span class="p-step-n">Step 2</span><h3>We choose the right tools</h3><p>We give you three options. We tell you which one we'd pick and why, with time, cost and limits in writing before we start.</p></li>
-            <li class="p-step"><span class="p-step-node" aria-hidden="true"></span><span class="p-step-n">Step 3</span><h3>We put them to work</h3><p>We set up the tool, connect it to what you already use and test it in real work with your team. In 4 weeks your first AI tool is in use.</p></li>
-            <li class="p-step"><span class="p-step-node" aria-hidden="true"></span><span class="p-step-n">Step 4</span><h3>We stay until it delivers</h3><p>We look at what changed, fix what doesn't work and decide the next step with you.</p></li>
-          </ol>
-        </div>
-      </div>
-      <div class="wrap p-method-foot">
-        <div class="callout" data-reveal>You have one point of contact: Telaio. We're accountable for the result, from analysis to a working solution, and after.</div>
       </div>
     </section>
 
