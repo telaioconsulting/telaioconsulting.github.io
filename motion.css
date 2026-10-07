@@ -958,3 +958,141 @@ html:not(.motion) .p-manifesto-text em {
   .btn-primary::after { display: none; }
   .btn:active, .icon-btn:active, .p-orb:active { scale: none; }
 }
+
+/* ============================================================
+   DETTAGLI: CAMBIO PAGINA COL FILO · MARCHIO CHE SI TESSE ·
+   LINK E PULSANTI CUCITI
+   Il comportamento è in fondo a script.js; lo script nell'<head>
+   ascolta «pagereveal» e dice se la pagina arriva col filo
+   (classe .p-filo-arrivo). Blocco a sé: si toglie tutto insieme.
+   ============================================================ */
+:root {
+  --p-ease-out: cubic-bezier(.23, 1, .32, 1);      /* risposta rapida (passaggio del mouse) */
+  --p-ease-in-out: cubic-bezier(.77, 0, .175, 1);  /* movimento sullo schermo (il filo che attraversa) */
+  --p-filo-durata: 600ms;
+}
+
+/* ---- 1 · Cambio pagina col filo ----
+   Tutte le pagine chiedono al browser la transizione tra documenti (Chrome, Edge, Safari recenti;
+   Firefox cambia pagina come sempre; chi chiede meno movimento non la vede). La richiesta,
+   «@view-transition { navigation: auto; types: p-filo }», sta in uno <style> in cima all'<head> di
+   ogni pagina: qui arriverebbe tardi e a volte la pagina nuova annullerebbe il passaggio.
+   La testata e il segno della pagina corrente hanno un nome: la testata resta ferma, il segno
+   scorre dalla voce vecchia alla nuova. La pagina nuova si scopre da sinistra a destra (clip-path)
+   dietro un filo blu che corre col bordo del ritaglio. Il tipo «p-filo» tiene questi stili lontani
+   dal cambio tema, che usa anche lui una View Transition (startViewTransition in script.js). */
+.top { view-transition-name: p-testata; }
+.nav a[aria-current="page"]::after { view-transition-name: p-segno; }
+
+/* il filo: 2 px nel blu del marchio, una sfumatura sottile dietro e un alone corto davanti.
+   Lo aggiunge script.js alla pagina che se ne va, un attimo prima della foto («pageswap») */
+.p-filo {
+  position: fixed; top: 0; left: -4px; z-index: 55; pointer-events: none;
+  width: 44px; height: 100vh;
+  background: linear-gradient(90deg,
+    transparent 0,
+    color-mix(in srgb, var(--brand) 45%, transparent) 4px,
+    var(--brand) 4px 6px,
+    color-mix(in srgb, var(--brand) 50%, transparent) 6px,
+    color-mix(in srgb, var(--brand) 16%, transparent) 16px,
+    transparent 44px);
+  view-transition-name: p-filo;
+}
+/* la pagina vecchia resta ferma sotto, quella nuova si scopre insieme al filo */
+html:active-view-transition-type(p-filo)::view-transition-old(root) { animation: none; }
+html:active-view-transition-type(p-filo)::view-transition-new(root) {
+  animation: p-filo-scopre var(--p-filo-durata) var(--p-ease-in-out) both;
+}
+html:active-view-transition-type(p-filo)::view-transition-group(p-filo) {
+  animation: p-filo-passa var(--p-filo-durata) var(--p-ease-in-out) both;
+}
+html:active-view-transition-type(p-filo)::view-transition-old(p-filo) { animation: none; }
+html:active-view-transition-type(p-filo)::view-transition-new(p-filo) { display: none; }
+/* il segno della pagina corrente scorre col passo del filo */
+html:active-view-transition-type(p-filo)::view-transition-group(p-segno) {
+  animation-duration: var(--p-filo-durata); animation-timing-function: var(--p-ease-in-out);
+}
+@keyframes p-filo-scopre { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes p-filo-passa { from { translate: 0 0; } to { translate: 100vw 0; } }
+/* arrivando col filo l'ingresso lo fa il filo: titolo e testi della hero sono già al loro posto
+   (sopra le posizioni di partenza che motion.js mette in linea); dietro, il tessuto si tesse lo stesso */
+.motion.p-filo-arrivo .p-h1 { visibility: visible; }
+.p-filo-arrivo .p-h1 .p-line, .p-filo-arrivo [data-hero-item] { opacity: 1 !important; transform: none !important; }
+.p-filo-arrivo .p-accent { --mark: 1 !important; }
+
+/* ---- 2 · Il marchio che si tesse ----
+   script.js sostituisce il <use> del marchio in testata con i tratti veri e li disegna:
+   prima l'ordito, poi la trama che passa sopra e sotto. Finché non parte resta nascosto
+   (niente lampo del marchio intero). Si vede subito intero arrivando col filo (la testata
+   resta ferma) e sulla home con l'apertura (il marchio lo disegna già l'apertura).
+   Se script.js non partisse, ricompare comunque dopo 2,5 s. */
+.motion:not(.p-filo-arrivo) .top .brand .mk:not(.p-tessuto) { visibility: hidden; animation: p-mk-mostra 0s 2.5s forwards; }
+.motion:not(.no-intro) .p-intro ~ .top .brand .mk { visibility: visible; animation: none; }
+@keyframes p-mk-mostra { to { visibility: visible; } }
+/* il pezzo d'ordito che resta sotto la trama: si vede solo mentre si tesse */
+.top .brand .mk .p-ponte { visibility: hidden; }
+.top .brand .mk.is-tessendo .p-ponte { visibility: visible; }
+
+/* ---- 3 · Link e pulsanti cuciti ----
+   Al passaggio del mouse corre un punto di cucitura (trattini) da sinistra a destra;
+   subito dietro il filo si chiude in una linea piena. Uscendo la linea si ritira veloce.
+   Transizioni CSS: se il mouse entra ed esce di fretta riprendono da dove sono. */
+
+/* voci del menu (in riga): la cucitura finisce esattamente dove sta il segno della pagina corrente.
+   Nel menu a scomparsa resta il riquadro di sempre. */
+@media (hover: hover) and (min-width: 1121px) {
+  .nav a:hover { background: none; }
+  .nav a:not([aria-current])::before,
+  .nav a:not([aria-current])::after {
+    content: ""; position: absolute; left: 12px; right: 12px; bottom: 2px; height: 2px; pointer-events: none;
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path .16s var(--p-ease-out);
+  }
+  /* i punti (trattini da 4 px) e il filo che chiude la cucitura */
+  .nav a:not([aria-current])::before { background: repeating-linear-gradient(90deg, var(--weft) 0 4px, transparent 4px 7px); }
+  .nav a:not([aria-current])::after { background: var(--brand); border-radius: 2px; }
+  .nav a:not([aria-current]):hover::before { clip-path: inset(0 0 0 0); transition: clip-path .24s var(--p-ease-out); }
+  .nav a:not([aria-current]):hover::after { clip-path: inset(0 0 0 0); transition: clip-path .24s var(--p-ease-out) .14s; }
+}
+
+/* link con la freccia: script.js mette il testo in uno <span class="p-cuci">, in linea, così su due righe
+   la cucitura fa la prima riga e poi la seconda (il link resta com'è, margini compresi).
+   Due sfondi, i trattini e la linea piena, ognuno con la sua larghezza: proprietà registrate,
+   così si animano separate e la linea parte in ritardo. */
+@property --p-cuci { syntax: "<percentage>"; inherits: false; initial-value: 0%; }
+@property --p-chiudi { syntax: "<percentage>"; inherits: false; initial-value: 0%; }
+.arrow-link .p-cuci {
+  padding-bottom: 4px;
+  background:
+    linear-gradient(var(--brand), var(--brand)) 0 100% / var(--p-chiudi) 2px no-repeat,
+    repeating-linear-gradient(90deg, var(--weft) 0 4px, transparent 4px 7px) 0 100% / var(--p-cuci) 2px no-repeat;
+  transition: --p-cuci .16s var(--p-ease-out), --p-chiudi .16s var(--p-ease-out);
+}
+@media (hover: hover) {
+  .arrow-link:hover .p-cuci {
+    --p-cuci: 100%; --p-chiudi: 100%;
+    transition: --p-cuci .26s var(--p-ease-out), --p-chiudi .26s var(--p-ease-out) .14s;
+  }
+}
+
+/* pulsanti: un filo fa una volta il giro del bordo (lo fa partire script.js) e la freccia si sposta.
+   Il riflesso che attraversava il pulsante lo sostituisce il filo; senza riflesso non serve più
+   tagliare quello che esce (overflow: hidden avrebbe tagliato il filo sul bordo). */
+.btn-primary { overflow: visible; }
+.btn-primary::after { display: none; }
+/* il disegno copre anche il bordo trasparente da 1,5 px: il filo corre proprio sul contorno */
+.p-btn-filo {
+  position: absolute; top: -1.5px; left: -1.5px; width: calc(100% + 3px); height: calc(100% + 3px);
+  pointer-events: none; overflow: visible;
+}
+.p-btn-filo rect { fill: none; stroke: #fff; stroke-width: 1.5; stroke-dasharray: 0 10000; }
+/* sui pulsanti bianchi del blocco blu il filo è blu */
+.p-btn-inv .p-btn-filo rect, .p-checkup .booking-box .p-btn-filo rect { stroke: var(--brand); }
+.btn .p-arr { transition: transform .22s var(--p-ease-out); }
+@media (hover: hover) { .btn:hover .p-arr { transform: translateX(3px); } }
+
+/* riduci movimento: niente cucitura che corre (la linea compare e basta), freccia ferma */
+@media (prefers-reduced-motion: reduce) {
+  .nav a::before, .nav a::after, .arrow-link .p-cuci { transition: none !important; }
+  .btn:hover .p-arr { transform: none; }
+}
