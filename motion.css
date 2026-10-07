@@ -629,6 +629,46 @@ html:not(.motion) .p-manifesto-text em {
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 
+/* ---- Tessuto in WebGL (motion.js: initWeaveGL, initParolaTessuta) — inizio ----
+   La classe .p-weave-gl la mette motion.js sulla hero quando il telo è in WebGL.
+   Il telo è pieno, non più solo linee: il velo a sinistra è un poco più deciso.
+   Sopra l'orizzonte, dove il telo si perde nella nebbia, resta una luce blu lontana. */
+.p-hero.p-weave-gl { background: radial-gradient(70% 46% at 70% 18%, rgba(19, 7, 237, .16), transparent 70%); }
+:root[data-theme="light"] .p-hero.p-weave-gl { background: radial-gradient(70% 46% at 70% 18%, rgba(19, 7, 237, .07), transparent 70%); }
+.p-weave-gl .p-hero-veil {
+  background:
+    linear-gradient(90deg, var(--ground) 0%, color-mix(in srgb, var(--ground) 86%, transparent) 30%, color-mix(in srgb, var(--ground) 30%, transparent) 52%, transparent 70%),
+    linear-gradient(180deg, color-mix(in srgb, var(--ground) 60%, transparent) 0%, transparent 22%, transparent 62%, color-mix(in srgb, var(--ground) 70%, transparent) 86%, var(--ground) 100%);
+}
+/* le briciole sono piccole e sul telefono stanno sopra il telo: un alone del colore della pagina */
+.p-weave-gl .crumbs { text-shadow: 0 0 10px var(--ground), 0 0 4px var(--ground); }
+/* nelle altre pagine il sottotitolo è più largo: il velo arriva più in là */
+@media (min-width: 561px) {
+  .p-hero.is-page.p-weave-gl .p-hero-veil {
+    background:
+      linear-gradient(90deg, var(--ground) 0%, color-mix(in srgb, var(--ground) 88%, transparent) 36%, color-mix(in srgb, var(--ground) 45%, transparent) 62%, transparent 82%),
+      linear-gradient(180deg, color-mix(in srgb, var(--ground) 60%, transparent) 0%, transparent 22%, transparent 62%, color-mix(in srgb, var(--ground) 70%, transparent) 86%, var(--ground) 100%);
+  }
+}
+/* sul telefono il testo prende quasi tutta la larghezza: il telo resta in alto e si scurisce sotto il testo */
+@media (max-width: 560px) {
+  .p-weave-gl .p-hero-veil {
+    background: linear-gradient(180deg, color-mix(in srgb, var(--ground) 45%, transparent) 0%, transparent 9%, transparent 24%,
+      color-mix(in srgb, var(--ground) 80%, transparent) 46%, color-mix(in srgb, var(--ground) 90%, transparent) 88%, var(--ground) 100%);
+  }
+}
+/* la parola gigante tessuta: le lettere vere restano al loro posto ma trasparenti (servono per le misure) */
+.p-bigword.p-tessuta { position: relative; }
+.p-bigword-gl {
+  position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none;
+  opacity: 0; transition: opacity .8s cubic-bezier(.23, 1, .32, 1);
+}
+.p-bigword.is-gl .p-bigword-gl { opacity: 1; }
+.p-bigword.p-tessuta span { transition: opacity .8s cubic-bezier(.23, 1, .32, 1); }
+.p-bigword.is-gl span { opacity: 0; }
+.p-bigword-base { display: inline-block; width: 0; height: 0; vertical-align: baseline; }
+/* ---- Tessuto in WebGL — fine ---- */
+
 /* ============================================================
    ALTRE PAGINE
    ============================================================ */
