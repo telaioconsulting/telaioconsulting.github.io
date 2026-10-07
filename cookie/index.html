@@ -26,9 +26,16 @@
 
   <link rel="preload" href="/assets/fonts/bricolage-grotesque-500-700-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/ibm-plex-sans-400-600-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <!-- cambio pagina col filo (motion.css): la richiesta al browser sta in cima, prima di ogni script,
+       altrimenti la pagina nuova può controllarla prima che arrivino i fogli di stile e annullare il passaggio -->
+  <style>@media (prefers-reduced-motion: no-preference) { @view-transition { navigation: auto; types: p-filo; } }</style>
   <script>
     (function (r) {
       r.classList.add("js");
+      // cambio pagina col filo (motion.css): «pagereveal» dice, prima del primo disegno, se la pagina arriva con la transizione
+      addEventListener("pagereveal", function (e) { r.classList.add(e.viewTransition ? "p-filo-arrivo" : "p-rivelata"); });
+      // tema chiaro salvato: subito, prima del primo disegno (niente passaggio dal buio al chiaro)
+      try { if (localStorage.getItem("telaio-theme") === "light") { r.setAttribute("data-theme", "light"); document.querySelector('meta[name="theme-color"]').content = "#F4F5F8"; } } catch (e) {}
       if (!matchMedia("(prefers-reduced-motion: reduce)").matches) r.classList.add("motion");
       // Se gli script non partono, si torna alla pagina statica (tutto visibile).
       setTimeout(function () {
@@ -52,6 +59,7 @@
   </script>
 </head>
 <body data-page-type="cookie">
+  <a class="skip" href="#top">Vai al contenuto</a>
   <!-- TODO(conferma): bozza da far rivedere al legale prima dell'unione -->
 
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">

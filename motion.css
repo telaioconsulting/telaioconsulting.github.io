@@ -15,10 +15,16 @@ html.lenis, html.lenis body { height: auto; }
 html.lenis { scroll-behavior: auto !important; }
 .lenis.lenis-stopped { overflow: hidden; }
 
+/* sezione raggiunta da un link interno: prende il focus, senza il bordo attorno */
+[tabindex="-1"]:focus { outline: none; }
+
+/* testo solo per i lettori di schermo */
+.p-sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+
 /* ---- Barra di avanzamento della pagina ---- */
 .p-progress {
   position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 120; pointer-events: none;
-  background: linear-gradient(90deg, var(--brand), var(--weft));
+  background: var(--brand);
   transform-origin: 0 50%; transform: scaleX(0);
 }
 html:not(.motion) .p-progress { display: none; }
@@ -29,6 +35,9 @@ html:not(.motion) .p-progress { display: none; }
 .motion .p-h1 { visibility: hidden; }
 /* la testata scende alla fine dell'apertura, solo nelle home */
 .motion .p-intro ~ .top { transform: translateY(-100%); }
+/* apertura già vista in questa visita (classe messa nell'<head>): niente apertura, testata al suo posto */
+.motion.no-intro .p-intro { display: none; }
+.motion.no-intro .p-intro ~ .top { transform: none; }
 
 /* ============================================================
    APERTURA
@@ -79,7 +88,7 @@ html:not(.motion) .p-progress { display: none; }
   border: 1px solid color-mix(in srgb, var(--weft) 28%, transparent);
   background: color-mix(in srgb, var(--ground) 55%, transparent);
   -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
-  font-family: var(--f-mono); font-size: var(--step--1); letter-spacing: .16em; text-transform: uppercase; color: var(--weft);
+  font-family: var(--f-mono); font-size: var(--step--1); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--weft);
 }
 .p-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--brand); flex: none; animation: p-pulse 2.2s ease-out infinite; }
 @keyframes p-pulse {
@@ -90,7 +99,7 @@ html:not(.motion) .p-progress { display: none; }
 
 .p-h1 {
   position: relative; isolation: isolate;
-  margin-top: clamp(20px, 3vh, 32px); max-width: 17ch;
+  margin-top: clamp(20px, 3vh, 32px); max-width: 20ch; /* tre righe invece di quattro, stessa grandezza */
   font-size: clamp(2.6rem, 6.2vw, 6rem); line-height: .98; letter-spacing: -.045em;
 }
 .p-h1 .p-line { padding-bottom: .04em; }
@@ -112,27 +121,42 @@ html:not(.motion) .p-progress { display: none; }
   font-size: clamp(1.15rem, 1.7vw, 1.45rem); line-height: 1.38; max-width: 40ch;
 }
 .p-hero-cta { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
-.p-meta { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 18px; font-family: var(--f-mono); font-size: 12px; color: var(--muted); }
+.p-meta { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 18px; font-family: var(--f-mono); font-size: .8125rem; color: var(--muted); }
 .p-meta li { display: inline-flex; align-items: center; gap: 8px; }
 .p-meta li + li::before { content: ""; width: 4px; height: 4px; background: var(--brand); transform: rotate(45deg); }
 
 .p-btn-xl { padding: 18px 26px; font-size: 1.04rem; gap: 12px; }
+/* sui pulsanti magnetici la posizione la muove GSAP: una transizione CSS su transform la rallentava a ogni passo */
+.motion [data-magnetic] { transition: background .18s ease, box-shadow .2s ease, scale .12s ease-out; }
+/* Frecce: icona a tratto del marchio (griglia 24, angoli arrotondati) al posto del carattere →,
+   che i font del sito non hanno e il browser prendeva da un font di sistema.
+   Il carattere resta nel testo (nascosto), il disegno è una maschera colorata col colore del testo. */
+:root {
+  --i-arr: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4.5 12h15M13.5 6l6 6-6 6'/%3E%3C/svg%3E");
+  --i-arr-thin: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4.5 12h15M13.5 6l6 6-6 6'/%3E%3C/svg%3E");
+}
+.p-arr, .p-orb-arr, .p-case-big {
+  width: 1em; height: 1em; overflow: hidden; text-indent: 200%; white-space: nowrap;
+  background: currentColor;
+  -webkit-mask: var(--i-arr) center / contain no-repeat; mask: var(--i-arr) center / contain no-repeat;
+}
+.p-orb-arr, .p-case-big { -webkit-mask-image: var(--i-arr-thin); mask-image: var(--i-arr-thin); }
 .p-arr { display: inline-block; transition: transform .35s var(--ease); }
-.btn:hover .p-arr { transform: translateX(4px); }
+@media (hover: hover) { .btn:hover .p-arr { transform: translateX(4px); } }
 
 .p-hero-foot {
   position: relative; z-index: 2; width: 100%;
   display: flex; justify-content: space-between; align-items: center; gap: 24px;
   padding-top: clamp(40px, 7vh, 80px); padding-bottom: 28px;
 }
-.p-trust { font-family: var(--f-mono); font-size: 12px; color: var(--muted); max-width: 46ch; }
+.p-trust { font-family: var(--f-mono); font-size: .8125rem; color: var(--muted); max-width: 46ch; }
 .p-scroll {
   display: inline-flex; align-items: center; gap: 12px; min-height: 44px;
-  font-family: var(--f-mono); font-size: 11px; letter-spacing: .24em; text-transform: uppercase; color: var(--muted); text-decoration: none;
+  font-family: var(--f-mono); font-size: 11px; letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--muted); text-decoration: none;
 }
 .p-scroll i { position: relative; width: 1px; height: 38px; background: var(--line-strong); overflow: hidden; }
-.p-scroll i::after { content: ""; position: absolute; left: 0; top: -40%; width: 1px; height: 40%; background: var(--weft); animation: p-drop 2s var(--ease) infinite; }
-@keyframes p-drop { to { top: 100%; } }
+.p-scroll i::after { content: ""; position: absolute; left: 0; top: 0; width: 1px; height: 40%; background: var(--weft); transform: translateY(-100%); animation: p-drop 2s var(--ease) infinite; }
+@keyframes p-drop { to { transform: translateY(250%); } }
 
 /* ============================================================
    NASTRO
@@ -150,40 +174,36 @@ html:not(.motion) .p-progress { display: none; }
 /* ============================================================
    SEZIONI
    ============================================================ */
-.p-sec { position: relative; padding-block: clamp(96px, 13vw, 184px); }
+.p-sec { position: relative; padding-block: clamp(88px, 11vw, 152px); }
+/* due sezioni di fila stavano a quasi 370 px l'una dall'altra: la seconda parte più vicina
+   (:where tiene bassa la specificità, così le sezioni con un loro spazio in alto lo conservano) */
+.p-sec + :where(.p-sec) { padding-top: clamp(56px, 7vw, 104px); }
 .p-head { margin-bottom: clamp(48px, 6vw, 88px); }
+/* nelle colonne a lato il titolo segue la larghezza della colonna, non dello schermo */
+.p-split-side, .p-method-side { container-type: inline-size; }
+:is(.p-split-side, .p-method-side) .p-h2 { font-size: clamp(2.3rem, min(5.4vw, 14cqi), 4.6rem); }
+/* su schermi bassi (portatili 1366×768) la colonna fissa era più alta dello schermo e nascondeva il pulsante */
+@media (min-width: 900px) and (max-height: 820px) { .p-split-side, .p-method-side { position: static; } }
 .p-h2 {
   margin-top: 18px; max-width: 18ch;
   font-size: clamp(2.3rem, 5.4vw, 4.9rem); line-height: 1; letter-spacing: -.045em;
 }
 .p-h2 .p-line { padding-bottom: .05em; }
 
-/* ---- Trama delle sezioni: la griglia del tessuto, appena accennata, si accende attorno al mouse.
-   Il livello lo aggiunge motion.js (solo con motion); --tx e --ty sono il punto luce dentro la sezione.
-   Sul telefono la luce è una fascia a metà schermo e la trama ci scorre sotto. ---- */
-.p-has-trama { isolation: isolate; }
-.p-trama {
-  --tx: -999px; --ty: -999px; --spot: 360px circle; --glow: 260px circle;
+/* ---- Trama delle sezioni: la griglia del tessuto disegnata su un canvas (motion.js, solo con motion).
+   .p-tela copre la pagina fino in fondo a <main>, sotto a tutto: le sezioni senza fondo la lasciano vedere,
+   i blocchi col loro fondo la coprono. Il canvas dentro è alto quanto lo schermo più un margine e lo sposta
+   motion.js a scatti di 44 px; l'altezza di .p-tela la scrive motion.js. ---- */
+.p-tela { position: absolute; left: 0; top: 0; width: 100%; z-index: -1; overflow: hidden; contain: strict; pointer-events: none; }
+.p-tela canvas { position: absolute; left: 0; top: 0; display: block; will-change: transform; }
+/* sul blocco blu del check-up c'è già il suo reticolo che scorre: solo la luce bianca, niente secondo reticolo.
+   --tx e --ty (da motion.js) sono il punto luce dentro il blocco; sul telefono è una fascia a metà schermo */
+.p-tela-luce {
+  --tx: -999px; --ty: -999px;
   position: absolute; inset: 0; z-index: -1; pointer-events: none;
-  background-image:
-    radial-gradient(var(--glow) at var(--tx) var(--ty), color-mix(in srgb, var(--brand) 18%, transparent), transparent 70%),
-    radial-gradient(circle, var(--weft) 0 1.7px, transparent 2.3px),
-    repeating-linear-gradient(90deg, color-mix(in srgb, var(--ink) 34%, transparent) 0 1px, transparent 1px 44px),
-    repeating-linear-gradient(0deg, color-mix(in srgb, var(--weft) 60%, transparent) 0 1px, transparent 1px 44px);
-  background-size: auto, 44px 44px, auto, auto;
-  background-position: 0 0, -22px -22px, 0 0, 0 0;
-  -webkit-mask-image: radial-gradient(var(--spot) at var(--tx) var(--ty), #000 0%, rgba(0, 0, 0, .5) 45%, rgba(0, 0, 0, .12) 100%);
-          mask-image: radial-gradient(var(--spot) at var(--tx) var(--ty), #000 0%, rgba(0, 0, 0, .5) 45%, rgba(0, 0, 0, .12) 100%);
+  background: radial-gradient(260px circle at var(--tx) var(--ty), rgba(255, 255, 255, .16), rgba(255, 255, 255, .055) 35%, transparent 70%);
 }
-.p-trama-touch .p-trama { --spot: 120% 260px; --glow: 90% 200px; }
-/* sul blocco blu del check-up i fili sono chiari */
-.p-checkup .p-trama {
-  background-image:
-    radial-gradient(var(--glow) at var(--tx) var(--ty), rgba(255, 255, 255, .14), transparent 70%),
-    radial-gradient(circle, #fff 0 1.7px, transparent 2.3px),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, .28) 0 1px, transparent 1px 44px),
-    repeating-linear-gradient(0deg, rgba(255, 255, 255, .36) 0 1px, transparent 1px 44px);
-}
+.p-tela-touch .p-tela-luce { background: radial-gradient(90% 200px at var(--tx) var(--ty), rgba(255, 255, 255, .1), transparent 70%); }
 
 /* ---- Numeri ---- */
 .p-stat-list { border-top: 1px solid var(--line); }
@@ -197,16 +217,28 @@ html:not(.motion) .p-progress { display: none; }
   font-size: clamp(5.2rem, 15vw, 13.5rem); line-height: .84; letter-spacing: -.065em;
   font-variant-numeric: tabular-nums;
 }
-.p-stat-num small { font-size: .3em; letter-spacing: -.02em; color: var(--weft); white-space: nowrap; }
+/* il blu chiaro resta per le piccole etichette (brand book): l'unità accanto al numero grande è grigia */
+.p-stat-num small { font-size: .3em; letter-spacing: -.02em; color: var(--muted); white-space: nowrap; }
 .p-stat-body > p { color: var(--muted); font-size: var(--step-1); line-height: 1.5; max-width: 40ch; }
-.p-stat-body > .p-src { margin-top: 14px; font-family: var(--f-mono); font-size: 11px; line-height: 1.4; }
+.p-stat-body > .p-src { margin-top: 14px; font-family: var(--f-mono); font-size: 12px; line-height: 1.5; }
 .p-src a { color: var(--weft); }
+
+/* ---- Numeri tessuti (motion.js): il canvas dei fili sta sopra la cifra; il testo vero resta sotto,
+   col valore finale. I canvas ereditano dal numero le cifre tabellari; la spaziatura la mette motion.js. ---- */
+.motion .p-stat-num { position: relative; }
+.p-woven, .p-woven-aux { letter-spacing: 0; font-variant-numeric: tabular-nums; }
+.p-woven { position: absolute; left: 0; top: 0; z-index: 1; display: block; pointer-events: none; }
+/* canvas di lavoro e misure: nella pagina (per ereditare il carattere), ma invisibili e fuori dal flusso */
+.p-woven-aux, .p-woven-meas { position: absolute; left: 0; top: 0; visibility: hidden; pointer-events: none; }
+.p-woven-aux { width: 1px; height: 1px; }
+.p-woven-meas { white-space: nowrap; }
+/* ---- fine numeri tessuti ---- */
 
 .p-viz { margin-bottom: 26px; }
 .p-viz-cols { display: flex; align-items: flex-end; gap: 14px; height: 132px; }
 .p-col { width: 66px; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; gap: 8px; }
 .p-col i { display: block; height: calc(var(--v) * (100% - 26px)); border-radius: 4px 4px 0 0; background: var(--line-strong); transform-origin: 50% 100%; }
-.p-col.is-hi i { background: linear-gradient(180deg, var(--weft), var(--brand)); box-shadow: 0 0 40px -6px rgba(19, 7, 237, .8); }
+.p-col.is-hi i { background: var(--brand); }
 .p-col span { font-family: var(--f-mono); font-size: 12px; color: var(--muted); }
 .p-col.is-hi span { color: var(--ink); }
 
@@ -214,7 +246,7 @@ html:not(.motion) .p-progress { display: none; }
 .p-hrow { display: grid; grid-template-columns: 112px 1fr 54px; gap: 12px; align-items: center; font-family: var(--f-mono); font-size: 12px; color: var(--muted); }
 .p-hrow i { height: 12px; border-radius: 3px; background: var(--panel); overflow: hidden; }
 .p-hrow em { display: block; height: 100%; width: calc(var(--v) * 100%); background: var(--line-strong); transform-origin: 0 50%; }
-.p-hrow.is-hi em { background: linear-gradient(90deg, var(--brand), var(--weft)); }
+.p-hrow.is-hi em { background: var(--brand); }
 .p-hrow b { color: var(--ink); font-weight: 500; text-align: right; }
 
 .p-viz-dots { display: flex; gap: 12px; }
@@ -223,7 +255,7 @@ html:not(.motion) .p-progress { display: none; }
   display: grid; place-items: center; font-style: normal;
   font-family: var(--f-display); font-weight: 700; font-size: 1.6rem; color: var(--weft);
 }
-.p-viz-dots i.is-hi { background: var(--brand); box-shadow: 0 0 22px -4px rgba(19, 7, 237, .9); }
+.p-viz-dots i.is-hi { background: var(--brand); }
 .p-viz-dots.is-ten { flex-wrap: wrap; gap: 8px; max-width: 360px; }
 .p-viz-dots.is-ten i { width: 28px; height: 28px; }
 .p-viz-dots i.is-q { position: relative; background: transparent; }
@@ -236,7 +268,13 @@ html:not(.motion) .p-progress { display: none; }
   font-family: var(--f-display); font-weight: 700; color: var(--ink);
   font-size: clamp(2.1rem, 5.4vw, 5rem); line-height: 1.02; letter-spacing: -.04em; max-width: 21ch;
 }
-.p-manifesto-text em { font-style: normal; color: var(--weft); }
+/* le parole chiave: bianche con l'evidenziatore blu sotto, come «4 settimane» nella hero */
+.p-manifesto-text em { font-style: normal; color: var(--ink); }
+.p-manifesto-text em .p-word,
+html:not(.motion) .p-manifesto-text em {
+  background: linear-gradient(var(--brand), var(--brand)) 0 92% / 100% .2em no-repeat;
+  -webkit-box-decoration-break: clone; box-decoration-break: clone;
+}
 .p-manifesto-cta {
   margin-top: clamp(56px, 8vw, 104px); padding-top: 36px; border-top: 1px solid var(--line);
   display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 28px;
@@ -261,6 +299,8 @@ html:not(.motion) .p-progress { display: none; }
 }
 .p-case:hover { border-color: color-mix(in srgb, var(--brand) 50%, var(--line)); }
 .p-case-n { font-family: var(--f-mono); font-size: var(--step--1); letter-spacing: .14em; color: var(--weft); }
+/* le esperienze non hanno un ordine: niente numero decorativo (resta il + sulla card blu) */
+.p-case:not(.p-case-cta) .p-case-n { display: none; }
 .p-case-art {
   position: relative; height: 140px; margin: 4px 0 10px; border-radius: var(--r-md); overflow: hidden;
   display: grid; place-items: center; color: var(--weft);
@@ -275,21 +315,23 @@ html:not(.motion) .p-progress { display: none; }
 .p-case-cta { background: var(--brand); border-color: var(--brand); color: #fff; justify-content: flex-end; }
 .p-case-cta .p-case-n, .p-case-cta p { color: rgba(255, 255, 255, .82); }
 .p-case-big { position: absolute; top: 18px; right: 24px; font-family: var(--f-display); font-weight: 700; font-size: 6rem; line-height: 1; transition: transform .5s var(--ease); }
-.p-case-cta:hover .p-case-big { transform: translateX(10px) rotate(-45deg); }
+@media (hover: hover) { .p-case-cta:hover .p-case-big { transform: translateX(10px) rotate(-45deg); } }
 
 /* Versione orizzontale (schermi larghi, con motion) */
 @media (min-width: 900px) {
   .motion .p-cases { padding: 0; }
-  .motion .p-cases-pin { height: 100vh; display: flex; flex-direction: column; justify-content: center; padding-top: 64px; overflow: hidden; }
+  .motion .p-cases-pin { height: 100vh; height: 100svh; display: flex; flex-direction: column; justify-content: center; padding-top: 64px; overflow: hidden; }
   .motion .p-cases-track {
     display: flex; gap: 22px; width: max-content; max-width: none; margin: 0; will-change: transform;
     padding-inline: max(clamp(20px, 5vw, 48px), calc((100vw - var(--maxw)) / 2 + clamp(20px, 5vw, 48px)));
   }
   .motion .p-cases-track .p-case { width: clamp(320px, 29vw, 420px); flex: none; }
+  /* nella colonna centrata il titolo si stringeva al suo contenuto e rientrava rispetto alle altre sezioni */
+  .motion .p-cases-head { width: 100%; }
   .motion .p-cases-foot { display: flex; align-items: center; gap: 22px; margin-top: clamp(28px, 4vh, 44px); width: 100%; }
 }
 .p-rail { flex: 1; height: 2px; background: var(--line); border-radius: 2px; overflow: hidden; }
-.p-rail i { display: block; height: 100%; background: linear-gradient(90deg, var(--brand), var(--weft)); transform-origin: 0 50%; transform: scaleX(0); }
+.p-rail i { display: block; height: 100%; background: var(--brand); transform-origin: 0 50%; transform: scaleX(0); }
 .p-cases-count { font-family: var(--f-mono); font-size: var(--step--1); color: var(--muted); letter-spacing: .1em; }
 .p-cases-count b { color: var(--ink); font-weight: 600; }
 
@@ -358,20 +400,22 @@ html:not(.motion) .p-progress { display: none; }
 .p-rows { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
 .p-rows li {
   position: relative; isolation: isolate; overflow: hidden;
-  display: grid; grid-template-columns: 56px 1fr; gap: 6px 12px;
+  display: grid; grid-template-columns: 1fr; gap: 6px 12px;
   padding: clamp(24px, 3vw, 36px) 18px clamp(24px, 3vw, 36px) 8px; border-bottom: 1px solid var(--line);
   transition: color .45s var(--ease);
 }
+/* le righe non sono link: al passaggio del mouse si colorano appena (il blu pieno significa «clicca») */
 .p-rows li::before {
-  content: ""; position: absolute; inset: 0; z-index: -1; background: var(--brand);
-  transform: scaleY(0); transform-origin: 50% 100%; transition: transform .55s var(--ease);
+  content: ""; position: absolute; inset: 0; z-index: -1; background: color-mix(in srgb, var(--brand) 12%, transparent);
+  transform: scaleY(0); transform-origin: 50% 100%; transition: transform .3s cubic-bezier(.23, 1, .32, 1);
 }
-.p-rows li:hover::before { transform: scaleY(1); }
-.p-rows .n { grid-row: span 2; padding-top: .9em; font-family: var(--f-mono); font-size: var(--step--1); color: var(--weft); transition: color .45s var(--ease); }
-.p-rows b { font-family: var(--f-display); font-size: clamp(1.7rem, 3.4vw, 2.8rem); line-height: 1.04; letter-spacing: -.035em; transition: transform .55s var(--ease); }
-.p-rows .d { color: var(--muted); transition: color .45s var(--ease); }
-.p-rows li:hover b { color: #fff; transform: translateX(10px); }
-.p-rows li:hover .n, .p-rows li:hover .d { color: rgba(255, 255, 255, .85); }
+/* gli effetti al passaggio del mouse solo dove c'è un mouse: sul telefono il tocco li lasciava accesi */
+@media (hover: hover) { .p-rows li:hover::before { transform: scaleY(1); } }
+/* numeri decorativi tolti: l'elenco non ha un ordine */
+.p-rows .n { display: none; }
+.p-rows b { font-family: var(--f-display); font-size: clamp(1.7rem, 3.4vw, 2.8rem); line-height: 1.04; letter-spacing: -.035em; transition: transform .3s cubic-bezier(.23, 1, .32, 1); }
+.p-rows .d { color: var(--muted); }
+@media (hover: hover) { .p-rows li:hover b { transform: translateX(10px); } }
 
 /* ---- Come lavoriamo ---- */
 .p-method { border-top: 1px solid var(--line); }
@@ -382,7 +426,7 @@ html:not(.motion) .p-progress { display: none; }
 .p-counter-reel { display: flex; flex-direction: column; }
 .p-counter-reel i {
   display: block; height: 1em; font-style: normal;
-  background: linear-gradient(180deg, var(--ink) 30%, var(--weft)); -webkit-background-clip: text; background-clip: text; color: transparent;
+  color: var(--ink);
 }
 .p-counter-tot { font-size: clamp(1.4rem, 2.4vw, 2.1rem); color: var(--muted); padding-top: .5em; }
 
@@ -391,22 +435,124 @@ html:not(.motion) .p-progress { display: none; }
 .p-thread { position: absolute; left: 0; top: 0; width: 24px; height: 100%; overflow: visible; }
 .p-thread path { fill: none; stroke-width: 2; stroke-linecap: round; }
 .p-thread .bg { stroke: var(--line-strong); stroke-dasharray: 2 6; }
-.p-thread .fg { stroke: var(--brand); filter: drop-shadow(0 0 6px rgba(19, 7, 237, .9)); }
+.p-thread .fg { stroke: var(--brand); filter: drop-shadow(0 0 3px rgba(19, 7, 237, .55)); }
 .p-step { position: relative; min-height: 46vh; padding-block: clamp(36px, 7vh, 80px); display: flex; flex-direction: column; justify-content: center; gap: 12px; transition: opacity .6s var(--ease); }
 .p-step-node {
   position: absolute; left: -60px; top: 50%; width: 16px; height: 16px; margin-top: -8px;
   background: var(--ground); border: 2px solid var(--line-strong); transform: rotate(45deg);
   transition: background .4s var(--ease), border-color .4s var(--ease), box-shadow .4s var(--ease);
 }
-.p-step-n { font-family: var(--f-mono); font-size: var(--step--1); letter-spacing: .16em; text-transform: uppercase; color: var(--weft); }
+.p-step-n { font-family: var(--f-mono); font-size: var(--step--1); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--weft); }
 .p-step h3 { font-size: clamp(1.8rem, 3.2vw, 2.7rem); letter-spacing: -.035em; max-width: 18ch; }
 .p-step p { color: var(--muted); font-size: var(--step-1); line-height: 1.5; max-width: 42ch; }
-.motion .p-step { opacity: .28; }
-.motion .p-step.is-lit { opacity: .5; }
-.motion .p-step.is-on { opacity: 1; }
-.p-step.is-lit .p-step-node { background: var(--brand); border-color: var(--brand); box-shadow: 0 0 0 6px color-mix(in srgb, var(--brand) 25%, transparent), 0 0 30px rgba(19, 7, 237, .9); }
+/* si spengono solo il titolo e il nodo, il testo resta sempre leggibile (prima i passi
+   non ancora attivi scendevano sotto il contrasto minimo) */
+.motion .p-step :is(h2, h3) { color: var(--muted); transition: color .6s var(--ease); }
+.motion .p-step.is-on :is(h2, h3) { color: var(--ink); }
+.p-step.is-lit .p-step-node { background: var(--brand); border-color: var(--brand); box-shadow: 0 0 0 6px color-mix(in srgb, var(--brand) 25%, transparent); }
 .p-method-foot { margin-top: clamp(24px, 4vw, 48px); }
 .p-method-foot .arrow-link { margin-top: 16px; }
+
+/* ============================================================
+   IL TELAIO RACCONTA — «Come lavoriamo» nella home (initRacconto in motion.js)
+   Base, senza JavaScript: titolo, i quattro passi in elenco, pulsante, e accanto il riquadro.
+   .p-rac-still (riduci movimento): accanto ai passi il tessuto finito, disegnato fermo.
+   .p-rac-live (con le animazioni): la sezione si ferma e la tela tesse mentre scorri;
+   un passo alla volta, col contatore. Su telefono e tablet il titolo resta sopra la scena.
+   ============================================================ */
+.p-rac-grid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(36px, 6vw, 104px); align-items: start; }
+.p-rac-side { container-type: inline-size; }
+.p-rac-side .p-h2 { font-size: clamp(2.3rem, min(5.4vw, 14cqi), 4.6rem); }
+.p-rac-now, .p-rac-canvas, .p-rac-glow { display: none; }
+.p-rac-steps { list-style: none; margin: clamp(32px, 4vw, 52px) 0 0; padding: 0; }
+.p-rac-step { display: flex; flex-direction: column; gap: 10px; padding: 24px 0; border-top: 1px solid var(--line); }
+.p-rac-step-n { font-family: var(--f-mono); font-size: var(--step--1); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--weft); }
+.p-rac-step h3 { font-size: clamp(1.6rem, 2.6vw, 2.3rem); letter-spacing: -.035em; max-width: 19ch; }
+.p-rac-step p { color: var(--muted); font-size: var(--step-1); line-height: 1.5; max-width: 42ch; }
+.p-rac-cta { margin-top: clamp(24px, 3vw, 36px); }
+.p-rac-stage { position: sticky; top: 112px; }
+.p-rac-callout { max-width: 46ch; }
+@media (min-width: 900px) and (max-height: 820px) { .p-rac-stage { position: relative; top: auto; } }
+/* bagliore blu dietro il tessuto (più tenue nel tema chiaro) */
+.p-rac-glow { pointer-events: none; background: radial-gradient(closest-side, rgba(19, 7, 237, .34), rgba(19, 7, 237, .12) 48%, rgba(19, 7, 237, 0)); }
+/* tema chiaro: l'alone resta appena accennato (sul fondo chiaro un alone ampio sembra una macchia) */
+:root[data-theme="light"] .p-rac-glow { background: radial-gradient(closest-side, rgba(19, 7, 237, .07), rgba(19, 7, 237, .025) 48%, rgba(19, 7, 237, 0)); }
+
+/* ---- Riduci movimento: il tessuto finito, fermo, col marchio intessuto in blu ---- */
+.p-rac-still .p-rac-canvas { display: block; position: relative; z-index: 1; width: 100%; aspect-ratio: 1 / 1.04; max-width: 600px; margin-inline: auto; }
+.p-rac-still .p-rac-glow { display: block; position: absolute; inset: 4% 4% auto; aspect-ratio: 1; z-index: 0; }
+.p-rac-still .p-rac-callout { position: relative; z-index: 1; margin: 20px auto 0; }
+
+/* ---- Scena: la sezione si ferma, la tela racconta i quattro passi ---- */
+/* fondo pieno (lo stesso della pagina): la trama delle sezioni, che scorrerebbe sotto la scena ferma, qui non si disegna */
+.p-sec.p-rac-live { padding-block: 0; background: var(--ground); }
+/* la scena si ferma sotto la testata (64 px, sempre visibile): così anche un link a #come-lavoriamo arriva sulla scena intera */
+.p-rac-live .p-rac-pin { position: relative; height: calc(100vh - 64px); height: calc(100svh - 64px); overflow: hidden; }
+.p-rac-live .p-rac-canvas { display: block; position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; pointer-events: none; }
+/* il bagliore lo muove motion.js (solo transform e opacity) */
+.p-rac-live .p-rac-glow { display: block; position: absolute; left: 0; top: 0; z-index: 0; width: 600px; height: 600px; border-radius: 50%; opacity: 0; will-change: transform, opacity; }
+.p-rac-live .p-rac-grid {
+  position: relative; z-index: 1; height: 100%;
+  grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); align-items: stretch;
+  padding-block: clamp(16px, 4.5vh, 48px);
+}
+.p-rac-live .p-rac-side { display: flex; flex-direction: column; justify-content: center; min-height: 0; }
+.p-rac-live .p-rac-side .p-h2 { font-size: clamp(2rem, min(3.6vw, 6.2vh, 12cqi), 3.6rem); max-width: 15ch; }
+.p-rac-live .p-rac-now { display: block; margin-top: clamp(16px, 4.4vh, 48px); }
+.p-rac-live .p-counter { margin: 0; }
+.p-rac-live .p-counter-win { font-size: clamp(3.8rem, min(8vw, 12.5vh), 8.2rem); }
+.p-rac-live .p-counter-tot { font-size: clamp(1.15rem, min(2vw, 3.2vh), 1.8rem); }
+/* quanto manca alla fine della scena: un tratto per passo */
+.p-rac-bars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; max-width: 280px; margin-top: clamp(10px, 1.8vh, 18px); }
+.p-rac-bars span { height: 2px; border-radius: 2px; background: var(--line-strong); overflow: hidden; }
+.p-rac-bars i { display: block; height: 100%; background: var(--brand); transform: scaleX(0); transform-origin: 0 50%; }
+/* un passo alla volta, tutti nella stessa cella: l'altezza resta quella del più lungo (niente salti) */
+.p-rac-live .p-rac-steps { display: grid; margin-top: clamp(16px, 3.4vh, 40px); }
+.p-rac-live .p-rac-step { grid-area: 1 / 1; padding: 0; border: 0; }
+.p-rac-live .p-rac-step h3 { font-size: clamp(1.55rem, min(2.5vw, 4.3vh), 2.35rem); }
+.p-rac-live .p-rac-step p { font-size: clamp(1rem, min(1.25vw, 2.1vh), 1.15rem); }
+.p-rac-live .p-rac-cta { margin-top: clamp(18px, 4.4vh, 48px); }
+.p-rac-live .p-rac-stage { position: relative; top: auto; min-height: 0; }
+/* la frase sotto il marchio, alla fine: la posizione la calcola motion.js */
+.p-rac-live .p-rac-callout {
+  position: absolute; left: 0; right: 0; top: 0; margin-inline: auto; width: min(38ch, 94%);
+  text-align: center; opacity: 0; transform: translateY(10px);
+  background: color-mix(in srgb, var(--brand) 9%, color-mix(in srgb, var(--surface) 82%, transparent));
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+}
+.p-rac-live .p-rac-foot { margin-top: 0; padding-top: clamp(20px, 3vw, 32px); }
+/* la trama delle sezioni qui raddoppierebbe i fili del telaio, e scorrerebbe sotto la scena ferma: si spegne
+   (il livello .p-trama sta sopra il fondo della sezione, quindi va spento anche con il fondo pieno) */
+.p-rac-live > .p-trama { display: none; }
+
+/* telefono e tablet: una colonna; la tela in alto, sotto il passo attivo e il pulsante */
+@media (max-width: 899px) {
+  .p-rac-grid { grid-template-columns: 1fr; }
+  .p-rac-stage { position: relative; top: auto; }
+  .p-rac-still .p-rac-stage { margin-top: 12px; }
+  .p-rac-live .p-rac-slot { padding-top: clamp(64px, 12vw, 104px); }
+  .p-rac-live .p-rac-grid {
+    grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) auto; gap: 0;
+    padding-top: 0; padding-bottom: clamp(14px, 2.6vh, 28px);
+  }
+  .p-rac-live .p-rac-stage { grid-row: 1; }
+  .p-rac-live .p-rac-side { grid-row: 2; justify-content: flex-end; }
+  .p-rac-live .p-rac-now { display: flex; align-items: flex-end; gap: 16px; margin-top: 0; }
+  /* sotto i 900 px il contatore del sito è nascosto: qui serve, in piccolo accanto ai tratti */
+  .p-rac-live .p-counter { display: flex; gap: 6px; }
+  .p-rac-live .p-counter-win { font-size: clamp(2.6rem, 11vw, 4.4rem); }
+  .p-rac-live .p-counter-tot { font-size: 1rem; padding-top: .35em; }
+  .p-rac-live .p-rac-bars { flex: 1; max-width: none; margin: 0 0 .7em; }
+  .p-rac-live .p-rac-steps { margin-top: 10px; }
+  .p-rac-live .p-rac-step { gap: 6px; }
+  .p-rac-live .p-rac-step-n { font-size: .75rem; }
+  .p-rac-live .p-rac-step h3 { font-size: clamp(1.3rem, 5.4vw, 1.9rem); max-width: 22ch; }
+  .p-rac-live .p-rac-step p { font-size: clamp(.95rem, 3.9vw, 1.05rem); line-height: 1.46; max-width: 52ch; }
+  .p-rac-live .p-rac-cta { margin-top: 14px; }
+  .p-rac-live .p-rac-cta .btn { width: 100%; padding-block: 15px; }
+  .p-rac-live .p-rac-callout { font-size: .875rem; line-height: 1.45; padding: 12px 16px; }
+}
+/* ---- fine «Il telaio racconta» ---- */
 
 /* ---- Perché Telaio ---- */
 .p-why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
@@ -415,7 +561,8 @@ html:not(.motion) .p-progress { display: none; }
   background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg);
   transition: border-color .4s var(--ease);
 }
-.p-why { min-height: 340px; padding: clamp(26px, 3vw, 38px); display: flex; flex-direction: column; justify-content: flex-end; gap: 12px; }
+/* il testo parte sempre alla stessa altezza, sotto il numero: i titoli delle tre card restano allineati */
+.p-why { min-height: 340px; padding: clamp(26px, 3vw, 38px); padding-top: clamp(118px, 11vw, 164px); display: flex; flex-direction: column; justify-content: flex-start; gap: 12px; }
 .p-why::before, .p-founder::before {
   content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: 0; transition: opacity .35s var(--ease);
   background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--brand) 26%, transparent), transparent 65%);
@@ -432,6 +579,30 @@ html:not(.motion) .p-progress { display: none; }
 .p-why h3 { font-size: var(--step-2); letter-spacing: -.02em; }
 .p-why p { color: var(--muted); line-height: 1.55; }
 
+/* Perché Telaio nella home: non tre card uguali. Il primo motivo (le 4 settimane) è grande, a sinistra,
+   con la trama del marchio in alto; gli altri due accanto. Qui i numeri erano solo decorazione: via. */
+:is(#perche, #why) .p-why-grid { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
+:is(#perche, #why) .p-why-n { display: none; }
+:is(#perche, #why) .p-why { min-height: 0; padding-top: clamp(26px, 3vw, 38px); justify-content: flex-end; }
+:is(#perche, #why) .p-why:first-child {
+  grid-row: span 2; min-height: 420px;
+  background: radial-gradient(90% 70% at 85% 0%, color-mix(in srgb, var(--brand) 42%, transparent), transparent 70%), var(--surface);
+}
+:root[data-theme="light"] :is(#perche, #why) .p-why:first-child {
+  background: radial-gradient(90% 70% at 85% 0%, color-mix(in srgb, var(--brand) 16%, transparent), transparent 70%), var(--surface);
+}
+:is(#perche, #why) .p-why:first-child::after {
+  content: ""; position: absolute; inset: -30% -30% 40%; z-index: 0; pointer-events: none;
+  background-image:
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--weft) 22%, transparent) 0 1px, transparent 1px 16px),
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--weft) 12%, transparent) 0 1px, transparent 1px 16px);
+  transform: rotate(-14deg);
+  -webkit-mask-image: linear-gradient(180deg, #000 20%, transparent 80%);
+          mask-image: linear-gradient(180deg, #000 20%, transparent 80%);
+}
+:is(#perche, #why) .p-why:first-child h3 { font-size: clamp(2rem, 3.6vw, 3.2rem); letter-spacing: -.035em; line-height: 1.02; max-width: 14ch; }
+:is(#perche, #why) .p-why:first-child p { font-size: var(--step-1); max-width: 34ch; }
+
 .p-values { list-style: none; margin: clamp(48px, 6vw, 88px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); }
 .p-values li { padding: 26px 22px 0 0; display: flex; flex-direction: column; gap: 6px; }
 .p-values b { font-family: var(--f-display); font-size: clamp(1.5rem, 2.5vw, 2.2rem); letter-spacing: -.035em; line-height: 1.05; }
@@ -445,6 +616,8 @@ html:not(.motion) .p-progress { display: none; }
   display: grid; place-items: center;
   background: radial-gradient(120% 100% at 15% 0%, color-mix(in srgb, var(--brand) 55%, var(--surface)), var(--surface) 75%);
 }
+/* tema chiaro: la sfumatura viola, forte sul bianco, diventa un azzurro leggero */
+:root[data-theme="light"] .p-founder-art { background: radial-gradient(120% 100% at 15% 0%, color-mix(in srgb, var(--brand) 20%, var(--surface)), var(--surface) 75%); }
 .p-founder-art::before {
   content: ""; position: absolute; inset: -40%;
   background-image:
@@ -452,15 +625,16 @@ html:not(.motion) .p-progress { display: none; }
     repeating-linear-gradient(0deg, color-mix(in srgb, var(--weft) 14%, transparent) 0 1px, transparent 1px 14px);
   transform: rotate(-14deg); transition: transform 1.4s var(--ease);
 }
-.p-founder:hover .p-founder-art::before { transform: rotate(-4deg) scale(1.15); }
+@media (hover: hover) { .p-founder:hover .p-founder-art::before { transform: rotate(-4deg) scale(1.15); } }
 .p-founder-art b { position: relative; font-family: var(--f-display); font-size: clamp(3.6rem, 6vw, 5.4rem); letter-spacing: -.06em; color: var(--ink); transition: transform .8s var(--ease); }
-.p-founder:hover .p-founder-art b { transform: scale(1.08); }
+@media (hover: hover) { .p-founder:hover .p-founder-art b { transform: scale(1.08); } }
 .p-founder h3 { font-size: var(--step-2); letter-spacing: -.02em; padding-inline: 8px; }
-.p-founder .role { font-family: var(--f-mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--weft); padding-inline: 8px; }
+.p-founder .role { font-family: var(--f-mono); font-size: 12px; letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--weft); padding-inline: 8px; }
 .p-founder .bio { color: var(--muted); font-size: var(--step--1); line-height: 1.55; padding-inline: 8px; margin-top: 4px; }
 
 /* ---- Check-up: blocco blu ---- */
 .p-checkup { position: relative; isolation: isolate; color: #fff; padding-block: clamp(110px, 14vw, 200px); }
+.p-checkup :focus-visible { outline-color: #fff; }
 .p-checkup-bg { position: absolute; inset: 0; z-index: -1; overflow: hidden; background: var(--brand); }
 .p-checkup-bg::before {
   content: ""; position: absolute; inset: -80px;
@@ -472,13 +646,13 @@ html:not(.motion) .p-progress { display: none; }
 .p-checkup-bg::after {
   content: ""; position: absolute; inset: 0;
   background:
-    radial-gradient(55% 70% at 85% 10%, rgba(142, 157, 255, .55), transparent 65%),
+    radial-gradient(55% 70% at 85% 10%, rgba(142, 157, 255, .28), transparent 65%),
     radial-gradient(50% 60% at 0% 100%, rgba(4, 2, 60, .6), transparent 70%);
 }
 @keyframes p-drift { to { transform: translate(40px, 40px); } }
 .p-checkup-in { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: clamp(40px, 6vw, 104px); align-items: end; }
 .p-checkup .p-h2 { color: #fff; }
-.p-eyebrow-inv { font-family: var(--f-mono); font-size: var(--step--1); font-weight: 500; letter-spacing: .24em; text-transform: uppercase; color: rgba(255, 255, 255, .78); }
+.p-eyebrow-inv { font-family: var(--f-mono); font-size: var(--step--1); font-weight: 500; letter-spacing: var(--tracking-label); text-transform: uppercase; color: rgba(255, 255, 255, .78); }
 .p-lede-inv { margin-top: 26px; max-width: 48ch; font-size: var(--step-1); line-height: 1.55; color: rgba(255, 255, 255, .86); }
 .p-checkup-cta { margin-top: 34px; }
 .p-btn-inv { background: #fff; color: var(--brand); }
@@ -495,6 +669,15 @@ html:not(.motion) .p-progress { display: none; }
 .p-takeaways span { font-family: var(--f-mono); font-size: var(--step--1); color: rgba(255, 255, 255, .7); }
 
 /* ---- FAQ ---- */
+/* la risposta si apre e si chiude scorrendo, invece di comparire di colpo (solo nei browser che lo sanno fare) */
+@supports (interpolate-size: allow-keywords) {
+  .motion .qa { interpolate-size: allow-keywords; }
+  .motion .qa::details-content {
+    block-size: 0; overflow: clip;
+    transition: block-size .3s cubic-bezier(.23, 1, .32, 1), content-visibility .3s allow-discrete;
+  }
+  .motion .qa[open]::details-content { block-size: auto; }
+}
 #faq .qa { transition: border-color .3s var(--ease); }
 #faq .qa:hover { border-color: var(--line-strong); }
 #faq .qa[open] { border-color: color-mix(in srgb, var(--brand) 55%, var(--line)); }
@@ -510,6 +693,12 @@ html:not(.motion) .p-progress { display: none; }
           mask-image: radial-gradient(closest-side, #000 30%, transparent);
   pointer-events: none;
 }
+/* tema chiaro: la nuvola blu attorno al pulsante rotondo diventava una macchia lilla; resta solo un alone leggero */
+:root[data-theme="light"] .p-final-glow {
+  background:
+    repeating-radial-gradient(circle at center, color-mix(in srgb, var(--weft) 7%, transparent) 0 1px, transparent 1px 34px),
+    radial-gradient(closest-side, color-mix(in srgb, var(--brand) 10%, transparent), transparent);
+}
 .p-final .wrap { position: relative; }
 .p-final-h { margin: 0 auto; max-width: 19ch; font-size: clamp(2.3rem, 5.6vw, 5.2rem); line-height: 1; letter-spacing: -.045em; }
 .p-orb {
@@ -517,13 +706,14 @@ html:not(.motion) .p-progress { display: none; }
   width: clamp(156px, 15vw, 196px); aspect-ratio: 1; border-radius: 50%;
   background: var(--brand); color: #fff; text-decoration: none;
   box-shadow: 0 30px 80px -18px rgba(19, 7, 237, .85), inset 0 0 0 1px rgba(255, 255, 255, .18);
-  transition: background .3s var(--ease);
+  transition: background .3s var(--ease), scale .12s ease-out;
 }
 .p-orb:hover { background: var(--brand-lift); }
+.p-orb:active { scale: .97; }
 .p-orb-ring { position: absolute; inset: 0; width: 100%; height: 100%; animation: p-spin 16s linear infinite; }
 .p-orb-ring text { font-family: var(--f-mono); font-size: 12.4px; letter-spacing: .19em; text-transform: uppercase; fill: #fff; }
 .p-orb-arr { font-family: var(--f-display); font-weight: 700; font-size: 2.6rem; line-height: 1; transition: transform .5s var(--ease); }
-.p-orb:hover .p-orb-arr { transform: rotate(-45deg) scale(1.1); }
+@media (hover: hover) { .p-orb:hover .p-orb-arr { transform: rotate(-45deg) scale(1.1); } }
 .p-final-sub { margin-top: 28px; font-family: var(--f-mono); font-size: var(--step--1); color: var(--muted); }
 
 /* ---- Piè di pagina con la scritta gigante ---- */
@@ -536,9 +726,67 @@ html:not(.motion) .p-progress { display: none; }
 }
 .p-bigword span {
   display: inline-block;
+  /* la spaziatura negativa fa uscire le lettere dalla loro scatola: senza questo margine il colore
+     (che riempie solo la scatola) le tagliava a destra */
+  padding-inline: .12em; margin-inline: -.12em;
   background: linear-gradient(180deg, var(--ink) 10%, color-mix(in srgb, var(--ink) 6%, transparent) 92%);
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
+
+/* ---- Tessuto in WebGL (motion.js: initWeaveGL, initParolaTessuta) — inizio ----
+   La classe .p-weave-gl la mette motion.js sulla hero quando il telo è in WebGL.
+   Il telo è pieno, non più solo linee: il velo a sinistra è un poco più deciso.
+   Sopra l'orizzonte, dove il telo si perde nella nebbia, resta una luce blu lontana. */
+.p-hero.p-weave-gl { background: radial-gradient(70% 46% at 70% 18%, rgba(19, 7, 237, .16), transparent 70%); }
+:root[data-theme="light"] .p-hero.p-weave-gl { background: radial-gradient(70% 46% at 70% 18%, rgba(19, 7, 237, .07), transparent 70%); }
+.p-weave-gl .p-hero-veil {
+  background:
+    linear-gradient(90deg, var(--ground) 0%, color-mix(in srgb, var(--ground) 86%, transparent) 30%, color-mix(in srgb, var(--ground) 30%, transparent) 52%, transparent 70%),
+    linear-gradient(180deg, color-mix(in srgb, var(--ground) 60%, transparent) 0%, transparent 22%, transparent 62%, color-mix(in srgb, var(--ground) 70%, transparent) 86%, var(--ground) 100%);
+}
+/* i testi piccoli (briciole, dettagli dell'offerta, riga in fondo) stanno sopra il telo: un alone del colore della pagina */
+.p-weave-gl :is(.crumbs, .p-meta, .p-trust, .p-scroll) { text-shadow: 0 0 10px var(--ground), 0 0 4px var(--ground), 0 0 2px var(--ground); }
+/* tema chiaro: il telo chiaro coi fili scuri è più fitto dietro il testo, il velo arriva più in là e copre di più */
+:root[data-theme="light"] .p-weave-gl .p-hero-veil {
+  background:
+    linear-gradient(90deg, var(--ground) 0%, color-mix(in srgb, var(--ground) 92%, transparent) 34%, color-mix(in srgb, var(--ground) 62%, transparent) 60%, color-mix(in srgb, var(--ground) 20%, transparent) 78%, transparent 90%),
+    linear-gradient(180deg, color-mix(in srgb, var(--ground) 50%, transparent) 0%, transparent 22%, transparent 62%, color-mix(in srgb, var(--ground) 75%, transparent) 86%, var(--ground) 100%);
+}
+/* nelle altre pagine il sottotitolo è più largo: il velo arriva più in là */
+@media (min-width: 561px) {
+  .p-hero.is-page.p-weave-gl .p-hero-veil {
+    background:
+      linear-gradient(90deg, var(--ground) 0%, color-mix(in srgb, var(--ground) 88%, transparent) 36%, color-mix(in srgb, var(--ground) 45%, transparent) 62%, transparent 82%),
+      linear-gradient(180deg, color-mix(in srgb, var(--ground) 60%, transparent) 0%, transparent 22%, transparent 62%, color-mix(in srgb, var(--ground) 70%, transparent) 86%, var(--ground) 100%);
+  }
+  :root[data-theme="light"] .p-hero.is-page.p-weave-gl .p-hero-veil {
+    background:
+      linear-gradient(90deg, var(--ground) 0%, color-mix(in srgb, var(--ground) 92%, transparent) 40%, color-mix(in srgb, var(--ground) 62%, transparent) 66%, color-mix(in srgb, var(--ground) 20%, transparent) 84%, transparent 94%),
+      linear-gradient(180deg, color-mix(in srgb, var(--ground) 50%, transparent) 0%, transparent 22%, transparent 62%, color-mix(in srgb, var(--ground) 75%, transparent) 86%, var(--ground) 100%);
+  }
+}
+/* sul telefono il testo prende quasi tutta la larghezza: il telo resta in alto e si scurisce sotto il testo */
+@media (max-width: 560px) {
+  .p-weave-gl .p-hero-veil {
+    background: linear-gradient(180deg, color-mix(in srgb, var(--ground) 45%, transparent) 0%, transparent 9%, transparent 24%,
+      color-mix(in srgb, var(--ground) 80%, transparent) 46%, color-mix(in srgb, var(--ground) 90%, transparent) 88%, var(--ground) 100%);
+  }
+  :root[data-theme="light"] .p-weave-gl .p-hero-veil {
+    background: linear-gradient(180deg, color-mix(in srgb, var(--ground) 40%, transparent) 0%, transparent 9%, transparent 20%,
+      color-mix(in srgb, var(--ground) 90%, transparent) 40%, color-mix(in srgb, var(--ground) 96%, transparent) 80%, var(--ground) 100%);
+  }
+}
+/* la parola gigante tessuta: le lettere vere restano al loro posto ma trasparenti (servono per le misure) */
+.p-bigword.p-tessuta { position: relative; }
+.p-bigword-gl {
+  position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none;
+  opacity: 0; transition: opacity .8s cubic-bezier(.23, 1, .32, 1);
+}
+.p-bigword.is-gl .p-bigword-gl { opacity: 1; }
+.p-bigword.p-tessuta span { transition: opacity .8s cubic-bezier(.23, 1, .32, 1); }
+.p-bigword.is-gl span { opacity: 0; }
+.p-bigword-base { display: inline-block; width: 0; height: 0; vertical-align: baseline; }
+/* ---- Tessuto in WebGL — fine ---- */
 
 /* ============================================================
    ALTRE PAGINE
@@ -589,15 +837,15 @@ html:not(.motion) .p-progress { display: none; }
 
 /* ---- Righe ricche (Strategia: su cosa lavoriamo) ---- */
 .p-rows h3 { font-family: var(--f-display); font-size: clamp(1.7rem, 3.4vw, 2.8rem); line-height: 1.04; letter-spacing: -.035em; transition: transform .55s var(--ease), color .45s var(--ease); }
-.p-rows li:hover h3 { color: #fff; transform: translateX(10px); }
+@media (hover: hover) { .p-rows li:hover h3 { transform: translateX(10px); } }
 .p-rows.is-rich .d { max-width: 54ch; line-height: 1.55; }
 .p-rows.is-wide { max-width: none; }
 
 /* ---- Check-up: la barra dei 30 minuti e i quattro momenti ---- */
 .p-timeline { display: flex; gap: 6px; margin-bottom: clamp(28px, 4vw, 48px); }
 .p-tl-seg { flex: var(--m) 1 0; min-width: 0; }
-.p-tl-seg i { display: block; height: 12px; border-radius: 3px; background: linear-gradient(90deg, var(--brand), var(--weft)); transform-origin: 0 50%; }
-.p-tl-seg:nth-child(even) i { background: linear-gradient(90deg, var(--weft), color-mix(in srgb, var(--weft) 55%, var(--brand))); }
+.p-tl-seg i { display: block; height: 12px; border-radius: 3px; background: var(--brand); transform-origin: 0 50%; }
+.p-tl-seg:nth-child(even) i { background: color-mix(in srgb, var(--brand) 60%, var(--ground)); }
 .p-tl-seg span { display: block; margin-top: 10px; font-family: var(--f-mono); font-size: 12px; color: var(--muted); white-space: nowrap; }
 .p-moments { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
 .p-moment { padding-top: 18px; border-top: 1px solid var(--line-strong); display: flex; flex-direction: column; gap: 10px; }
@@ -625,7 +873,8 @@ html:not(.motion) .p-progress { display: none; }
 .p-group { display: grid; grid-template-columns: minmax(0, .75fr) minmax(0, 1.6fr); gap: clamp(28px, 5vw, 80px); align-items: start; padding-block: clamp(40px, 6vw, 72px); border-top: 1px solid var(--line); }
 .p-group:last-child { border-bottom: 1px solid var(--line); }
 .p-group-side { position: sticky; top: 112px; }
-.p-group-n { display: block; font-family: var(--f-mono); font-size: var(--step--1); letter-spacing: .16em; color: var(--weft); margin-bottom: 14px; }
+/* le aree non hanno un ordine: il numero era solo decorazione */
+.p-group-n { display: none; }
 .p-group-side h2 { font-size: clamp(1.9rem, 3.4vw, 3rem); letter-spacing: -.04em; line-height: 1.02; max-width: 12ch; }
 .p-group-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
 .p-group-cards .p-case { min-height: 0; }
@@ -633,12 +882,12 @@ html:not(.motion) .p-progress { display: none; }
 /* strumenti che usi già: pillole collegate da un filo */
 .p-chips { position: relative; display: flex; flex-wrap: wrap; gap: 12px; margin-top: clamp(28px, 4vw, 44px); }
 .p-chips span {
-  position: relative; z-index: 1; padding: 12px 20px; border-radius: var(--r-pill);
+  position: relative; z-index: 1; padding: 12px 20px; border-radius: var(--r-sm);
   border: 1px solid var(--line-strong); background: var(--surface);
   font-family: var(--f-mono); font-size: var(--step--1); letter-spacing: .06em; color: var(--ink);
   transition: border-color .3s var(--ease), background .3s var(--ease);
 }
-.p-chips span:hover { border-color: var(--brand); background: color-mix(in srgb, var(--brand) 18%, var(--surface)); }
+@media (hover: hover) { .p-chips span:hover { border-color: var(--brand); background: color-mix(in srgb, var(--brand) 18%, var(--surface)); } }
 
 /* due nuove illustrazioni animate */
 .i7-panel { fill: color-mix(in srgb, var(--brand) 18%, transparent); }
@@ -666,7 +915,7 @@ html:not(.motion) .p-progress { display: none; }
 
 /* ---- Domande frequenti: pannello fisso a lato ---- */
 .p-faq-side .p-faq-count { display: flex; align-items: baseline; gap: 12px; margin-bottom: clamp(24px, 3vw, 36px); font-family: var(--f-display); font-weight: 700; letter-spacing: -.06em; }
-.p-faq-count b { font-size: clamp(5rem, 11vw, 9.5rem); line-height: .85; background: linear-gradient(180deg, var(--ink) 30%, var(--weft)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.p-faq-count b { font-size: clamp(5rem, 11vw, 9.5rem); line-height: .85; color: var(--ink); }
 .p-faq-count span { font-size: clamp(1.3rem, 2.2vw, 1.9rem); color: var(--muted); letter-spacing: -.02em; }
 .p-faq-list .qa .a .arrow-link { margin-top: 10px; }
 
@@ -694,7 +943,10 @@ html:not(.motion) .p-progress { display: none; }
   .p-split, .p-method-grid, .p-checkup-in { grid-template-columns: 1fr; }
   .p-split-side, .p-method-side { position: static; }
   .p-counter { display: none; }
-  .p-why-grid, .p-team-grid { grid-template-columns: 1fr; }
+  /* senza il contatore il pulsante restava attaccato al titolo */
+  .p-h2 + .p-counter + [data-reveal] { margin-top: 28px; }
+  .p-why-grid, .p-team-grid, :is(#perche, #why) .p-why-grid { grid-template-columns: 1fr; }
+  :is(#perche, #why) .p-why:first-child { grid-row: auto; min-height: 320px; }
   .p-values { grid-template-columns: 1fr 1fr; gap: 0 18px; }
   .p-step { min-height: 0; }
   .p-steps { padding-left: 48px; }
@@ -709,6 +961,8 @@ html:not(.motion) .p-progress { display: none; }
   .p-viz-dots i { width: 46px; height: 46px; }
   .p-values { grid-template-columns: 1fr; }
   .p-btn-xl { width: 100%; }
+  /* i testi di servizio da 11-12 px sul telefono erano troppo piccoli */
+  .p-scroll, .p-stat-body > .p-src, .p-founder .role, .p-micro { font-size: .8125rem; }
 }
 
 /* ============================================================
@@ -721,4 +975,148 @@ html:not(.motion) .p-progress { display: none; }
   .i3-dot { opacity: 0; }
   .i5-lens { transform: translate(52px, 46px); }
   .p-rows li::before, .p-founder-art::before { transition: none; }
+  /* gli effetti al passaggio del mouse cambiano colore ma non spostano niente */
+  .p-rows li:hover b, .p-rows li:hover h3, .btn:hover .p-arr, .p-case-cta:hover .p-case-big,
+  .p-orb:hover .p-orb-arr, .p-founder:hover .p-founder-art b { transform: none; }
+  .p-founder:hover .p-founder-art::before { transform: rotate(-14deg); }
+  .btn-primary::after { display: none; }
+  .btn:active, .icon-btn:active, .p-orb:active { scale: none; }
+}
+
+/* ============================================================
+   DETTAGLI: CAMBIO PAGINA COL FILO · MARCHIO CHE SI TESSE ·
+   LINK E PULSANTI CUCITI
+   Il comportamento è in fondo a script.js; lo script nell'<head>
+   ascolta «pagereveal» e dice se la pagina arriva col filo
+   (classe .p-filo-arrivo). Blocco a sé: si toglie tutto insieme.
+   ============================================================ */
+:root {
+  --p-ease-out: cubic-bezier(.23, 1, .32, 1);      /* risposta rapida (passaggio del mouse) */
+  --p-ease-in-out: cubic-bezier(.77, 0, .175, 1);  /* movimento sullo schermo (il filo che attraversa) */
+  --p-filo-durata: 600ms;
+}
+
+/* ---- 1 · Cambio pagina col filo ----
+   Tutte le pagine chiedono al browser la transizione tra documenti (Chrome, Edge, Safari recenti;
+   Firefox cambia pagina come sempre; chi chiede meno movimento non la vede). La richiesta,
+   «@view-transition { navigation: auto; types: p-filo }», sta in uno <style> in cima all'<head> di
+   ogni pagina: qui arriverebbe tardi e a volte la pagina nuova annullerebbe il passaggio.
+   La testata e il segno della pagina corrente hanno un nome: la testata resta ferma, il segno
+   scorre dalla voce vecchia alla nuova. La pagina nuova si scopre da sinistra a destra (clip-path)
+   dietro un filo blu che corre col bordo del ritaglio. Il tipo «p-filo» tiene questi stili lontani
+   dal cambio tema, che usa anche lui una View Transition (startViewTransition in script.js). */
+.top { view-transition-name: p-testata; }
+.nav a[aria-current="page"]::after { view-transition-name: p-segno; }
+
+/* il filo: 2 px nel blu del marchio, una sfumatura sottile dietro e un alone corto davanti.
+   Lo aggiunge script.js alla pagina che se ne va, un attimo prima della foto («pageswap») */
+.p-filo {
+  position: fixed; top: 0; left: -4px; z-index: 55; pointer-events: none;
+  width: 44px; height: 100vh;
+  background: linear-gradient(90deg,
+    transparent 0,
+    color-mix(in srgb, var(--brand) 45%, transparent) 4px,
+    var(--brand) 4px 6px,
+    color-mix(in srgb, var(--brand) 50%, transparent) 6px,
+    color-mix(in srgb, var(--brand) 16%, transparent) 16px,
+    transparent 44px);
+  view-transition-name: p-filo;
+}
+/* la pagina vecchia resta ferma sotto, quella nuova si scopre insieme al filo */
+html:active-view-transition-type(p-filo)::view-transition-old(root) { animation: none; }
+html:active-view-transition-type(p-filo)::view-transition-new(root) {
+  animation: p-filo-scopre var(--p-filo-durata) var(--p-ease-in-out) both;
+}
+html:active-view-transition-type(p-filo)::view-transition-group(p-filo) {
+  animation: p-filo-passa var(--p-filo-durata) var(--p-ease-in-out) both;
+}
+html:active-view-transition-type(p-filo)::view-transition-old(p-filo) { animation: none; }
+html:active-view-transition-type(p-filo)::view-transition-new(p-filo) { display: none; }
+/* il segno della pagina corrente scorre col passo del filo */
+html:active-view-transition-type(p-filo)::view-transition-group(p-segno) {
+  animation-duration: var(--p-filo-durata); animation-timing-function: var(--p-ease-in-out);
+}
+@keyframes p-filo-scopre { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes p-filo-passa { from { translate: 0 0; } to { translate: 100vw 0; } }
+/* arrivando col filo l'ingresso lo fa il filo: titolo e testi della hero sono già al loro posto
+   (sopra le posizioni di partenza che motion.js mette in linea); dietro, il tessuto si tesse lo stesso */
+.motion.p-filo-arrivo .p-h1 { visibility: visible; }
+.p-filo-arrivo .p-h1 .p-line, .p-filo-arrivo [data-hero-item] { opacity: 1 !important; transform: none !important; }
+.p-filo-arrivo .p-accent { --mark: 1 !important; }
+
+/* ---- 2 · Il marchio che si tesse ----
+   script.js sostituisce il <use> del marchio in testata con i tratti veri e li disegna:
+   prima l'ordito, poi la trama che passa sopra e sotto. Finché non parte resta nascosto
+   (niente lampo del marchio intero). Si vede subito intero arrivando col filo (la testata
+   resta ferma) e sulla home con l'apertura (il marchio lo disegna già l'apertura).
+   Se script.js non partisse, ricompare comunque dopo 2,5 s. */
+.motion:not(.p-filo-arrivo) .top .brand .mk:not(.p-tessuto) { visibility: hidden; animation: p-mk-mostra 0s 2.5s forwards; }
+.motion:not(.no-intro) .p-intro ~ .top .brand .mk { visibility: visible; animation: none; }
+@keyframes p-mk-mostra { to { visibility: visible; } }
+/* il pezzo d'ordito che resta sotto la trama: si vede solo mentre si tesse */
+.top .brand .mk .p-ponte { visibility: hidden; }
+.top .brand .mk.is-tessendo .p-ponte { visibility: visible; }
+
+/* ---- 3 · Link e pulsanti cuciti ----
+   Al passaggio del mouse corre un punto di cucitura (trattini) da sinistra a destra;
+   subito dietro il filo si chiude in una linea piena. Uscendo la linea si ritira veloce.
+   Transizioni CSS: se il mouse entra ed esce di fretta riprendono da dove sono. */
+
+/* voci del menu (in riga): la cucitura finisce esattamente dove sta il segno della pagina corrente.
+   Nel menu a scomparsa resta il riquadro di sempre. */
+@media (hover: hover) and (min-width: 1121px) {
+  .nav a:hover { background: none; }
+  .nav a:not([aria-current])::before,
+  .nav a:not([aria-current])::after {
+    content: ""; position: absolute; left: 12px; right: 12px; bottom: 2px; height: 2px; pointer-events: none;
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path .16s var(--p-ease-out);
+  }
+  /* i punti (trattini da 4 px) e il filo che chiude la cucitura */
+  .nav a:not([aria-current])::before { background: repeating-linear-gradient(90deg, var(--weft) 0 4px, transparent 4px 7px); }
+  .nav a:not([aria-current])::after { background: var(--brand); border-radius: 2px; }
+  .nav a:not([aria-current]):hover::before { clip-path: inset(0 0 0 0); transition: clip-path .24s var(--p-ease-out); }
+  .nav a:not([aria-current]):hover::after { clip-path: inset(0 0 0 0); transition: clip-path .24s var(--p-ease-out) .14s; }
+}
+
+/* link con la freccia: script.js mette il testo in uno <span class="p-cuci">, in linea, così su due righe
+   la cucitura fa la prima riga e poi la seconda (il link resta com'è, margini compresi).
+   Due sfondi, i trattini e la linea piena, ognuno con la sua larghezza: proprietà registrate,
+   così si animano separate e la linea parte in ritardo. */
+@property --p-cuci { syntax: "<percentage>"; inherits: false; initial-value: 0%; }
+@property --p-chiudi { syntax: "<percentage>"; inherits: false; initial-value: 0%; }
+.arrow-link .p-cuci {
+  padding-bottom: 4px;
+  background:
+    linear-gradient(var(--brand), var(--brand)) 0 100% / var(--p-chiudi) 2px no-repeat,
+    repeating-linear-gradient(90deg, var(--weft) 0 4px, transparent 4px 7px) 0 100% / var(--p-cuci) 2px no-repeat;
+  transition: --p-cuci .16s var(--p-ease-out), --p-chiudi .16s var(--p-ease-out);
+}
+@media (hover: hover) {
+  .arrow-link:hover .p-cuci {
+    --p-cuci: 100%; --p-chiudi: 100%;
+    transition: --p-cuci .26s var(--p-ease-out), --p-chiudi .26s var(--p-ease-out) .14s;
+  }
+}
+
+/* pulsanti: un filo fa una volta il giro del bordo (lo fa partire script.js) e la freccia si sposta.
+   Il riflesso che attraversava il pulsante lo sostituisce il filo; senza riflesso non serve più
+   tagliare quello che esce (overflow: hidden avrebbe tagliato il filo sul bordo). */
+.btn-primary { overflow: visible; }
+.btn-primary::after { display: none; }
+/* il disegno copre anche il bordo trasparente da 1,5 px: il filo corre proprio sul contorno */
+.p-btn-filo {
+  position: absolute; top: -1.5px; left: -1.5px; width: calc(100% + 3px); height: calc(100% + 3px);
+  pointer-events: none; overflow: visible;
+}
+.p-btn-filo rect { fill: none; stroke: #fff; stroke-width: 1.5; stroke-dasharray: 0 10000; }
+/* sui pulsanti bianchi del blocco blu il filo è blu */
+.p-btn-inv .p-btn-filo rect, .p-checkup .booking-box .p-btn-filo rect { stroke: var(--brand); }
+.btn .p-arr { transition: transform .22s var(--p-ease-out); }
+@media (hover: hover) { .btn:hover .p-arr { transform: translateX(3px); } }
+
+/* riduci movimento: niente cucitura che corre (la linea compare e basta), freccia ferma */
+@media (prefers-reduced-motion: reduce) {
+  .nav a::before, .nav a::after, .arrow-link .p-cuci { transition: none !important; }
+  .btn:hover .p-arr { transform: none; }
 }
