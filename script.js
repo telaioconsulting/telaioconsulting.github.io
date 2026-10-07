@@ -31,6 +31,8 @@
     var tc = document.querySelector('meta[name="theme-color"]');
     if (tc) tc.content = theme === "light" ? "#F4F5F8" : "#090C08";
     if (typeof window.__loomRedraw === "function") window.__loomRedraw();
+    // gli effetti disegnati (tessuto, trama, numeri…) ascoltano questo evento e si ridisegnano coi colori del tema
+    document.dispatchEvent(new CustomEvent("telaio:tema", { detail: { tema: theme === "light" ? "light" : "dark" } }));
   }
   try { if (localStorage.getItem(STORAGE_KEY) === "light") applyTheme("light"); } catch (e) {}
   if (themeBtn) {
