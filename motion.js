@@ -610,7 +610,8 @@
     if (Split) {
       gsap.utils.toArray(".p-manifesto-text, [data-scrub]").forEach(function (el) {
         var s = Split.create(el, { type: "words", wordsClass: "p-word" });
-        gsap.fromTo(s.words, { opacity: 0.13 }, {
+        // sul fondo chiaro le parole ancora spente sparivano: lì partono un po' più visibili
+        gsap.fromTo(s.words, { opacity: function () { return root.getAttribute("data-theme") === "light" ? 0.24 : 0.13; } }, {
           opacity: 1, ease: "none", stagger: 0.1,
           scrollTrigger: { trigger: el, start: "top 80%", end: "bottom 45%", scrub: true }
         });
@@ -825,14 +826,17 @@
       var dpr = Math.min(window.devicePixelRatio || 1, 1.5);
 
       // colori dai token del tema (si rileggono quando il tema cambia)
-      var INK, WEFT, BRAND, C_WARP, C_WEFT, C_DOT;
+      var INK, WEFT, BRAND, C_WARP, C_WEFT, C_DOT, A_WARP, A_WEFT;
       function token(name, fb) {
         var v = getComputedStyle(root).getPropertyValue(name).trim();
         return /^#[0-9a-f]{6}$/i.test(v) ? parseInt(v.substr(1, 2), 16) + "," + parseInt(v.substr(3, 2), 16) + "," + parseInt(v.substr(5, 2), 16) : fb;
       }
       function colors() {
         INK = token("--ink", "245,247,241"); WEFT = token("--weft", "142,157,255"); BRAND = token("--brand", "19,7,237");
-        C_WARP = "rgba(" + INK + ",.34)"; C_WEFT = "rgba(" + WEFT + ",.6)"; C_DOT = "rgb(" + WEFT + ")";
+        // sul fondo chiaro i fili scuri si vedono molto di più: più tenui, così non passano davanti al testo
+        var chiaro = root.getAttribute("data-theme") === "light";
+        A_WARP = chiaro ? 0.18 : 0.34; A_WEFT = chiaro ? 0.36 : 0.6;
+        C_WARP = "rgba(" + INK + "," + A_WARP + ")"; C_WEFT = "rgba(" + WEFT + "," + A_WEFT + ")"; C_DOT = "rgb(" + WEFT + ")";
       }
       colors();
 
@@ -1088,7 +1092,7 @@
           rect(lr); ctx.clip();
           if (finePointer) {
             m0 = Math.max(base, 0.12 + 0.88 * lit); m1 = Math.max(base, 0.12 + 0.38 * lit); mb = base;
-            weave(lr, lightGrad(INK, 0.34), lightGrad(WEFT, 0.6), lightGrad(WEFT, 1));
+            weave(lr, lightGrad(INK, A_WARP), lightGrad(WEFT, A_WEFT), lightGrad(WEFT, 1));
             ctx.fillStyle = glowGrad(); ctx.fillRect(lx - GLOW * 0.7, ly - GLOW * 0.7, GLOW * 1.4, GLOW * 1.4);
           } else {
             // telefono: la fascia più tenue (picco al 60%), con l'alone e poi la maschera ellittica
@@ -2153,7 +2157,8 @@
         : { warp: [0.185, 0.190, 0.174], weft: [0.123, 0.143, 0.207], base: [0.0016, 0.002, 0.0016], luce: [1.2, 0.05, 0.3, 0], fondo: [0.005, 0.006, 0.004] };
     }
     return chiaro
-      ? { warp: [0.50, 0.52, 0.54], weft: [0.42, 0.45, 0.52], base: [0.20, 0.21, 0.24], luce: [0.86, 0.36, 0.10, 0.22], fondo: [0.905, 0.913, 0.94] }
+      // tema chiaro: fili e fondo più vicini di tono, il telo resta tessuto ma non fa da trama fitta dietro il testo
+      ? { warp: [0.60, 0.62, 0.64], weft: [0.52, 0.55, 0.62], base: [0.34, 0.35, 0.38], luce: [0.86, 0.36, 0.10, 0.22], fondo: [0.905, 0.913, 0.94] }
       : { warp: [0.066, 0.068, 0.062], weft: [0.044, 0.051, 0.074], base: [0.0016, 0.002, 0.0016], luce: [1.05, 0.035, 0.2, 1.6], fondo: [0.0027, 0.0037, 0.0024] };
   }
 

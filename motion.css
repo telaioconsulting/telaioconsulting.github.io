@@ -220,7 +220,7 @@ html:not(.motion) .p-progress { display: none; }
 /* il blu chiaro resta per le piccole etichette (brand book): l'unità accanto al numero grande è grigia */
 .p-stat-num small { font-size: .3em; letter-spacing: -.02em; color: var(--muted); white-space: nowrap; }
 .p-stat-body > p { color: var(--muted); font-size: var(--step-1); line-height: 1.5; max-width: 40ch; }
-.p-stat-body > .p-src { margin-top: 14px; font-family: var(--f-mono); font-size: 11px; line-height: 1.4; }
+.p-stat-body > .p-src { margin-top: 14px; font-family: var(--f-mono); font-size: 12px; line-height: 1.5; }
 .p-src a { color: var(--weft); }
 
 /* ---- Numeri tessuti (motion.js): il canvas dei fili sta sopra la cifra; il testo vero resta sotto,
@@ -475,7 +475,8 @@ html:not(.motion) .p-manifesto-text em {
 @media (min-width: 900px) and (max-height: 820px) { .p-rac-stage { position: relative; top: auto; } }
 /* bagliore blu dietro il tessuto (più tenue nel tema chiaro) */
 .p-rac-glow { pointer-events: none; background: radial-gradient(closest-side, rgba(19, 7, 237, .34), rgba(19, 7, 237, .12) 48%, rgba(19, 7, 237, 0)); }
-:root[data-theme="light"] .p-rac-glow { background: radial-gradient(closest-side, rgba(19, 7, 237, .14), rgba(19, 7, 237, .05) 48%, rgba(19, 7, 237, 0)); }
+/* tema chiaro: l'alone resta appena accennato (sul fondo chiaro un alone ampio sembra una macchia) */
+:root[data-theme="light"] .p-rac-glow { background: radial-gradient(closest-side, rgba(19, 7, 237, .07), rgba(19, 7, 237, .025) 48%, rgba(19, 7, 237, 0)); }
 
 /* ---- Riduci movimento: il tessuto finito, fermo, col marchio intessuto in blu ---- */
 .p-rac-still .p-rac-canvas { display: block; position: relative; z-index: 1; width: 100%; aspect-ratio: 1 / 1.04; max-width: 600px; margin-inline: auto; }
@@ -615,6 +616,8 @@ html:not(.motion) .p-manifesto-text em {
   display: grid; place-items: center;
   background: radial-gradient(120% 100% at 15% 0%, color-mix(in srgb, var(--brand) 55%, var(--surface)), var(--surface) 75%);
 }
+/* tema chiaro: la sfumatura viola, forte sul bianco, diventa un azzurro leggero */
+:root[data-theme="light"] .p-founder-art { background: radial-gradient(120% 100% at 15% 0%, color-mix(in srgb, var(--brand) 20%, var(--surface)), var(--surface) 75%); }
 .p-founder-art::before {
   content: ""; position: absolute; inset: -40%;
   background-image:
@@ -690,6 +693,12 @@ html:not(.motion) .p-manifesto-text em {
           mask-image: radial-gradient(closest-side, #000 30%, transparent);
   pointer-events: none;
 }
+/* tema chiaro: la nuvola blu attorno al pulsante rotondo diventava una macchia lilla; resta solo un alone leggero */
+:root[data-theme="light"] .p-final-glow {
+  background:
+    repeating-radial-gradient(circle at center, color-mix(in srgb, var(--weft) 7%, transparent) 0 1px, transparent 1px 34px),
+    radial-gradient(closest-side, color-mix(in srgb, var(--brand) 10%, transparent), transparent);
+}
 .p-final .wrap { position: relative; }
 .p-final-h { margin: 0 auto; max-width: 19ch; font-size: clamp(2.3rem, 5.6vw, 5.2rem); line-height: 1; letter-spacing: -.045em; }
 .p-orb {
@@ -735,8 +744,14 @@ html:not(.motion) .p-manifesto-text em {
     linear-gradient(90deg, var(--ground) 0%, color-mix(in srgb, var(--ground) 86%, transparent) 30%, color-mix(in srgb, var(--ground) 30%, transparent) 52%, transparent 70%),
     linear-gradient(180deg, color-mix(in srgb, var(--ground) 60%, transparent) 0%, transparent 22%, transparent 62%, color-mix(in srgb, var(--ground) 70%, transparent) 86%, var(--ground) 100%);
 }
-/* le briciole sono piccole e sul telefono stanno sopra il telo: un alone del colore della pagina */
-.p-weave-gl .crumbs { text-shadow: 0 0 10px var(--ground), 0 0 4px var(--ground); }
+/* i testi piccoli (briciole, dettagli dell'offerta, riga in fondo) stanno sopra il telo: un alone del colore della pagina */
+.p-weave-gl :is(.crumbs, .p-meta, .p-trust, .p-scroll) { text-shadow: 0 0 10px var(--ground), 0 0 4px var(--ground), 0 0 2px var(--ground); }
+/* tema chiaro: il telo chiaro coi fili scuri è più fitto dietro il testo, il velo arriva più in là e copre di più */
+:root[data-theme="light"] .p-weave-gl .p-hero-veil {
+  background:
+    linear-gradient(90deg, var(--ground) 0%, color-mix(in srgb, var(--ground) 92%, transparent) 34%, color-mix(in srgb, var(--ground) 62%, transparent) 60%, color-mix(in srgb, var(--ground) 20%, transparent) 78%, transparent 90%),
+    linear-gradient(180deg, color-mix(in srgb, var(--ground) 50%, transparent) 0%, transparent 22%, transparent 62%, color-mix(in srgb, var(--ground) 75%, transparent) 86%, var(--ground) 100%);
+}
 /* nelle altre pagine il sottotitolo è più largo: il velo arriva più in là */
 @media (min-width: 561px) {
   .p-hero.is-page.p-weave-gl .p-hero-veil {
@@ -744,12 +759,21 @@ html:not(.motion) .p-manifesto-text em {
       linear-gradient(90deg, var(--ground) 0%, color-mix(in srgb, var(--ground) 88%, transparent) 36%, color-mix(in srgb, var(--ground) 45%, transparent) 62%, transparent 82%),
       linear-gradient(180deg, color-mix(in srgb, var(--ground) 60%, transparent) 0%, transparent 22%, transparent 62%, color-mix(in srgb, var(--ground) 70%, transparent) 86%, var(--ground) 100%);
   }
+  :root[data-theme="light"] .p-hero.is-page.p-weave-gl .p-hero-veil {
+    background:
+      linear-gradient(90deg, var(--ground) 0%, color-mix(in srgb, var(--ground) 92%, transparent) 40%, color-mix(in srgb, var(--ground) 62%, transparent) 66%, color-mix(in srgb, var(--ground) 20%, transparent) 84%, transparent 94%),
+      linear-gradient(180deg, color-mix(in srgb, var(--ground) 50%, transparent) 0%, transparent 22%, transparent 62%, color-mix(in srgb, var(--ground) 75%, transparent) 86%, var(--ground) 100%);
+  }
 }
 /* sul telefono il testo prende quasi tutta la larghezza: il telo resta in alto e si scurisce sotto il testo */
 @media (max-width: 560px) {
   .p-weave-gl .p-hero-veil {
     background: linear-gradient(180deg, color-mix(in srgb, var(--ground) 45%, transparent) 0%, transparent 9%, transparent 24%,
       color-mix(in srgb, var(--ground) 80%, transparent) 46%, color-mix(in srgb, var(--ground) 90%, transparent) 88%, var(--ground) 100%);
+  }
+  :root[data-theme="light"] .p-weave-gl .p-hero-veil {
+    background: linear-gradient(180deg, color-mix(in srgb, var(--ground) 40%, transparent) 0%, transparent 9%, transparent 20%,
+      color-mix(in srgb, var(--ground) 90%, transparent) 40%, color-mix(in srgb, var(--ground) 96%, transparent) 80%, var(--ground) 100%);
   }
 }
 /* la parola gigante tessuta: le lettere vere restano al loro posto ma trasparenti (servono per le misure) */
