@@ -540,17 +540,18 @@ html:not(.motion) .p-manifesto-text em {
   .p-rac-live .p-rac-now { display: flex; align-items: flex-end; gap: 16px; margin-top: 0; }
   /* sotto i 900 px il contatore del sito è nascosto: qui serve, in piccolo accanto ai tratti */
   .p-rac-live .p-counter { display: flex; gap: 6px; }
-  .p-rac-live .p-counter-win { font-size: clamp(2.6rem, 11vw, 4.4rem); }
-  .p-rac-live .p-counter-tot { font-size: 1rem; padding-top: .35em; }
-  .p-rac-live .p-rac-bars { flex: 1; max-width: none; margin: 0 0 .7em; }
-  .p-rac-live .p-rac-steps { margin-top: 10px; }
-  .p-rac-live .p-rac-step { gap: 6px; }
-  .p-rac-live .p-rac-step-n { font-size: .75rem; }
-  .p-rac-live .p-rac-step h3 { font-size: clamp(1.3rem, 5.4vw, 1.9rem); max-width: 22ch; }
-  .p-rac-live .p-rac-step p { font-size: clamp(.95rem, 3.9vw, 1.05rem); line-height: 1.46; max-width: 52ch; }
-  .p-rac-live .p-rac-cta { margin-top: 14px; }
-  .p-rac-live .p-rac-cta .btn { width: 100%; padding-block: 15px; }
-  .p-rac-live .p-rac-callout { font-size: .875rem; line-height: 1.45; padding: 12px 16px; }
+  /* sul telefono il testo del passo è la cosa da leggere: più grande, la tela si stringe un poco */
+  .p-rac-live .p-counter-win { font-size: clamp(3.2rem, 15vw, 5rem); }
+  .p-rac-live .p-counter-tot { font-size: 1.15rem; padding-top: .35em; }
+  .p-rac-live .p-rac-bars { flex: 1; max-width: none; margin: 0 0 .8em; }
+  .p-rac-live .p-rac-steps { margin-top: 12px; }
+  .p-rac-live .p-rac-step { gap: 8px; }
+  .p-rac-live .p-rac-step-n { font-size: .8125rem; }
+  .p-rac-live .p-rac-step h3 { font-size: clamp(1.65rem, 7vw, 2.3rem); line-height: 1.04; max-width: 20ch; }
+  .p-rac-live .p-rac-step p { font-size: clamp(1.05rem, 4.4vw, 1.2rem); line-height: 1.48; max-width: 52ch; }
+  .p-rac-live .p-rac-cta { margin-top: 16px; }
+  .p-rac-live .p-rac-cta .btn { width: 100%; padding-block: 16px; }
+  .p-rac-live .p-rac-callout { font-size: .95rem; line-height: 1.45; padding: 12px 16px; }
 }
 /* ---- fine «Il telaio racconta» ---- */
 
@@ -745,7 +746,7 @@ html:not(.motion) .p-manifesto-text em {
     linear-gradient(180deg, color-mix(in srgb, var(--ground) 60%, transparent) 0%, transparent 22%, transparent 62%, color-mix(in srgb, var(--ground) 70%, transparent) 86%, var(--ground) 100%);
 }
 /* i testi piccoli (briciole, dettagli dell'offerta, riga in fondo) stanno sopra il telo: un alone del colore della pagina */
-.p-weave-gl :is(.crumbs, .p-meta, .p-trust, .p-scroll) { text-shadow: 0 0 10px var(--ground), 0 0 4px var(--ground), 0 0 2px var(--ground); }
+.p-weave-gl :is(.crumbs, .p-meta, .p-trust, .p-scroll, .p-kicker) { text-shadow: 0 0 10px var(--ground), 0 0 4px var(--ground), 0 0 2px var(--ground); }
 /* tema chiaro: il telo chiaro coi fili scuri è più fitto dietro il testo, il velo arriva più in là e copre di più */
 :root[data-theme="light"] .p-weave-gl .p-hero-veil {
   background:
@@ -963,6 +964,11 @@ html:not(.motion) .p-manifesto-text em {
   .p-btn-xl { width: 100%; }
   /* i testi di servizio da 11-12 px sul telefono erano troppo piccoli */
   .p-scroll, .p-stat-body > .p-src, .p-founder .role, .p-micro { font-size: .8125rem; }
+  /* l'etichetta della hero: sul telefono va a capo, quindi niente riquadro a pillola (sembrava un blocco di testo) */
+  .p-kicker { padding: 0; border: 0; background: none; -webkit-backdrop-filter: none; backdrop-filter: none; align-items: flex-start; letter-spacing: .1em; line-height: 1.5; }
+  .p-kicker .p-dot { margin-top: .45em; }
+  /* i numeri Istat sono il primo colpo d'occhio dopo la hero: più grandi */
+  .p-stat-num { font-size: clamp(6.2rem, 28vw, 8rem); }
 }
 
 /* ============================================================
