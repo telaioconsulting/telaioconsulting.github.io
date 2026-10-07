@@ -2718,13 +2718,15 @@
       speed: function () { return 44; }
     });
     var autoT = 1.5; // telefono: ogni tanto un'onda da sola
+    var lastTop = 0, scrollT = 0; // telefono: onde quando si scorre
 
     // la camera del telaio 2D (in più lo scorrimento). Sul telefono il testo prende la parte bassa:
     // si guarda più in giù, così in alto c'è il tessuto vicino e non la nebbia
     function camera() {
       var e = tessLiscia(ps), live = tessLiscia(alive);
-      yaw = -0.42 + (mx - 0.5) * 0.06 * live + e * 0.16;
-      pitch = (W < 600 ? 0.72 : 0.5) + (my - 0.5) * 0.03 * live + e * 0.2;
+      // sul telefono l'inclinazione sposta il telaio un po' di più del mouse (il gesto è più ampio)
+      yaw = -0.42 + (mx - 0.5) * (phone ? 0.12 : 0.06) * live + e * 0.16;
+      pitch = (W < 600 ? 0.72 : 0.5) + (my - 0.5) * (phone ? 0.05 : 0.03) * live + e * 0.2;
       amp = (1 - e * 0.45) * live;
       slide = e * 950;
       return e;
@@ -2830,10 +2832,17 @@
       touch.step(dt, time);
       shut.step(dt, st.weave >= 1 && live && ps < 0.6);
       if (phone && live && st.weave >= 1) {
+        // scorrendo, il telo ondeggia: un'onda ogni tanto, più forte se si scorre veloce
+        var vsc = Math.abs(r.top - lastTop) / Math.max(dt, 0.001);
+        lastTop = r.top; scrollT -= dt;
+        if (vsc > 220 && scrollT <= 0) {
+          scrollT = 0.3;
+          if (pick(W * tessCaso(0.2, 0.85), H * tessCaso(0.18, 0.45), P)) touch.ripple(P[0], P[1], time, 34 * tessLimita(vsc / 2000, 0.35, 1));
+        }
         autoT -= dt;
         if (autoT <= 0) {
-          autoT = tessCaso(3.4, 5.2);
-          if (pick(W * tessCaso(0.35, 0.9), H * tessCaso(0.14, 0.42), P)) touch.ripple(P[0], P[1], time, 26);
+          autoT = tessCaso(2.4, 3.8);
+          if (pick(W * tessCaso(0.35, 0.9), H * tessCaso(0.14, 0.42), P)) touch.ripple(P[0], P[1], time, 30);
         }
       }
       draw();
@@ -2857,6 +2866,36 @@
         touch.press();
       });
       window.addEventListener("pointerup", function () { touch.release(time); });
+    }
+    // telefono e tablet: il dito preme il tessuto (impronta, luce e un'onda subito), anche se poi la pagina scorre;
+    // quando lo scorrimento parte il browser annulla il tocco e il tessuto risale con un'altra onda
+    if (!fine && motion) {
+      var dito = null;
+      hero.addEventListener("pointerdown", function (ev) {
+        if (dead || ev.pointerType === "mouse") return;
+        if (ev.target.closest && ev.target.closest("a, button")) return;
+        var rr = canvas.getBoundingClientRect();
+        px = ev.clientX - rr.left; py = ev.clientY - rr.top; hasPtr = true; dito = ev.pointerId;
+        if (pick(px, py, P, 0)) { touch.move(P[0], P[1], time); touch.ripple(P[0], P[1], time, 40); }
+        touch.press();
+      }, { passive: true });
+      hero.addEventListener("pointermove", function (ev) {
+        if (dead || ev.pointerId !== dito) return;
+        var rr = canvas.getBoundingClientRect();
+        px = ev.clientX - rr.left; py = ev.clientY - rr.top;
+      }, { passive: true });
+      var lascia = function (ev) {
+        if (ev.pointerId !== dito) return;
+        dito = null; touch.release(time); hasPtr = false;
+      };
+      window.addEventListener("pointerup", lascia);
+      window.addEventListener("pointercancel", lascia);
+      // inclinando il telefono il telaio si sposta appena, come col mouse (dove il browser lo permette senza chiedere)
+      window.addEventListener("deviceorientation", function (ev) {
+        if (ev.gamma == null || ev.beta == null) return;
+        tmx = 0.5 + tessLimita(ev.gamma / 50, -0.5, 0.5);
+        tmy = 0.5 + tessLimita((ev.beta - 50) / 70, -0.5, 0.5);
+      });
     }
     // cambio di tema: nuovi colori, e se è fermo si ridisegna subito
     document.addEventListener("telaio:tema", function () {
