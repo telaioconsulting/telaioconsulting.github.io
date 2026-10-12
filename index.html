@@ -167,8 +167,14 @@
         <h1 class="p-h1">Il primo strumento AI al lavoro nella tua impresa, in <span class="p-accent">4&nbsp;settimane</span>.</h1>
         <div class="p-hero-row">
           <p class="p-tagline" data-hero-item>Partiamo da un problema reale, scegliamo lo strumento giusto e lo mettiamo al lavoro con te. Poi restiamo finché produce risultati.</p>
-          <div class="p-hero-cta" data-hero-item>
-            <a class="btn btn-primary p-btn-xl" data-magnetic href="/check-up-ai/" data-cta="checkup" data-placement="hero">Prenota il check-up AI <span class="p-arr" aria-hidden="true">→</span></a>
+          <div class="p-hero-cta p-hero-orb" data-hero-item>
+            <a class="p-orb" data-magnetic href="/check-up-ai/" data-cta="checkup" data-placement="hero" aria-label="Prenota il check-up AI">
+              <svg class="p-orb-ring" viewBox="0 0 200 200" aria-hidden="true">
+                <defs><path id="orbPath" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs>
+                <text><textPath href="#orbPath">Prenota il check-up AI · 30 minuti · Gratuito · </textPath></text>
+              </svg>
+              <span class="p-orb-arr" aria-hidden="true">→</span>
+            </a>
             <ul class="p-meta">
               <li>30 minuti in videochiamata</li>
               <li>Gratuito</li>
@@ -232,18 +238,12 @@
       </div>
     </section>
 
-    <!-- Invito con la pallina, subito dopo il manifesto -->
+    <!-- Invito subito dopo il manifesto: titolo grande e pulsante (la pallina è nella hero) -->
     <section class="p-final">
       <div class="p-final-glow" aria-hidden="true"></div>
       <div class="wrap">
         <h2 class="p-final-h" data-split>Scopri come l'AI sta cambiando il tuo settore e cosa puoi fare tu, da subito.</h2>
-        <a class="p-orb" data-magnetic href="/check-up-ai/" data-cta="checkup" data-placement="stats" aria-label="Prenota il check-up AI">
-          <svg class="p-orb-ring" viewBox="0 0 200 200" aria-hidden="true">
-            <defs><path id="orbPath" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs>
-            <text><textPath href="#orbPath">Prenota il check-up AI · 30 minuti · Gratuito · </textPath></text>
-          </svg>
-          <span class="p-orb-arr" aria-hidden="true">→</span>
-        </a>
+        <a class="btn btn-primary p-btn-xl p-final-btn" data-magnetic href="/check-up-ai/" data-cta="checkup" data-placement="stats">Prenota il check-up AI <span class="p-arr" aria-hidden="true">→</span></a>
         <p class="p-final-sub">30 minuti · Gratuito · Con uno dei fondatori</p>
       </div>
     </section>

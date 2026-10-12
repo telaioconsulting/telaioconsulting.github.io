@@ -124,6 +124,11 @@ html:not(.motion) .p-progress { display: none; }
 .p-meta { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 18px; font-family: var(--f-mono); font-size: .8125rem; color: var(--muted); }
 .p-meta li { display: inline-flex; align-items: center; gap: 8px; }
 .p-meta li + li::before { content: ""; width: 4px; height: 4px; background: var(--brand); transform: rotate(45deg); }
+/* home: al posto del pulsante la pallina che rimbalza (.p-orb, più sotto); accanto le tre voci in colonna, ognuna col suo rombo */
+.p-hero-orb { flex-direction: row; align-items: center; gap: clamp(20px, 2.4vw, 32px); }
+.p-hero-orb .p-orb { margin-top: 0; width: clamp(132px, 11vw, 164px); flex: none; }
+.p-hero-orb .p-meta { flex-direction: column; gap: 10px; }
+.p-hero-orb .p-meta li::before { content: ""; width: 4px; height: 4px; background: var(--brand); transform: rotate(45deg); }
 
 .p-btn-xl { padding: 18px 26px; font-size: 1.04rem; gap: 12px; }
 /* sui pulsanti magnetici la posizione la muove GSAP: una transizione CSS su transform la rallentava a ogni passo */
@@ -710,8 +715,9 @@ html:not(.motion) .p-manifesto-text em {
     radial-gradient(closest-side, color-mix(in srgb, var(--brand) 10%, transparent), transparent);
 }
 .p-final .wrap { position: relative; }
-/* nella home la pallina viene subito dopo il manifesto: ne è il seguito, niente riga e meno spazio sopra */
+/* nella home l'invito viene subito dopo il manifesto: ne è il seguito, niente riga e meno spazio sopra */
 .p-manifesto + .p-final { border-top: 0; padding-top: clamp(24px, 4vw, 56px); }
+.p-final-btn { margin-top: clamp(40px, 5vw, 60px); }
 .p-final-h { margin: 0 auto; max-width: 19ch; font-size: clamp(2.3rem, 5.6vw, 5.2rem); line-height: 1; letter-spacing: -.045em; }
 .p-orb {
   position: relative; display: inline-grid; place-items: center; margin-top: clamp(44px, 6vw, 76px);
@@ -726,7 +732,7 @@ html:not(.motion) .p-manifesto-text em {
 .p-orb-ring text { font-family: var(--f-mono); font-size: 12.4px; letter-spacing: .19em; text-transform: uppercase; fill: #fff; }
 .p-orb-arr { font-family: var(--f-display); font-weight: 700; font-size: 2.6rem; line-height: 1; transition: transform .5s var(--ease); }
 @media (hover: hover) { .p-orb:hover .p-orb-arr { transform: rotate(-45deg) scale(1.1); } }
-/* la pallina saltellante: dopo l'entrata (motion.js) ogni tanto un saltello e un rimbalzino.
+/* la pallina saltellante (hero della home, chiusura di Come lavoriamo): dopo l'entrata (motion.js) ogni tanto un saltello e un rimbalzino.
    Usa «translate», così non tocca lo spostamento magnetico (x/y di GSAP); sotto il mouse o il dito si ferma */
 .motion .p-orb.is-hop { animation: p-hop 3.8s 1.2s infinite; }
 .p-orb.is-hop:is(:hover, :focus-visible, :active) { animation-play-state: paused; }

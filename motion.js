@@ -93,6 +93,14 @@
       if (!h1) return;
       var h1Split = Split ? Split.create(h1, { type: "lines", mask: "lines", linesClass: "p-line" }) : null;
       var accent = h1.querySelector(".p-accent");
+      // la pallina della hero cade e rimbalza mentre entra il resto, poi saltella (.is-hop in motion.css).
+      // Il saltello parte da una chiamata della timeline, non dalla fine della caduta: se il mouse passa sulla
+      // pallina mentre cade, l'effetto magnetico prende il suo posto e la caduta non finisce
+      var orb = document.querySelector(".p-hero .p-orb");
+      function orbFall(at) {
+        tl.from(orb, { y: -160, duration: 1.2, ease: "bounce.out" }, at)
+          .call(function () { orb.classList.add("is-hop"); }, null, at + 1.2);
+      }
       gsap.set(h1, { visibility: "visible" });
       if (h1Split) gsap.set(h1Split.lines, { yPercent: 112 });
       if (accent) gsap.set(accent, { "--mark": 0 });
@@ -102,8 +110,9 @@
         tl.to(weave, { weave: 1, duration: 2.4, ease: "power2.out" }, 0)
           .to(h1Split ? h1Split.lines : h1, { yPercent: 0, duration: 1.2, stagger: 0.08 }, 0.1);
         if (accent) tl.to(accent, { "--mark": 1, duration: 1, ease: "expo.inOut" }, 0.6);
-        tl.fromTo("[data-hero-item]", { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 1, stagger: 0.07 }, 0.05)
-          .add(function () { if (h1Split) h1Split.revert(); });
+        tl.fromTo("[data-hero-item]", { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 1, stagger: 0.07 }, 0.05);
+        if (orb) orbFall(0.3);
+        tl.add(function () { if (h1Split) h1Split.revert(); });
         if (deepLink) tl.progress(1);
         heroExit();
         return;
@@ -148,8 +157,9 @@
         .fromTo(".p-kicker", { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 1 }, HERO)
         .to(h1Split ? h1Split.lines : h1, { yPercent: 0, duration: 1.3, stagger: 0.09 }, HERO + 0.05);
       if (accent) tl.to(accent, { "--mark": 1, duration: 1, ease: "expo.inOut" }, HERO + 0.6);
-      tl.fromTo("[data-hero-item]:not(.p-kicker)", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 1.1, stagger: 0.09 }, HERO + 0.35)
-        .add(endIntro, END + 0.65)
+      tl.fromTo("[data-hero-item]:not(.p-kicker)", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 1.1, stagger: 0.09 }, HERO + 0.35);
+      if (orb) orbFall(HERO + 0.6);
+      tl.add(endIntro, END + 0.65)
         .add(function () { if (h1Split) h1Split.revert(); });
       // appena lo sfondo dell'apertura è trasparente, testata e pulsante della hero si possono già cliccare;
       // lo scorrimento riparte quando il tessuto è al suo posto
@@ -732,9 +742,10 @@
         scrollTrigger: { trigger: ".p-final", start: "top 85%", end: "center center", scrub: true }
       });
     }
-    // la pallina: cade dall'alto e rimbalza, poi ogni tanto fa un saltello (.is-hop, p-hop in motion.css).
-    // Si misura dal titolo sopra di lei: la pallina ha già lo spostamento dell'entrata
-    gsap.utils.toArray(".p-orb").forEach(function (orb) {
+    // la pallina delle chiusure: cade dall'alto e rimbalza quando arriva sullo schermo, poi ogni tanto fa un saltello
+    // (.is-hop, p-hop in motion.css). Si misura dal titolo sopra di lei: la pallina ha già lo spostamento dell'entrata.
+    // Quella della hero entra con la hero (sopra)
+    gsap.utils.toArray(".p-orb").filter(function (o) { return !o.closest(".p-hero"); }).forEach(function (orb) {
       gsap.timeline({
         scrollTrigger: { trigger: orb.previousElementSibling || orb, start: "bottom 72%", toggleActions: "play none none none" },
         onComplete: function () { orb.classList.add("is-hop"); }
