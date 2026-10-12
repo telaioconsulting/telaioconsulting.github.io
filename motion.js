@@ -112,7 +112,10 @@
         if (accent) tl.to(accent, { "--mark": 1, duration: 1, ease: "expo.inOut" }, 0.6);
         tl.fromTo("[data-hero-item]", { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 1, stagger: 0.07 }, 0.05);
         if (orb) orbFall(0.3);
-        tl.add(function () { if (h1Split) h1Split.revert(); });
+        // le righe tornano testo normale appena il titolo è entrato (e l'evidenziatore è passato), non alla fine
+        // del tessuto: Google misura il titolo da quel momento (Largest Contentful Paint), prima arrivava a 2,4 s
+        var linesEnd = 1.3 + 0.08 * ((h1Split ? h1Split.lines.length : 1) - 1);
+        tl.add(function () { if (h1Split) h1Split.revert(); }, Math.max(linesEnd, accent ? 1.6 : 0));
         if (deepLink) tl.progress(1);
         heroExit();
         return;

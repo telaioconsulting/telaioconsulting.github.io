@@ -1,0 +1,35 @@
+# Telaio
+
+> Telaio (Telaio Consulting) è un team di consulenza per le piccole e medie imprese italiane: le affianca nella strategia d'impresa e mette l'intelligenza artificiale al lavoro, partendo da un problema reale e portando il primo strumento AI in uso in 4 settimane. Il primo passo è un check-up AI gratuito di 30 minuti in videochiamata con uno dei fondatori.
+
+In breve:
+
+- Per chi: piccole e medie imprese (PMI) di tutta Italia; in inglese anche clienti all'estero. Si lavora in videochiamata.
+- Cosa fa: individua le attività ripetitive che l'AI può togliere dalla settimana (schede prodotto, preventivi, richieste dei clienti, ordini, fatture, email, contratti, numeri della settimana, procedure), sceglie lo strumento giusto, lo mette al lavoro con gli strumenti che l'impresa usa già e resta finché produce risultati. Si occupa anche di consulenza strategica: mercati e clienti, offerta, organizzazione, crescita.
+- Come lavora, in 4 passi: 1) check-up AI gratuito di 30 minuti; 2) un breve questionario e una proposta scritta con tre strade, quella che Telaio sceglierebbe, tempi, costi e limiti; 3) le 4 settimane in cui il primo strumento AI entra in uso; 4) dopo il lancio Telaio resta: controlla i risultati e sistema quello che serve.
+- Un solo referente, dall'analisi alla soluzione che funziona. Non tiene corsi sull'AI e non vende pacchetti uguali per tutti.
+- Costi: dipendono dal problema e dalla soluzione; prima di iniziare arriva una proposta scritta con tempi, costi e limiti. Il check-up è gratuito e non impegna a nulla.
+- Dati: prima di iniziare Telaio dice quali dati usa lo strumento, dove vengono conservati e chi può vederli, con soluzioni coerenti con il GDPR.
+- Fondatori: Dan Alessandro Podasca (AI e prodotto, Politecnico di Milano), Pasquale Silvestre (strategia e sviluppo, Innovation Management, esperienza nel private equity), Rod Lonardo (business e crescita, Università Bocconi, fintech).
+- Contatti: info@telaioconsulting.com. Prenotazione del check-up: https://telaioconsulting.github.io/check-up-ai/
+
+## Pagine principali
+
+- [Home](https://telaioconsulting.github.io/): consulenza AI per PMI, il primo strumento in 4 settimane
+- [Check-up AI](https://telaioconsulting.github.io/check-up-ai/): cosa succede nei 30 minuti gratuiti, cosa ti porti a casa, per chi è, prenotazione
+- [Come lavoriamo](https://telaioconsulting.github.io/come-lavoriamo/): i 4 passi, cosa cambia lavorando con Telaio, cosa trovi sempre per iscritto, cosa non facciamo
+- [Cosa facciamo](https://telaioconsulting.github.io/cosa-facciamo/): le attività da cui partire, divise per area (vendite e negozio online, clienti e assistenza, amministrazione e documenti, direzione)
+- [Consulenza strategica](https://telaioconsulting.github.io/consulenza-strategica/): le scelte di fondo dell'impresa mentre l'AI cambia il mercato
+- [E-commerce su Shopify](https://telaioconsulting.github.io/cosa-facciamo/e-commerce/): automazioni con l'AI per clienti, spedizioni, magazzino e conti; i servizi sono descritti sul sito [Telaio - Ecommerce Automations](https://telaioconsulting.github.io/ecommerce-automations/)
+- [Chi siamo](https://telaioconsulting.github.io/chi-siamo/): i tre fondatori e perché esiste Telaio
+- [Domande frequenti](https://telaioconsulting.github.io/domande-frequenti/): costi, tempi, dati, AI Act, strumenti che usi già
+
+## English
+
+- [Home](https://telaioconsulting.github.io/en/): AI consulting for small and mid-sized businesses, first AI tool in use in 4 weeks
+- [AI check-up](https://telaioconsulting.github.io/en/ai-check-up/): a free 30-minute video call with a Telaio founder, in English or Italian
+
+## Optional
+
+- [Informativa privacy](https://telaioconsulting.github.io/privacy/) · [Privacy notice](https://telaioconsulting.github.io/en/privacy/)
+- [Cookie](https://telaioconsulting.github.io/cookie/) · [Cookies](https://telaioconsulting.github.io/en/cookies/)

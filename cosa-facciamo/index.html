@@ -6,6 +6,10 @@
   <title>Automazione e AI per PMI: da dove partire | Telaio</title>
   <meta name="description" content="Schede prodotto, ordini, preventivi, richieste dei clienti, documenti: le attività che l'AI può togliere dalla tua settimana, con esempi concreti.">
   <meta name="theme-color" content="#090C08">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://telaioconsulting.github.io/cosa-facciamo/">
 
@@ -47,10 +51,68 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://telaioconsulting.github.io/" },
-      { "@type": "ListItem", "position": 2, "name": "Cosa facciamo" }
+    "@graph": [
+      {
+        "@type": "Service",
+        "@id": "https://telaioconsulting.github.io/cosa-facciamo/#service",
+        "name": "Automazione e AI per PMI",
+        "serviceType": "Automazione delle attività aziendali con l'intelligenza artificiale",
+        "description": "Schede prodotto, ordini, preventivi, richieste dei clienti, documenti: le attività che l'AI può togliere dalla settimana di una piccola o media impresa, con gli strumenti che usa già.",
+        "provider": { "@id": "https://telaioconsulting.github.io/#organization" },
+        "areaServed": "IT",
+        "hasOfferCatalog": {
+          "@type": "OfferCatalog",
+          "name": "Da dove partire",
+          "itemListElement": [
+            { "@type": "OfferCatalog", "name": "Vendite e negozio online", "itemListElement": [
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Schede prodotto" } },
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Preventivi" } }
+            ] },
+            { "@type": "OfferCatalog", "name": "Clienti e assistenza", "itemListElement": [
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Richieste dei clienti" } },
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Domande ripetute, anche sul sito" } }
+            ] },
+            { "@type": "OfferCatalog", "name": "Amministrazione e documenti", "itemListElement": [
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Ordini e documenti" } },
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Fatture, email e contratti" } }
+            ] },
+            { "@type": "OfferCatalog", "name": "Direzione", "itemListElement": [
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "I numeri della settimana" } },
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Procedure e archivio" } }
+            ] }
+          ]
+        }
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://telaioconsulting.github.io/cosa-facciamo/#webpage",
+        "url": "https://telaioconsulting.github.io/cosa-facciamo/",
+        "name": "Automazione e AI per PMI: da dove partire | Telaio",
+        "description": "Schede prodotto, ordini, preventivi, richieste dei clienti, documenti: le attività che l'AI può togliere dalla tua settimana, con esempi concreti.",
+        "inLanguage": "it",
+        "isPartOf": { "@id": "https://telaioconsulting.github.io/#website" },
+        "about": { "@id": "https://telaioconsulting.github.io/cosa-facciamo/#service" },
+        "publisher": { "@id": "https://telaioconsulting.github.io/#organization" },
+        "breadcrumb": { "@id": "https://telaioconsulting.github.io/cosa-facciamo/#breadcrumb" },
+        "dateModified": "2026-10-12"
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://telaioconsulting.github.io/#organization",
+        "name": "Telaio",
+        "alternateName": "Telaio Consulting",
+        "url": "https://telaioconsulting.github.io/",
+        "logo": "https://telaioconsulting.github.io/assets/telaio-logo-512.png",
+        "email": "info@telaioconsulting.com"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://telaioconsulting.github.io/cosa-facciamo/#breadcrumb",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://telaioconsulting.github.io/" },
+          { "@type": "ListItem", "position": 2, "name": "Cosa facciamo" }
+        ]
+      }
     ]
   }
   </script>

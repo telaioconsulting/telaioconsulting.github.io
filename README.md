@@ -16,11 +16,20 @@ Public marketing website for **Telaio Consulting**, served via GitHub Pages.
 | AI check-up | `/check-up-ai/` | `/en/ai-check-up/` |
 | How we work | `/come-lavoriamo/` | — |
 | What we do | `/cosa-facciamo/` | — |
+| E-commerce (bridge to the Telaio - Ecommerce Automations site) | `/cosa-facciamo/e-commerce/` | — |
 | Strategy consulting | `/consulenza-strategica/` | — |
 | About us | `/chi-siamo/` | — |
 | FAQ | `/domande-frequenti/` | — |
 | Privacy | `/privacy/` | `/en/privacy/` |
 | Cookies | `/cookie/` | `/en/cookies/` |
+| Not found (served by GitHub Pages for any missing path, `noindex`) | `/404.html` | — |
+
+## Search engines and AI answers
+
+- Every page has a title, description, canonical URL, Open Graph tags and JSON-LD (`WebPage` or a subtype, the `Organization`, the breadcrumb; services, FAQ and people where the page has them). `dateModified` in the JSON-LD and `lastmod` in `sitemap.xml` follow the last content change: update both when a page's text changes.
+- `llms.txt`: a plain summary of Telaio and its key pages for AI assistants. Keep it in line with the site when services, prices or contacts change.
+- `robots.txt` lets every crawler in (AI search crawlers included) and lists both sitemaps (this site and `/ecommerce-automations/`, which lives on the same host).
+- Icons: `favicon.ico`, `favicon.svg`, `apple-touch-icon.png`, `assets/icon-192.png`, `assets/icon-512.png`, `site.webmanifest`.
 
 ## Editing
 
@@ -28,5 +37,9 @@ Change the files and push to `main` — GitHub Pages redeploys automatically in 
 
 ## Custom domain
 
-To use `telaioconsulting.com`: add a `CNAME` file containing the domain, set it in
-repo Settings → Pages, and point the domain's DNS to GitHub Pages.
+To use `telaioconsulting.com`: first point the domain's DNS to GitHub Pages (A/AAAA records for the apex,
+CNAME `www` → `telaioconsulting.github.io`), then add a `CNAME` file containing the domain and set it in
+repo Settings → Pages. Do it in this order: with the `CNAME` file in place GitHub redirects every visit to the
+domain, so the site would be unreachable until the DNS is ready. Then replace `https://telaioconsulting.github.io`
+with the new address everywhere (canonical and hreflang links, Open Graph, JSON-LD, `sitemap.xml`, `robots.txt`,
+`llms.txt`) and resubmit the sitemaps in Search Console and Bing Webmaster Tools.

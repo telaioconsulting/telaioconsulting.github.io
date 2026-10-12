@@ -33,6 +33,10 @@ html:not(.motion) .p-progress { display: none; }
 .motion [data-reveal] { opacity: 0; }
 .motion [data-hero-item] { opacity: 0; }
 .motion .p-h1 { visibility: hidden; }
+/* con l'apertura il titolo c'è già dal primo fotogramma, sotto l'apertura che è opaca: Google misura quando
+   compare il contenuto principale (Largest Contentful Paint) e prima lo trovava solo dopo l'apertura.
+   motion.js nasconde le righe prima che l'apertura si apra e le fa entrare come prima */
+.motion:not(.no-intro) .p-intro ~ main .p-h1 { visibility: visible; }
 /* la testata scende alla fine dell'apertura, solo nelle home */
 .motion .p-intro ~ .top { transform: translateY(-100%); }
 /* apertura già vista in questa visita (classe messa nell'<head>): niente apertura, testata al suo posto */
@@ -755,7 +759,8 @@ html:not(.motion) .p-manifesto-text em {
 /* chiusura della home: una riga con il testo e il pulsante */
 .p-close { border-top: 1px solid var(--line); }
 .p-cta-row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 28px; }
-.p-cta-row h2 { font-size: var(--step-3); line-height: 1.15; letter-spacing: -.025em; max-width: 30ch; }
+/* è un paragrafo, non un titolo: lo stesso testo è già il titolo dell'invito dopo il manifesto */
+.p-cta-row-h { font-family: var(--f-display); font-weight: 700; font-size: var(--step-3); line-height: 1.15; letter-spacing: -.025em; text-wrap: balance; max-width: 30ch; }
 
 /* ---- Piè di pagina con la scritta gigante ---- */
 .p-footer { overflow: hidden; padding-bottom: 0; }
@@ -959,6 +964,9 @@ html:not(.motion) .p-manifesto-text em {
 .p-faq-count b { font-size: clamp(5rem, 11vw, 9.5rem); line-height: .85; color: var(--ink); }
 .p-faq-count span { font-size: clamp(1.3rem, 2.2vw, 1.9rem); color: var(--muted); letter-spacing: -.02em; }
 .p-faq-list .qa .a .arrow-link { margin-top: 10px; }
+/* i gruppi di domande (Domande frequenti): un'etichetta piccola, ma è un titolo vero per Google e per le AI */
+.p-faq-h { display: flex; margin: clamp(36px, 4vw, 52px) 0 16px; line-height: 1.4; }
+.p-faq-h:first-child { margin-top: 0; }
 
 /* ---- Pagine legali: testo leggibile, niente effetti ---- */
 .p-legal { padding-top: clamp(24px, 4vw, 48px); padding-bottom: clamp(72px, 10vw, 128px); }
