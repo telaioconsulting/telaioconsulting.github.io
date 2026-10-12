@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Risparmia tempo sul tuo Shopify con l'AI | Telaio</title>
+  <meta name="description" content="Risposte ai clienti, bolle del corriere, magazzino e conti: l'AI prepara il lavoro, tu decidi. Puoi partire anche da un servizio solo.">
+  <meta name="theme-color" content="#090C08">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://telaioconsulting.github.io/cosa-facciamo/e-commerce/">
+
+  <meta property="og:title" content="Risparmia tempo sul lavoro operativo del tuo Shopify, con l'AI">
+  <meta property="og:description" content="Risposte ai clienti, bolle del corriere, magazzino e conti: l'AI prepara il lavoro, tu decidi. Puoi partire anche da un servizio solo.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://telaioconsulting.github.io/cosa-facciamo/e-commerce/">
+  <meta property="og:locale" content="it_IT">
+  <meta property="og:site_name" content="Telaio">
+  <meta property="og:image" content="https://telaioconsulting.github.io/assets/og-telaio.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Risparmia tempo sul lavoro operativo del tuo Shopify, con l'AI">
+  <meta name="twitter:description" content="Risposte ai clienti, bolle del corriere, magazzino e conti: l'AI prepara il lavoro, tu decidi. Puoi partire anche da un servizio solo.">
+  <meta name="twitter:image" content="https://telaioconsulting.github.io/assets/og-telaio.png">
+
+  <link rel="preload" href="/assets/fonts/bricolage-grotesque-500-700-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/ibm-plex-sans-400-600-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <!-- cambio pagina col filo (motion.css): la richiesta al browser sta in cima, prima di ogni script,
+       altrimenti la pagina nuova può controllarla prima che arrivino i fogli di stile e annullare il passaggio -->
+  <style>@media (prefers-reduced-motion: no-preference) { @view-transition { navigation: auto; types: p-filo; } }</style>
+  <script>
+    (function (r) {
+      r.classList.add("js");
+      // cambio pagina col filo (motion.css): «pagereveal» dice, prima del primo disegno, se la pagina arriva con la transizione
+      addEventListener("pagereveal", function (e) { r.classList.add(e.viewTransition ? "p-filo-arrivo" : "p-rivelata"); });
+      // tema chiaro salvato: subito, prima del primo disegno (niente passaggio dal buio al chiaro)
+      try { if (localStorage.getItem("telaio-theme") === "light") { r.setAttribute("data-theme", "light"); document.querySelector('meta[name="theme-color"]').content = "#F4F5F8"; } } catch (e) {}
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) r.classList.add("motion");
+      // Se gli script non partono, si torna alla pagina statica (tutto visibile).
+      setTimeout(function () {
+        if (!window.__telaio) r.classList.remove("js");
+        if (!window.__motion) r.classList.remove("motion");
+      }, 4000);
+    })(document.documentElement);
+  </script>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/motion.css">
+  <style>
+    /* voce del menu della sezione (questa pagina sta dentro «Cosa facciamo») */
+    .nav a[aria-current="true"] { color: var(--ink); }
+    .nav a[aria-current="true"]::after {
+      content: ""; position: absolute; left: 12px; right: 12px; bottom: 2px; height: 2px;
+      background: var(--brand); border-radius: 2px;
+    }
+    .nav a[aria-current="true"]::after { view-transition-name: p-segno; }
+    @media (max-width: 1120px) { .nav a[aria-current="true"]::after { left: 8px; right: auto; width: 24px; bottom: 6px; } }
+
+    /* lancetta dell'orologio e ritardo della busta nei disegni */
+    .i-hand { transform-box: view-box; transform-origin: 126px 26px; animation: i-tick 4.8s steps(12) infinite; }
+    @keyframes i-tick { to { transform: rotate(360deg); } }
+    .i9-late { animation-delay: .25s; }
+
+    .p-hero-in > .p-hero-cta { margin-top: clamp(28px, 4vh, 44px); }
+
+    .p-pain {
+      margin-top: 20px; max-width: 30ch; padding-left: 14px; border-left: 2px solid var(--brand);
+      font-family: var(--f-display); font-weight: 500; color: var(--ink);
+      font-size: clamp(1.05rem, 1.4vw, 1.2rem); line-height: 1.42;
+    }
+    .p-group-cards { grid-template-columns: 1fr; }
+    .p-ai .ticks { margin-top: clamp(32px, 4vw, 48px); gap: 18px; max-width: 70ch; }
+    .p-ai .ticks li { font-size: var(--step-1); color: var(--ink); }
+    .p-origin-note { margin-top: 24px; max-width: 56ch; }
+    .p-list-note { margin-top: 22px; padding-left: 8px; color: var(--ink); font-size: var(--step-0); line-height: 1.55; }
+
+    @media (max-width: 899px) { .p-pain { max-width: 44ch; } }
+    @media (max-width: 560px) {
+      .p-hero.is-page .p-h1 { font-size: clamp(1.9rem, 8.4vw, 2.3rem); }
+      .p-hero-lede { font-size: 1.05rem; }
+      .p-case { padding: 22px; }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Service",
+        "@id": "https://telaioconsulting.github.io/cosa-facciamo/e-commerce/#service",
+        "name": "Clienti, spedizioni, magazzino e conti per negozi su Shopify",
+        "serviceType": "Automazione e AI per e-commerce",
+        "description": "Per i negozi su Shopify: i messaggi dei clienti in un posto solo, con bozze preparate dall'AI e inviate da una persona; etichette di spedizione pronte e avviso «spedito» solo dopo il ritiro, per i corrieri che si possono collegare; le stesse quantità sul sito e in negozio, se la cassa si può collegare; quanto vendi, quanto spendi e quanto ti resta, calcolato dalle vendite e dai costi veri. Sono quattro servizi separati: si può partire anche da uno solo.",
+        "provider": { "@id": "https://telaioconsulting.github.io/#organization" },
+        "areaServed": "IT"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://telaioconsulting.github.io/" },
+          { "@type": "ListItem", "position": 2, "name": "Cosa facciamo", "item": "https://telaioconsulting.github.io/cosa-facciamo/" },
+          { "@type": "ListItem", "position": 3, "name": "E-commerce" }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body data-page-type="ecommerce">
+  <a class="skip" href="#top">Vai al contenuto</a>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="mk" viewBox="0 0 64 64">
+      <g fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round">
+        <path d="M24 10 V32 M24 48 V54"></path>
+        <path d="M40 10 V16 M40 32 V54"></path>
+        <path d="M10 24 H16 M32 24 H54"></path>
+        <path d="M10 40 H32 M48 40 H54"></path>
+      </g>
+    </symbol>
+  </svg>
+
+  <div class="grain" aria-hidden="true"></div>
+  <div class="p-progress" aria-hidden="true"></div>
+
+  <header class="top">
+    <div class="wrap top-in">
+      <a class="brand" href="/" aria-label="Telaio, home">
+        <svg class="mk" viewBox="0 0 64 64" aria-hidden="true"><use href="#mk"></use></svg>
+        <span class="wm">Telaio</span>
+      </a>
+      <nav class="nav" id="nav" aria-label="Navigazione principale">
+        <a href="/come-lavoriamo/">Come lavoriamo</a>
+        <a href="/cosa-facciamo/" aria-current="true">Cosa facciamo</a>
+        <a href="/consulenza-strategica/">Strategia</a>
+        <a href="/chi-siamo/">Chi siamo</a>
+        <a href="/domande-frequenti/">Domande frequenti</a>
+      </nav>
+      <div class="top-actions">
+        <div class="lang" aria-label="Lingua" data-lang-switch>
+          <a href="/cosa-facciamo/e-commerce/" class="lang-link is-active" aria-current="page">IT</a>
+          <a href="/en/" class="lang-link" hreflang="en">EN</a>
+        </div>
+        <button class="icon-btn" id="themeBtn" type="button" aria-label="Passa al tema chiaro">◐</button>
+        <a class="btn btn-primary btn-sm" href="/check-up-ai/" data-cta="checkup" data-placement="nav">Prenota il check-up AI</a>
+        <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Apri il menu" aria-expanded="false" aria-controls="nav">≡</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <section class="p-hero is-page">
+      <canvas class="p-weave" id="weave" aria-hidden="true"></canvas>
+      <div class="p-hero-veil" aria-hidden="true"></div>
+      <div class="wrap p-hero-in">
+        <nav class="crumbs" aria-label="Percorso" data-hero-item><a href="/">Home</a> <span aria-hidden="true">›</span> <a href="/cosa-facciamo/">Cosa facciamo</a> <span aria-hidden="true">›</span> <span aria-current="page">E-commerce</span></nav>
+        <h1 class="p-h1">Ti facciamo risparmiare il tempo che perdi in lavori che l'AI può fare al posto tuo.</h1>
+        <p class="p-hero-lede" data-hero-item>Per il tuo negozio Shopify: risposte ai clienti, bolle del corriere, magazzino e conti. L'AI e le automazioni preparano il lavoro, tu controlli e decidi. Nessuna risposta parte senza di te. Sono quattro servizi separati: puoi partire anche da uno solo.</p>
+        <div class="p-hero-cta" data-hero-item>
+          <a class="btn btn-primary p-btn-xl" data-magnetic href="/check-up-ai/" data-cta="checkup" data-placement="hero">Prenota il check-up AI <span class="p-arr" aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- I quattro servizi -->
+    <section class="p-sec" style="padding-top:clamp(48px,7vw,96px)">
+      <div class="wrap">
+
+        <div class="p-group">
+          <div class="p-group-side" data-reveal>
+            <h2>Clienti</h2>
+            <p class="p-pain">La casella piena di «dov'è il mio ordine?», e per ogni risposta apri Shopify e il sito del corriere. Ti suona familiare?</p>
+          </div>
+          <div class="p-group-cards">
+            <article class="p-case" data-reveal>
+              <div class="p-case-art" aria-hidden="true">
+                <svg class="ill" viewBox="0 0 160 100">
+                  <rect x="8" y="10" width="28" height="20" rx="3"/>
+                  <path d="M8 13l14 9 14-9"/>
+                  <rect class="soft" x="8" y="40" width="28" height="20" rx="3"/>
+                  <path class="soft" d="M13 47h18M13 53h10"/>
+                  <rect class="soft" x="8" y="70" width="28" height="20" rx="9"/>
+                  <path class="i1-flow" d="M40 20c8 0 8 30 14 30"/>
+                  <path class="i1-flow" d="M40 50h14"/>
+                  <path class="i1-flow" d="M40 80c8 0 8-30 14-30"/>
+                  <g class="i8-f"><rect x="58" y="32" width="30" height="9" rx="3"/></g>
+                  <g class="i8-f b"><rect x="58" y="46" width="30" height="9" rx="3"/></g>
+                  <g class="i8-f c"><rect x="58" y="60" width="30" height="9" rx="3"/></g>
+                  <g class="i3-reply">
+                    <rect class="i3-box" x="96" y="16" width="58" height="38" rx="10"/>
+                    <circle class="i3-dot" cx="115" cy="35" r="2.6"/>
+                    <circle class="i3-dot b" cx="125" cy="35" r="2.6"/>
+                    <circle class="i3-dot c" cx="135" cy="35" r="2.6"/>
+                    <path class="i3-txt" d="M106 29h38M106 41h24"/>
+                  </g>
+                  <circle cx="122" cy="70" r="5"/>
+                  <path d="M112 88c0-6 4.5-10 10-10s10 4 10 10"/>
+                  <g class="i1-ok"><circle class="fillb" cx="145" cy="80" r="7"/><path d="M141.8 80l2.2 2.2 4.2-4.2" stroke="#fff"/></g>
+                </svg>
+              </div>
+              <h3>Rispondi ai clienti con la bozza già pronta</h3>
+              <p>Se la tua casella email si può collegare, i messaggi e i moduli del sito arrivano in un posto solo, con l'ordine del cliente accanto. Se usi la chat del sito, nello stesso posto vedi anche quando un cliente ti scrive in chat. A quei messaggi rispondi dalla chat, come oggi. Offerte commerciali, spam e notifiche automatiche vengono messe da parte. Un messaggio che il sistema non capisce resta comunque lì, da leggere.</p>
+              <p>L'AI smista le richieste e prepara la bozza con i dati veri: l'ordine, lo stato della spedizione quando c'è, se il prodotto c'è. Prima che tu la legga, il sistema controlla che numeri, date e link corrispondano ai tuoi ordini e al tuo catalogo. Poi la correggi e la mandi tu: nessuna risposta parte da sola.</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="p-group">
+          <div class="p-group-side" data-reveal>
+            <h2>Spedizioni</h2>
+            <p class="p-pain">Inserisci ancora a mano i dati dei clienti sul portale del corriere?</p>
+          </div>
+          <div class="p-group-cards">
+            <article class="p-case" data-reveal>
+              <div class="p-case-art" aria-hidden="true">
+                <svg class="ill" viewBox="0 0 160 100">
+                  <rect x="8" y="12" width="32" height="40" rx="3"/>
+                  <path class="soft" d="M14 20v12M17.5 20v12M21 20v12M25 20v12M28.5 20v12M32 20v12"/>
+                  <path class="soft" d="M14 40h20M14 46h13"/>
+                  <rect x="52" y="56" width="26" height="24" rx="2"/>
+                  <path d="M52 64h26M65 56v8"/>
+                  <path class="soft" d="M12 92h140"/>
+                  <circle class="i2-run" cx="40" cy="92" r="3"/>
+                  <rect x="104" y="58" width="28" height="22" rx="2"/>
+                  <path d="M132 64h9l7 8v8h-16z"/>
+                  <circle cx="113" cy="84" r="4"/>
+                  <circle cx="141" cy="84" r="4"/>
+                  <g class="i1-ok i9-late"><rect class="fillb" x="112" y="14" width="36" height="24" rx="4"/><path d="M112 18l18 11 18-11" stroke="#fff"/></g>
+                </svg>
+              </div>
+              <h3>Automatizza le bolle del corriere</h3>
+              <p>Se il tuo corriere si può collegare, gli ordini da spedire arrivano sul suo portale senza che tu copi un indirizzo. Bolle ed etichette le trovi pronte da stampare. L'ordine risulta spedito, e il cliente riceve l'avviso con il tracciamento, solo quando il corriere ha davvero ritirato il pacco. Gli ordini da ritirare in negozio restano fuori: li gestisci tu.</p>
+              <p>Se usi anche il servizio per i clienti, lo stato del pacco entra nelle bozze.</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="p-group">
+          <div class="p-group-side" data-reveal>
+            <h2>Magazzino</h2>
+            <p class="p-pain">Tracci ancora il tuo inventario su fogli Excel?</p>
+          </div>
+          <div class="p-group-cards">
+            <article class="p-case" data-reveal>
+              <div class="p-case-art" aria-hidden="true">
+                <svg class="ill" viewBox="0 0 160 100">
+                  <rect class="soft" x="8" y="12" width="38" height="28" rx="4"/>
+                  <path class="soft" d="M15 22h18M15 30h11"/>
+                  <rect class="soft" x="8" y="60" width="38" height="28" rx="4"/>
+                  <path class="soft" d="M8 68h38M15 77h20"/>
+                  <path class="i1-flow" d="M50 26c10 0 10 20 18 20"/>
+                  <path class="i1-flow" d="M50 74c10 0 10-20 18-20"/>
+                  <rect x="70" y="34" width="32" height="32" rx="4"/>
+                  <path d="M70 45h32M86 34v11"/>
+                  <g class="i1-ok"><circle class="fillb" cx="101" cy="65" r="7"/><path d="M97.8 65l2.2 2.2 4.2-4.2" stroke="#fff"/></g>
+                  <path class="i1-flow" d="M108 50h10"/>
+                  <path d="M116 45l5 5-5 5"/>
+                  <rect x="126" y="20" width="28" height="60" rx="5"/>
+                  <path class="i1-l" d="M132 33h16"/>
+                  <path class="i1-l b" d="M132 43h12"/>
+                  <path class="i1-l c" d="M132 53h16"/>
+                  <rect class="fillb" x="132" y="63" width="10" height="7" rx="2"/>
+                </svg>
+              </div>
+              <h3>Aggiorna il magazzino senza fogli Excel</h3>
+              <p>Ogni vendita sul sito scala la merce dal magazzino, e il sito mostra solo quella che hai davvero. Se la tua cassa si può collegare, scalano anche le vendite in negozio. In quel caso ogni prodotto deve avere lo stesso codice in cassa e sul sito: se i codici non coincidono, i numeri non tornano.</p>
+              <p>Gli ordini ai tuoi fornitori li registri con una foto, un messaggio vocale o una email. L'AI li legge e tu controlli. Poi il magazzino si aggiorna, e con lui le quantità su Shopify.</p>
+              <p>La lista di cosa riordinare è sempre pronta, e decidi tu cosa ordinare. Se un numero non torna, il sistema lo segnala.</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="p-group">
+          <div class="p-group-side" data-reveal>
+            <h2>Conti</h2>
+            <p class="p-pain">Sai quali prodotti ti fanno guadagnare, o lo scopri solo dal commercialista?</p>
+          </div>
+          <div class="p-group-cards">
+            <article class="p-case" data-reveal>
+              <div class="p-case-art" aria-hidden="true">
+                <svg class="ill" viewBox="0 0 160 100">
+                  <rect x="12" y="10" width="76" height="80" rx="5"/>
+                  <path class="soft" d="M20 22h34"/>
+                  <path class="i4-r" d="M20 36h40"/><path class="soft" d="M68 36h12"/>
+                  <path class="i4-r b" d="M20 47h32"/><path class="soft" d="M68 47h12"/>
+                  <path class="i4-r c" d="M20 58h44"/><path class="soft" d="M68 58h12"/>
+                  <path class="soft" d="M20 68h60"/>
+                  <rect class="i4-total fillb" x="44" y="74" width="36" height="8" rx="2"/>
+                  <circle cx="126" cy="26" r="13"/>
+                  <path class="soft" d="M126 26h6"/>
+                  <path class="i-hand" d="M126 26v-8"/>
+                  <path d="M116 60v-6a10 10 0 0 1 20 0v6"/>
+                  <rect x="110" y="60" width="32" height="26" rx="4"/>
+                  <circle class="fillb" cx="126" cy="72" r="3.5"/>
+                  <path d="M126 75v5"/>
+                </svg>
+              </div>
+              <h3>Scopri quanto guadagni, mese per mese</h3>
+              <p>Il conto economico ti dice quanto vendi, quanto spendi e quanto ti resta. Si calcola dalle vendite e dai costi veri. Le vendite del sito entrano da sole. Quelle del negozio entrano se la tua cassa si può collegare. Il costo della merce si calcola da quanto l'hai pagata, se registri i tuoi acquisti. Le spese entrano quando carichi l'estratto conto della tua banca. Non tutti si leggono allo stesso modo: nel check-up guardiamo insieme se il tuo va bene. Se il sistema non sa dove mettere una spesa, la sistemi tu.</p>
+              <p>Lo calcola il sistema, non l'AI. Tocchi un numero e vedi da dove viene: ordini, spese e, con la cassa collegata, scontrini. Vedi anche quanto ti fa guadagnare ogni prodotto venduto sul sito. Il sistema verifica da solo che i conti tornino, e un mese chiuso non cambia senza un motivo scritto. Il mese lo chiudi con il tuo commercialista, con i totali già pronti.</p>
+            </article>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- L'AI prepara. Tu decidi. -->
+    <section class="p-sec p-ai">
+      <div class="wrap">
+        <header class="p-head" style="margin-bottom:clamp(24px,3vw,36px)">
+          <h2 class="p-h2" data-split>L'AI prepara. Tu decidi.</h2>
+        </header>
+        <p class="p-statement" data-scrub>L'AI lavora solo in due punti: le bozze per i clienti e la lettura degli ordini ai fornitori. I calcoli di magazzino, i conti e le spedizioni seguono regole fisse, senza AI.</p>
+        <ul class="ticks" data-reveal>
+          <li>Nessuna risposta parte da sola: la manda una persona, con un clic e una conferma.</li>
+          <li>Quello che manca nei dati, la bozza lo segna «da verificare». Non lo inventa.</li>
+          <li>Quando il sistema non è sicuro, si ferma. Un prodotto che non riconosce non lo tocca. Se il corriere manda un aggiornamento che il sistema non conosce, non parte nessun avviso al cliente: lo guarda una persona.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Da dove viene -->
+    <section class="p-sec">
+      <div class="wrap">
+        <header class="p-head" style="margin-bottom:clamp(24px,3vw,36px)">
+          <h2 class="p-h2" data-split>Da dove viene</h2>
+        </header>
+        <p class="p-statement" data-scrub>Questi servizi sono nati nel negozio di moda di uno dei fondatori, che vende su Shopify e in negozio.</p>
+        <p class="lede p-origin-note" data-reveal>Per questo possiamo dirti cosa fanno, e anche cosa non fanno. Per il tuo negozio, quelli che scegli li costruiamo intorno agli strumenti che usi già, se si possono collegare.</p>
+        <p data-reveal style="margin-top:18px"><a class="arrow-link" href="/chi-siamo/">Chi siamo →</a></p>
+      </div>
+    </section>
+
+    <!-- Per chi è -->
+    <section class="p-sec">
+      <div class="wrap p-lists">
+        <div class="p-list yes" data-reveal>
+          <h2>È per te se…</h2>
+          <ul>
+            <li>vendi prodotti tuoi su Shopify, per esempio moda, bellezza, casa o cibo;</li>
+            <li>hai solo il sito, o anche un negozio fisico con la sua cassa, ovunque in Italia;</li>
+            <li>ricevi ogni giorno da qualche ordine a qualche decina;</li>
+            <li>il retrobottega ti porta via ore: conte del magazzino, fogli di calcolo, risposte, etichette.</li>
+          </ul>
+        </div>
+        <div class="p-list no" data-reveal>
+          <h2>Non è per te se…</h2>
+          <ul>
+            <li>il tuo negozio non è su Shopify;</li>
+            <li>vendi soprattutto su siti come Amazon o Zalando, più che sul tuo;</li>
+            <li>cerchi un'AI che risponda ai clienti da sola.</li>
+          </ul>
+          <p class="p-list-note"><b>Cosa non fa:</b> non emette fatture elettroniche e non prende il posto del tuo commercialista.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Domande frequenti -->
+    <section id="faq" class="p-sec">
+      <div class="wrap p-split">
+        <div class="p-split-side">
+          <h2 class="p-h2" data-split>Domande frequenti</h2>
+          <p data-reveal><a class="arrow-link" href="/domande-frequenti/">Tutte le domande →</a></p>
+          <p data-reveal><a class="arrow-link" href="/cosa-facciamo/">Le altre attività da cui partire →</a></p>
+        </div>
+        <div>
+          <details class="qa" data-reveal data-question-id="ecommerce-data"><summary>Dove stanno i miei dati?</summary><div class="a"><p>Nei tuoi account, intestati al tuo negozio: è lì che costruiamo ogni servizio, compreso quello di AI che legge i messaggi e gli ordini ai fornitori.</p></div></details>
+          <details class="qa" data-reveal data-question-id="ecommerce-standalone"><summary>Devo prendere tutti e quattro i servizi?</summary><div class="a"><p>No. Sono servizi separati. Puoi partire da uno solo, quello che ti fa perdere più tempo, e aggiungere gli altri dopo, se ti servono.</p></div></details>
+          <details class="qa" data-reveal data-question-id="ecommerce-online-only"><summary>Funziona anche se vendo solo online?</summary><div class="a"><p>Sì. Ognuno dei quattro servizi va bene anche senza un negozio fisico. La cassa entra in gioco solo se ce l'hai.</p></div></details>
+          <details class="qa" data-reveal data-question-id="ecommerce-tools"><summary>Ho già delle app. Devo cambiarle?</summary><div class="a"><p>Non per forza. Si parte da quello che usi: Shopify, la casella email, il corriere, la cassa. Se un'app fa già bene il suo lavoro, resta. Casella, corriere e cassa li guardiamo insieme nel check-up: non tutti si possono collegare, e non tutti allo stesso modo.</p></div></details>
+          <details class="qa" data-reveal data-question-id="ecommerce-ai-mistakes"><summary>E se l'AI sbaglia?</summary><div class="a"><p>Può succedere. Per questo non risponde mai da sola. Ogni bozza parte dai dati veri, e il sistema controlla numeri, date e link prima che tu la legga. Anche gli ordini ai fornitori letti dall'AI li controlli tu, prima che il magazzino cambi. Decidi sempre tu.</p></div></details>
+          <details class="qa" data-reveal data-question-id="ecommerce-cost"><summary>Quanto costa?</summary><div class="a"><p>Dipende da quali servizi scegli e da cosa usi già. Prima di iniziare ricevi una proposta scritta con costi e limiti. Il check-up è gratuito.</p></div></details>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chiusura -->
+    <section class="p-final">
+      <div class="p-final-glow" aria-hidden="true"></div>
+      <div class="wrap">
+        <h2 class="p-final-h" data-split>Quale lavoro ti fa perdere più tempo? Partiamo da quello: parliamone nel check-up.</h2>
+        <a class="p-orb" data-magnetic href="/check-up-ai/" data-cta="checkup" data-placement="ecommerce" aria-label="Prenota il check-up AI">
+          <svg class="p-orb-ring" viewBox="0 0 200 200" aria-hidden="true">
+            <defs><path id="orbPath" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs>
+            <text><textPath href="#orbPath">Prenota il check-up AI · Gratuito · Da remoto · </textPath></text>
+          </svg>
+          <span class="p-orb-arr" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <div class="mobile-bar"><a class="btn btn-primary btn-block" href="/check-up-ai/" data-cta="checkup" data-placement="mobile_bar">Prenota il check-up AI</a></div>
+
+  <footer class="p-footer">
+    <div class="wrap foot-in foot-grid">
+      <div class="foot-col">
+        <div class="foot-brand">
+          <svg class="mk" viewBox="0 0 64 64" aria-hidden="true"><use href="#mk"></use></svg>
+          <span class="wm">Telaio</span>
+        </div>
+        <span class="foot-tag">Dall'AI al valore.</span>
+        <span>Consulenza strategica e AI per piccole e medie imprese.</span>
+      </div>
+      <nav class="foot-col" aria-label="Pagine">
+        <a href="/come-lavoriamo/">Come lavoriamo</a>
+        <a href="/cosa-facciamo/">Cosa facciamo</a>
+        <a href="/consulenza-strategica/">Consulenza strategica</a>
+        <a href="/chi-siamo/">Chi siamo</a>
+        <a href="/domande-frequenti/">Domande frequenti</a>
+        <a href="/check-up-ai/">Check-up AI</a>
+      </nav>
+      <div class="foot-col">
+        <a href="mailto:info@telaioconsulting.com" data-email-link>info@telaioconsulting.com</a>
+        <a href="/privacy/">Informativa privacy</a>
+        <a href="/cookie/">Cookie</a>
+        <span>© 2026 Telaio</span>
+      </div>
+    </div>
+    <div class="p-bigword" aria-hidden="true"><span>T</span><span>e</span><span>l</span><span>a</span><span>i</span><span>o</span></div>
+  </footer>
+
+  <!-- Librerie di animazione, ospitate nel sito (vedi assets/vendor/README.md) -->
+  <script src="/assets/vendor/gsap.min.js"></script>
+  <script src="/assets/vendor/ScrollTrigger.min.js"></script>
+  <script src="/assets/vendor/SplitText.min.js"></script>
+  <script src="/assets/vendor/lenis.min.js"></script>
+  <script src="/script.js"></script>
+  <script src="/motion.js"></script>
+</body>
+</html>
