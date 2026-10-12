@@ -10,4 +10,7 @@ Allow: /
 User-agent: Claude-SearchBot
 Allow: /
 
+# Riassunto del sito per le AI: https://telaioconsulting.github.io/llms.txt
 Sitemap: https://telaioconsulting.github.io/sitemap.xml
+# il sito Telaio - Ecommerce Automations sta su questo stesso indirizzo: i motori leggono solo questo robots.txt
+Sitemap: https://telaioconsulting.github.io/ecommerce-automations/sitemap.xml
