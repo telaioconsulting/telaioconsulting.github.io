@@ -127,7 +127,14 @@ html:not(.motion) .p-progress { display: none; }
 /* home: al posto del pulsante la pallina che rimbalza (.p-orb, più sotto); accanto le tre voci in colonna, ognuna col suo rombo */
 .p-hero-orb { flex-direction: row; align-items: center; gap: clamp(20px, 2.4vw, 32px); }
 .p-hero-orb .p-orb { margin-top: 0; width: clamp(132px, 11vw, 164px); flex: none; }
-.p-hero-orb .p-meta { flex-direction: column; gap: 10px; }
+/* le voci stanno sopra la parte chiara del tessuto: un fondo vetro come l'etichetta in alto, e testo più chiaro */
+.p-hero-orb .p-meta {
+  flex-direction: column; gap: 10px; padding: 14px 18px;
+  border: 1px solid color-mix(in srgb, var(--weft) 22%, transparent); border-radius: var(--r-md);
+  background: color-mix(in srgb, var(--ground) 78%, transparent);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  color: color-mix(in srgb, var(--ink) 86%, var(--muted));
+}
 .p-hero-orb .p-meta li::before { content: ""; width: 4px; height: 4px; background: var(--brand); transform: rotate(45deg); }
 
 .p-btn-xl { padding: 18px 26px; font-size: 1.04rem; gap: 12px; }
