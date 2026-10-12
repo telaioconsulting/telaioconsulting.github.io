@@ -124,8 +124,14 @@
         <h1 class="p-h1">Your first AI tool, at work in your business in <span class="p-accent">4&nbsp;weeks</span>.</h1>
         <div class="p-hero-row">
           <p class="p-tagline" data-hero-item>We start from a real problem, choose the right tool and put it to work with your team. Then we stay until it delivers.</p>
-          <div class="p-hero-cta" data-hero-item>
-            <a class="btn btn-primary p-btn-xl" data-magnetic href="/en/ai-check-up/" data-cta="checkup" data-placement="hero">Book your AI check-up <span class="p-arr" aria-hidden="true">→</span></a>
+          <div class="p-hero-cta p-hero-orb" data-hero-item>
+            <a class="p-orb" data-magnetic href="/en/ai-check-up/" data-cta="checkup" data-placement="hero" aria-label="Book your AI check-up">
+              <svg class="p-orb-ring" viewBox="0 0 200 200" aria-hidden="true">
+                <defs><path id="orbPath" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs>
+                <text><textPath href="#orbPath">Book your AI check-up · 30 minutes · Free · </textPath></text>
+              </svg>
+              <span class="p-orb-arr" aria-hidden="true">→</span>
+            </a>
             <ul class="p-meta">
               <li>30-minute video call</li>
               <li>Free</li>
@@ -178,27 +184,6 @@
               <p class="p-src">Source: <a href="https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Use_of_artificial_intelligence_in_enterprises" target="_blank" rel="noopener">Eurostat, 2025</a></p>
             </div>
           </article>
-
-          <article class="p-stat">
-            <div class="p-stat-num"><span data-count="17">17</span><small>% vs 55%</small></div>
-            <div class="p-stat-body">
-              <div class="p-viz p-viz-rows" aria-hidden="true">
-                <div class="p-hrow"><span>Large (250+)</span><i><em style="--v:.55"></em></i><b>55%</b></div>
-                <div class="p-hrow is-hi"><span>Small (10–49)</span><i><em style="--v:.17"></em></i><b>17%</b></div>
-              </div>
-              <p>AI use in small EU firms (10–49 employees) against large ones (250+).</p>
-              <p class="p-src">Source: <a href="https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Use_of_artificial_intelligence_in_enterprises" target="_blank" rel="noopener">Eurostat, 2025</a></p>
-            </div>
-          </article>
-
-          <article class="p-stat">
-            <div class="p-stat-num"><span data-count="7">7</span><small>in 10</small></div>
-            <div class="p-stat-body">
-              <div class="p-viz p-viz-dots is-ten" aria-hidden="true"><i class="is-hi"></i><i class="is-hi"></i><i class="is-hi"></i><i class="is-hi"></i><i class="is-hi"></i><i class="is-hi"></i><i class="is-hi"></i><i></i><i></i><i></i></div>
-              <p>EU businesses that considered AI but didn't adopt it say they lack the expertise.</p>
-              <p class="p-src">Source: <a href="https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Use_of_artificial_intelligence_in_enterprises" target="_blank" rel="noopener">Eurostat, 2025</a></p>
-            </div>
-          </article>
         </div>
       </div>
     </section>
@@ -207,10 +192,16 @@
     <section class="p-sec p-manifesto">
       <div class="wrap">
         <p class="p-manifesto-text">You don't need a big project to start. You need one <em>concrete problem</em>, and someone who stays with you until it's <em>solved</em>.</p>
-        <div class="p-manifesto-cta" data-reveal>
-          <h3>See how AI is changing your industry, and what you can do about it, starting now.</h3>
-          <a class="btn btn-primary p-btn-xl" data-magnetic href="/en/ai-check-up/" data-cta="checkup" data-placement="stats">Book your AI check-up <span class="p-arr" aria-hidden="true">→</span></a>
-        </div>
+      </div>
+    </section>
+
+    <!-- Invitation right after the manifesto: big title and button (the round button is in the hero) -->
+    <section class="p-final">
+      <div class="p-final-glow" aria-hidden="true"></div>
+      <div class="wrap">
+        <h2 class="p-final-h" data-split>See how AI is changing your industry, and what you can do about it, starting now.</h2>
+        <a class="btn btn-primary p-btn-xl p-final-btn" data-magnetic href="/en/ai-check-up/" data-cta="checkup" data-placement="stats">Book your AI check-up <span class="p-arr" aria-hidden="true">→</span></a>
+        <p class="p-final-sub">30 minutes · Free · With one of the founders</p>
       </div>
     </section>
 
@@ -490,19 +481,13 @@
       </div>
     </section>
 
-    <!-- 9 · CLOSE -->
-    <section class="p-final">
-      <div class="p-final-glow" aria-hidden="true"></div>
+    <!-- 9 · CLOSE: text and button -->
+    <section class="p-sec p-close">
       <div class="wrap">
-        <h2 class="p-final-h" data-split>See how AI is changing your industry, and what you can do about it, starting now.</h2>
-        <a class="p-orb" data-magnetic href="/en/ai-check-up/" data-cta="checkup" data-placement="final" aria-label="Book your AI check-up">
-          <svg class="p-orb-ring" viewBox="0 0 200 200" aria-hidden="true">
-            <defs><path id="orbPath" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs>
-            <text><textPath href="#orbPath">Book your AI check-up · 30 minutes · Free · </textPath></text>
-          </svg>
-          <span class="p-orb-arr" aria-hidden="true">→</span>
-        </a>
-        <p class="p-final-sub">30 minutes · Free · With one of the founders</p>
+        <div class="p-cta-row" data-reveal>
+          <h2>See how AI is changing your industry, and what you can do about it, starting now.</h2>
+          <a class="btn btn-primary p-btn-xl" data-magnetic href="/en/ai-check-up/" data-cta="checkup" data-placement="final">Book your AI check-up <span class="p-arr" aria-hidden="true">→</span></a>
+        </div>
       </div>
     </section>
   </main>

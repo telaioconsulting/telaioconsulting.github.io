@@ -124,6 +124,18 @@ html:not(.motion) .p-progress { display: none; }
 .p-meta { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 18px; font-family: var(--f-mono); font-size: .8125rem; color: var(--muted); }
 .p-meta li { display: inline-flex; align-items: center; gap: 8px; }
 .p-meta li + li::before { content: ""; width: 4px; height: 4px; background: var(--brand); transform: rotate(45deg); }
+/* home: al posto del pulsante la pallina che rimbalza (.p-orb, più sotto); accanto le tre voci in colonna, ognuna col suo rombo */
+.p-hero-orb { flex-direction: row; align-items: center; gap: clamp(20px, 2.4vw, 32px); }
+.p-hero-orb .p-orb { margin-top: 0; width: clamp(132px, 11vw, 164px); flex: none; }
+/* le voci stanno sopra la parte chiara del tessuto: un fondo vetro come l'etichetta in alto, e testo più chiaro */
+.p-hero-orb .p-meta {
+  flex-direction: column; gap: 10px; padding: 14px 18px;
+  border: 1px solid color-mix(in srgb, var(--weft) 22%, transparent); border-radius: var(--r-md);
+  background: color-mix(in srgb, var(--ground) 78%, transparent);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  color: color-mix(in srgb, var(--ink) 86%, var(--muted));
+}
+.p-hero-orb .p-meta li::before { content: ""; width: 4px; height: 4px; background: var(--brand); transform: rotate(45deg); }
 
 .p-btn-xl { padding: 18px 26px; font-size: 1.04rem; gap: 12px; }
 /* sui pulsanti magnetici la posizione la muove GSAP: una transizione CSS su transform la rallentava a ogni passo */
@@ -275,11 +287,6 @@ html:not(.motion) .p-manifesto-text em {
   background: linear-gradient(var(--brand), var(--brand)) 0 92% / 100% .2em no-repeat;
   -webkit-box-decoration-break: clone; box-decoration-break: clone;
 }
-.p-manifesto-cta {
-  margin-top: clamp(56px, 8vw, 104px); padding-top: 36px; border-top: 1px solid var(--line);
-  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 28px;
-}
-.p-manifesto-cta h3 { font-size: var(--step-3); max-width: 30ch; }
 
 /* ---- Casi (scorrimento orizzontale) ---- */
 .p-cases { position: relative; padding-block: clamp(80px, 10vw, 140px); border-top: 1px solid var(--line); }
@@ -580,19 +587,19 @@ html:not(.motion) .p-manifesto-text em {
 .p-why h3 { font-size: var(--step-2); letter-spacing: -.02em; }
 .p-why p { color: var(--muted); line-height: 1.55; }
 
-/* Perché Telaio nella home: non tre card uguali. Il primo motivo (le 4 settimane) è grande, a sinistra,
-   con la trama del marchio in alto; gli altri due accanto. Qui i numeri erano solo decorazione: via. */
+/* Perché Telaio (Come lavoriamo; #why nella home inglese): non tre card uguali. Il primo motivo (le 4 settimane)
+   è grande, a sinistra; gli altri due accanto. Tutte e tre hanno la stessa luce blu e la stessa trama del marchio
+   in alto (prima solo la prima, e le altre sembravano spente). Fondo appena più chiaro della pagina, testo quasi
+   bianco: sul telefono la sezione era troppo scura. I numeri erano solo decorazione: via. */
 :is(#perche, #why) .p-why-grid { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
 :is(#perche, #why) .p-why-n { display: none; }
-:is(#perche, #why) .p-why { min-height: 0; padding-top: clamp(26px, 3vw, 38px); justify-content: flex-end; }
-:is(#perche, #why) .p-why:first-child {
-  grid-row: span 2; min-height: 420px;
-  background: radial-gradient(90% 70% at 85% 0%, color-mix(in srgb, var(--brand) 42%, transparent), transparent 70%), var(--surface);
+:is(#perche, #why) .p-why {
+  min-height: 0; padding-top: clamp(26px, 3vw, 38px); justify-content: flex-end;
+  border-color: color-mix(in srgb, var(--brand) 30%, var(--line));
+  background: radial-gradient(90% 75% at 85% 0%, color-mix(in srgb, var(--brand) 36%, transparent), transparent 72%),
+              color-mix(in srgb, var(--brand) 7%, var(--panel));
 }
-:root[data-theme="light"] :is(#perche, #why) .p-why:first-child {
-  background: radial-gradient(90% 70% at 85% 0%, color-mix(in srgb, var(--brand) 16%, transparent), transparent 70%), var(--surface);
-}
-:is(#perche, #why) .p-why:first-child::after {
+:is(#perche, #why) .p-why::after {
   content: ""; position: absolute; inset: -30% -30% 40%; z-index: 0; pointer-events: none;
   background-image:
     repeating-linear-gradient(90deg, color-mix(in srgb, var(--weft) 22%, transparent) 0 1px, transparent 1px 16px),
@@ -601,13 +608,27 @@ html:not(.motion) .p-manifesto-text em {
   -webkit-mask-image: linear-gradient(180deg, #000 20%, transparent 80%);
           mask-image: linear-gradient(180deg, #000 20%, transparent 80%);
 }
+:is(#perche, #why) .p-why:not(:first-child) { min-height: 200px; }
+:is(#perche, #why) .p-why p { color: color-mix(in srgb, var(--ink) 78%, var(--muted)); }
+:is(#perche, #why) .p-why:first-child { grid-row: span 2; min-height: 420px; }
 :is(#perche, #why) .p-why:first-child h3 { font-size: clamp(2rem, 3.6vw, 3.2rem); letter-spacing: -.035em; line-height: 1.02; max-width: 14ch; }
 :is(#perche, #why) .p-why:first-child p { font-size: var(--step-1); max-width: 34ch; }
+/* tema chiaro: card bianche con un velo blu leggero, bordo e ombra netti (sul fondo grigio chiaro sparivano) */
+:root[data-theme="light"] :is(#perche, #why) .p-why {
+  border-color: color-mix(in srgb, var(--brand) 22%, var(--line));
+  background: radial-gradient(90% 75% at 85% 0%, color-mix(in srgb, var(--brand) 13%, transparent), transparent 72%), var(--surface);
+  box-shadow: 0 1px 2px rgba(9, 12, 8, .06), 0 18px 40px -28px rgba(19, 7, 237, .35);
+}
+:root[data-theme="light"] :is(#perche, #why) .p-why::after {
+  background-image:
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--brand) 16%, transparent) 0 1px, transparent 1px 16px),
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--brand) 9%, transparent) 0 1px, transparent 1px 16px);
+}
 
 .p-values { list-style: none; margin: clamp(48px, 6vw, 88px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); }
 .p-values li { padding: 26px 22px 0 0; display: flex; flex-direction: column; gap: 6px; }
 .p-values b { font-family: var(--f-display); font-size: clamp(1.5rem, 2.5vw, 2.2rem); letter-spacing: -.035em; line-height: 1.05; }
-.p-values span { color: var(--muted); font-size: var(--step--1); line-height: 1.5; }
+.p-values span { color: var(--muted); font-size: .9rem; line-height: 1.5; }
 
 /* ---- Chi siamo ---- */
 .p-team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
@@ -631,7 +652,7 @@ html:not(.motion) .p-manifesto-text em {
 @media (hover: hover) { .p-founder:hover .p-founder-art b { transform: scale(1.08); } }
 .p-founder h3 { font-size: var(--step-2); letter-spacing: -.02em; padding-inline: 8px; }
 .p-founder .role { font-family: var(--f-mono); font-size: 12px; letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--weft); padding-inline: 8px; }
-.p-founder .bio { color: var(--muted); font-size: var(--step--1); line-height: 1.55; padding-inline: 8px; margin-top: 4px; }
+.p-founder .bio { color: var(--muted); font-size: .9rem; line-height: 1.55; padding-inline: 8px; margin-top: 4px; }
 
 /* ---- Check-up: blocco blu ---- */
 .p-checkup { position: relative; isolation: isolate; color: #fff; padding-block: clamp(110px, 14vw, 200px); }
@@ -701,6 +722,9 @@ html:not(.motion) .p-manifesto-text em {
     radial-gradient(closest-side, color-mix(in srgb, var(--brand) 10%, transparent), transparent);
 }
 .p-final .wrap { position: relative; }
+/* nella home l'invito viene subito dopo il manifesto: ne è il seguito, niente riga e meno spazio sopra */
+.p-manifesto + .p-final { border-top: 0; padding-top: clamp(24px, 4vw, 56px); }
+.p-final-btn { margin-top: clamp(40px, 5vw, 60px); }
 .p-final-h { margin: 0 auto; max-width: 19ch; font-size: clamp(2.3rem, 5.6vw, 5.2rem); line-height: 1; letter-spacing: -.045em; }
 .p-orb {
   position: relative; display: inline-grid; place-items: center; margin-top: clamp(44px, 6vw, 76px);
@@ -715,7 +739,23 @@ html:not(.motion) .p-manifesto-text em {
 .p-orb-ring text { font-family: var(--f-mono); font-size: 12.4px; letter-spacing: .19em; text-transform: uppercase; fill: #fff; }
 .p-orb-arr { font-family: var(--f-display); font-weight: 700; font-size: 2.6rem; line-height: 1; transition: transform .5s var(--ease); }
 @media (hover: hover) { .p-orb:hover .p-orb-arr { transform: rotate(-45deg) scale(1.1); } }
+/* la pallina saltellante (hero della home, chiusura di Come lavoriamo): dopo l'entrata (motion.js) ogni tanto un saltello e un rimbalzino.
+   Usa «translate», così non tocca lo spostamento magnetico (x/y di GSAP); sotto il mouse o il dito si ferma */
+.motion .p-orb.is-hop { animation: p-hop 3.8s 1.2s infinite; }
+.p-orb.is-hop:is(:hover, :focus-visible, :active) { animation-play-state: paused; }
+@keyframes p-hop {
+  0%, 64% { translate: 0 0; animation-timing-function: cubic-bezier(.2, .8, .3, 1); }
+  72% { translate: 0 -22px; animation-timing-function: cubic-bezier(.6, 0, .9, .4); }
+  80% { translate: 0 0; animation-timing-function: cubic-bezier(.2, .8, .3, 1); }
+  85% { translate: 0 -7px; animation-timing-function: cubic-bezier(.6, 0, .9, .4); }
+  90%, 100% { translate: 0 0; }
+}
 .p-final-sub { margin-top: 28px; font-family: var(--f-mono); font-size: var(--step--1); color: var(--muted); }
+
+/* chiusura della home: una riga con il testo e il pulsante */
+.p-close { border-top: 1px solid var(--line); }
+.p-cta-row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 28px; }
+.p-cta-row h2 { font-size: var(--step-3); line-height: 1.15; letter-spacing: -.025em; max-width: 30ch; }
 
 /* ---- Piè di pagina con la scritta gigante ---- */
 .p-footer { overflow: hidden; padding-bottom: 0; }
@@ -975,7 +1015,7 @@ html:not(.motion) .p-manifesto-text em {
    RIDUCI MOVIMENTO: tutto fermo, nella posizione finale
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
-  .p-dot, .p-scroll i::after, .p-viz-dots i.is-q::before, .p-checkup-bg::before, .p-orb-ring,
+  .p-dot, .p-scroll i::after, .p-viz-dots i.is-q::before, .p-checkup-bg::before, .p-orb-ring, .p-orb,
   .ill *, .ill g { animation: none !important; }
   .i1-l, .i3-txt, .i4-r, .i5-hl-l, .i6-line { stroke-dashoffset: 0; }
   .i3-dot { opacity: 0; }
