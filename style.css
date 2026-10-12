@@ -134,9 +134,9 @@
   --ground:      #F4F5F8;
   --surface:     #FFFFFF;
   --panel:       #EAECF1;
-  --line:        #DCDFE7;
-  --line-strong: #BDC2CE;
-  --muted:       #4A5160;   /* più scuro che nel tema scuro: sul fondo chiaro i testi piccoli si leggevano poco (7,3:1) */
+  --line:        #D2D6DF;   /* bordi un po' più netti: le card bianche sul fondo chiaro si perdevano */
+  --line-strong: #AAB0BE;
+  --muted:       #3B4150;   /* più scuro che nel tema scuro: sul fondo chiaro i testi piccoli si leggevano poco (oltre 9:1) */
   --ink:         #090C08;
   --brand:       #1307ED;
   --brand-soft:  #E1E4FF;
@@ -162,6 +162,9 @@ body {
   overflow-x: hidden;
   transition: background .35s ease, color .35s ease;
 }
+/* tema chiaro più nitido: il testo scuro sul chiaro sembra più sottile del chiaro sullo scuro. Un filo di peso
+   in più (IBM Plex Sans è variabile, 400-600) e la resa normale dei caratteri, che su Mac non li assottiglia */
+:root[data-theme="light"] body { font-weight: 450; -webkit-font-smoothing: auto; }
 /* dove c'è la dissolvenza di pagina (startViewTransition in script.js) basta quella */
 @supports (view-transition-name: none) { body { transition: none; } }
 ::view-transition-old(root), ::view-transition-new(root) { animation-duration: .3s; }

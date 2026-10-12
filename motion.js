@@ -732,10 +732,16 @@
         scrollTrigger: { trigger: ".p-final", start: "top 85%", end: "center center", scrub: true }
       });
     }
-    if (document.querySelector(".p-orb")) {
-      // entra da piccolo e trasparente, non dal nulla (scale 0 sembra spuntare da un punto)
-      gsap.from(".p-orb", { scale: 0.8, opacity: 0, rotation: -30, duration: 1.1, ease: "expo.out", scrollTrigger: { trigger: ".p-orb", start: "top 92%", toggleActions: "play none none none" } });
-    }
+    // la pallina: cade dall'alto e rimbalza, poi ogni tanto fa un saltello (.is-hop, p-hop in motion.css).
+    // Si misura dal titolo sopra di lei: la pallina ha già lo spostamento dell'entrata
+    gsap.utils.toArray(".p-orb").forEach(function (orb) {
+      gsap.timeline({
+        scrollTrigger: { trigger: orb.previousElementSibling || orb, start: "bottom 72%", toggleActions: "play none none none" },
+        onComplete: function () { orb.classList.add("is-hop"); }
+      })
+        .from(orb, { y: -150, duration: 1.2, ease: "bounce.out" }, 0)
+        .from(orb, { opacity: 0, scale: 0.85, duration: 0.4, ease: "power2.out" }, 0);
+    });
     // con il tessuto in WebGL la parola si tesse riga dopo riga (initParolaTessuta): le lettere restano ferme
     if (document.querySelector(".p-bigword") && !(weave && weave.gl)) {
       gsap.fromTo(".p-bigword span", { yPercent: 100 }, {
@@ -835,7 +841,7 @@
         INK = token("--ink", "245,247,241"); WEFT = token("--weft", "142,157,255"); BRAND = token("--brand", "19,7,237");
         // sul fondo chiaro i fili scuri si vedono molto di più: più tenui, così non passano davanti al testo
         var chiaro = root.getAttribute("data-theme") === "light";
-        A_WARP = chiaro ? 0.18 : 0.34; A_WEFT = chiaro ? 0.36 : 0.6;
+        A_WARP = chiaro ? 0.12 : 0.34; A_WEFT = chiaro ? 0.3 : 0.6;
         C_WARP = "rgba(" + INK + "," + A_WARP + ")"; C_WEFT = "rgba(" + WEFT + "," + A_WEFT + ")"; C_DOT = "rgb(" + WEFT + ")";
       }
       colors();
@@ -2818,10 +2824,12 @@
       raf = requestAnimationFrame(frame);
       var dt = Math.min(0.05, (now - last) / 1000);
       last = now; time += dt;
-      // dopo l'apertura: il telo è al suo posto (weave = 1), le linee del marchio sfumano, poi si sveglia
-      if (calm && st.weave >= 1) { calm = false; hold = 0.7; }
-      if (!calm && alive < 1) { if (hold > 0) hold -= dt; else alive = Math.min(1, alive + dt / 2.2); }
-      var live = alive >= 1;
+      // dopo l'apertura: il telo è al suo posto (weave = 1), le linee del marchio sfumano e si sveglia subito
+      // (prima aspettava quasi 3 secondi e il mouse non faceva niente)
+      if (calm && st.weave >= 1) { calm = false; hold = 0.2; }
+      if (!calm && alive < 1) { if (hold > 0) hold -= dt; else alive = Math.min(1, alive + dt / 0.9); }
+      // il mouse e il dito agiscono già mentre si sveglia: l'effetto cresce con alive (u_dent, u_glow)
+      var live = !calm && alive > 0;
       var r = hero.getBoundingClientRect();
       ps += (tessLimita(-r.top / (r.height || 1), 0, 1) - ps) * (1 - Math.exp(-dt * 9));
       var km = 1 - Math.exp(-dt * 3);
