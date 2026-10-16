@@ -41,15 +41,7 @@
       addEventListener("pagereveal", function (e) { r.classList.add(e.viewTransition ? "p-filo-arrivo" : "p-rivelata"); });
       // tema chiaro salvato: subito, prima del primo disegno (niente passaggio dal buio al chiaro)
       try { if (localStorage.getItem("telaio-theme") === "light") { r.setAttribute("data-theme", "light"); document.querySelector('meta[name="theme-color"]').content = "#F4F5F8"; } } catch (e) {}
-      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        r.classList.add("motion");
-        // L'apertura si vede una volta per visita: tornando alla home (anche dall'inglese) si salta
-        var seen = false;
-        try { seen = sessionStorage.getItem("telaio-intro") === "1"; sessionStorage.setItem("telaio-intro", "1"); } catch (e) {}
-        if (seen) r.classList.add("no-intro");
-        // la prima volta parte sempre dall'inizio della pagina
-        else if ("scrollRestoration" in history) history.scrollRestoration = "manual";
-      }
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) r.classList.add("motion");
       // Se gli script non partono, si torna alla pagina statica (tutto visibile).
       setTimeout(function () {
         if (!window.__telaio) r.classList.remove("js");
@@ -131,21 +123,6 @@
   <div class="grain" aria-hidden="true"></div>
   <div class="p-progress" aria-hidden="true"></div>
 
-  <!-- Apertura: il marchio si tesse, poi il sipario sale -->
-  <div class="p-intro" aria-hidden="true">
-    <div class="p-intro-in">
-      <svg class="p-intro-mk" viewBox="0 0 64 64">
-        <g fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round">
-          <path d="M24 10 V32 M24 48 V54"></path>
-          <path d="M40 10 V16 M40 32 V54"></path>
-          <path d="M10 24 H16 M32 24 H54"></path>
-          <path d="M10 40 H32 M48 40 H54"></path>
-        </g>
-      </svg>
-      <div class="p-intro-wm"><span>T</span><span>e</span><span>l</span><span>a</span><span>i</span><span>o</span></div>
-    </div>
-    <p class="p-intro-tag">Dall'AI al valore</p>
-  </div>
 
   <header class="top">
     <div class="wrap top-in">
@@ -154,11 +131,13 @@
         <span class="wm">Telaio</span>
       </a>
       <nav class="nav" id="nav" aria-label="Navigazione principale">
-        <a href="/come-lavoriamo/">Come lavoriamo</a>
         <a href="/cosa-facciamo/">Cosa facciamo</a>
+        <a href="/come-lavoriamo/">Come lavoriamo</a>
         <a href="/consulenza-strategica/">Strategia</a>
         <a href="/chi-siamo/">Chi siamo</a>
         <a href="/domande-frequenti/">Domande frequenti</a>
+        <a href="/check-up-ai/#prenota">Contatti</a>
+        <a class="btn btn-primary nav-cta" href="/check-up-ai/" data-cta="checkup" data-placement="menu">Prenota il check-up AI</a>
       </nav>
       <div class="top-actions">
         <div class="lang" aria-label="Lingua" data-lang-switch>
@@ -182,69 +161,163 @@
         <p class="p-kicker" data-hero-item><span class="p-dot" aria-hidden="true"></span>Consulenza AI per piccole e medie imprese</p>
         <h1 class="p-h1">Il primo strumento AI al lavoro nella tua impresa, in <span class="p-accent">4&nbsp;settimane</span>.</h1>
         <div class="p-hero-row">
-          <p class="p-tagline" data-hero-item>Partiamo da un problema reale, scegliamo lo strumento giusto e lo mettiamo al lavoro con te. Poi restiamo finché produce risultati.</p>
-          <div class="p-hero-cta p-hero-orb" data-hero-item>
-            <a class="p-orb" data-magnetic href="/check-up-ai/" data-cta="checkup" data-placement="hero" aria-label="Prenota il check-up AI">
-              <svg class="p-orb-ring" viewBox="0 0 200 200" aria-hidden="true">
-                <defs><path id="orbPath" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs>
-                <text><textPath href="#orbPath">Prenota il check-up AI · 30 minuti · Gratuito · </textPath></text>
-              </svg>
-              <span class="p-orb-arr" aria-hidden="true">→</span>
-            </a>
+          <p class="p-tagline" data-hero-item>Risposte ai clienti, preventivi, documenti, i numeri del lunedì: partiamo da un'attività, la mettiamo al lavoro con le tue persone e restiamo finché funziona.</p>
+          <div class="p-hero-cta" data-hero-item>
+            <a class="btn btn-primary p-btn-xl" data-magnetic href="/check-up-ai/" data-cta="checkup" data-placement="hero">Prenota il check-up AI <span class="p-arr" aria-hidden="true">→</span></a>
             <ul class="p-meta">
               <li>30 minuti in videochiamata</li>
               <li>Gratuito</li>
-              <li>Giorno e ora li fissiamo insieme</li>
+              <li>Con uno dei fondatori</li>
             </ul>
           </div>
         </div>
       </div>
       <div class="p-hero-foot wrap">
-        <p class="p-trust" data-hero-item>Un solo referente, dall'analisi alla soluzione che funziona. E anche dopo.</p>
-        <a class="p-scroll" href="#cambia" data-hero-item><span>Scorri</span><i aria-hidden="true"></i></a>
+        <a class="p-scroll" href="#perche" data-hero-item><span>Scorri</span><i aria-hidden="true"></i></a>
       </div>
     </section>
 
-    <!-- Nastro in movimento -->
-    <div class="p-marquee" aria-hidden="true">
-      <div class="p-marquee-track">
-        <div class="p-marquee-group">
-          <span>Dall'AI al valore</span><svg class="mk" viewBox="0 0 64 64"><use href="#mk"></use></svg>
-          <span class="o">Un problema reale</span><svg class="mk" viewBox="0 0 64 64"><use href="#mk"></use></svg>
-          <span>Lo strumento giusto</span><svg class="mk" viewBox="0 0 64 64"><use href="#mk"></use></svg>
-          <span class="o">4 settimane</span><svg class="mk" viewBox="0 0 64 64"><use href="#mk"></use></svg>
+    <!-- Tre motivi per scegliere Telaio, subito sotto la hero -->
+    <section id="perche" class="p-reasons" aria-labelledby="perche-h">
+      <h2 class="vh" id="perche-h">Perché Telaio</h2>
+      <div class="wrap p-reasons-in">
+          <div class="p-reason" data-reveal><h3>Un solo referente</h3><p>Dalla prima call a dopo il lancio parli con le stesse persone.</p></div>
+          <div class="p-reason" data-reveal><h3>Tempi, costi e limiti per iscritto</h3><p>Prima di iniziare, non a lavori finiti.</p></div>
+          <div class="p-reason" data-reveal><h3>Se l'AI non conviene, te lo diciamo</h3><p>E ti diciamo cosa fare prima.</p></div>
+      </div>
+    </section>
+
+    <!-- 3 · DA DOVE SI PARTE -->
+    <section id="cosa-facciamo" class="p-cases">
+      <div class="wrap p-cases-head">
+        <div>
+          <p class="eyebrow">Da dove si parte</p>
+          <h2 class="p-h2" data-split>Le attività che l'AI può togliere dalla tua settimana</h2>
         </div>
-        <div class="p-marquee-group">
-          <span>Dall'AI al valore</span><svg class="mk" viewBox="0 0 64 64"><use href="#mk"></use></svg>
-          <span class="o">Un problema reale</span><svg class="mk" viewBox="0 0 64 64"><use href="#mk"></use></svg>
-          <span>Lo strumento giusto</span><svg class="mk" viewBox="0 0 64 64"><use href="#mk"></use></svg>
-          <span class="o">4 settimane</span><svg class="mk" viewBox="0 0 64 64"><use href="#mk"></use></svg>
+        <div class="p-cases-lede">
+          <p class="lede">In un anno le imprese italiane che usano l'AI sono raddoppiate, dall'8,2% al 16,4%. Ecco da dove si parte più spesso.</p>
+          <p class="p-src">Fonte: <a href="https://www.istat.it/comunicato-stampa/imprese-e-ict-anno-2025/" target="_blank" rel="noopener">Istat, Imprese e ICT 2025</a> · imprese con almeno 10 addetti</p>
         </div>
       </div>
-    </div>
 
-    <!-- 2 · COSA STA CAMBIANDO -->
-    <section id="cambia" class="p-sec">
-      <div class="wrap">
-        <header class="p-head">
-          <p class="eyebrow" data-reveal>Cosa sta cambiando</p>
-          <h2 class="p-h2" data-split>L'AI sta cambiando il modo di lavorare. Anche nel tuo settore.</h2>
-        </header>
+      <div class="p-cases-track">
+        <article class="p-case">
+          <span class="p-case-n">01</span>
+          <div class="p-case-art" aria-hidden="true">
+            <svg class="ill" viewBox="0 0 160 100">
+              <rect class="soft" x="10" y="36" width="36" height="28" rx="4"/>
+              <path class="soft" d="M18 46h20M18 54h12"/>
+              <path class="i1-flow" d="M52 50h22"/>
+              <path d="M72 45l6 5-6 5"/>
+              <rect x="88" y="14" width="62" height="72" rx="6"/>
+              <rect class="i1-img" x="96" y="22" width="22" height="18" rx="3"/>
+              <path class="i1-l" d="M96 50h44"/>
+              <path class="i1-l b" d="M96 59h34"/>
+              <path class="i1-l c" d="M96 68h22"/>
+              <g class="i1-ok"><circle class="fillb" cx="138" cy="74" r="8"/><path d="M134.5 74l2.5 2.5 5-5" stroke="#fff"/></g>
+            </svg>
+          </div>
+          <h3>Schede prodotto</h3>
+          <p>Dal link della pagina di origine alla scheda pubblicata sul tuo negozio online. L'AI compila i campi e li controlla. Tu approvi con un clic.</p>
+        </article>
 
-        <div class="p-stat-list">
-          <article class="p-stat">
-            <div class="p-stat-num"><span data-count="16.4" data-decimals="1">16,4</span><small>%</small></div>
-            <div class="p-stat-body">
-              <div class="p-viz p-viz-cols" aria-hidden="true">
-                <div class="p-col" style="--v:.5"><i></i><span>8,2%</span></div>
-                <div class="p-col is-hi" style="--v:1"><i></i><span>16,4%</span></div>
-              </div>
-              <p>Le imprese italiane che usano l'AI sono raddoppiate in un anno: dall'8,2% al 16,4%.</p>
-              <p class="p-src">Fonte: <a href="https://www.istat.it/comunicato-stampa/imprese-e-ict-anno-2025/" target="_blank" rel="noopener">Istat, Imprese e ICT 2025</a> · imprese con almeno 10 addetti</p>
-            </div>
-          </article>
-        </div>
+        <article class="p-case">
+          <span class="p-case-n">02</span>
+          <div class="p-case-art" aria-hidden="true">
+            <svg class="ill" viewBox="0 0 160 100">
+              <g class="i2-in"><rect x="8" y="38" width="32" height="24" rx="3"/><path d="M8 41l16 11 16-11"/></g>
+              <path class="soft i1-flow" d="M44 50h12"/>
+              <g class="i2-doc"><rect x="62" y="24" width="26" height="34" rx="3"/><path class="soft" d="M68 33h14M68 40h14M68 47h9"/></g>
+              <g class="i2-doc b"><rect x="94" y="24" width="26" height="34" rx="3"/><path class="soft" d="M100 33h14M100 40h8"/><circle class="fillb" cx="112" cy="49" r="4"/></g>
+              <g class="i2-doc c"><rect x="126" y="28" width="26" height="26" rx="3"/><path d="M126 37h26M139 28v9"/></g>
+              <path class="soft" d="M62 72h90"/>
+              <circle class="i2-run" cx="62" cy="72" r="3"/>
+            </svg>
+          </div>
+          <h3>Ordini e documenti</h3>
+          <p>Arriva un ordine e il resto parte da solo: contratto, fattura elettronica, spedizione.</p>
+        </article>
+
+        <article class="p-case">
+          <span class="p-case-n">03</span>
+          <div class="p-case-art" aria-hidden="true">
+            <svg class="ill" viewBox="0 0 160 100">
+              <rect class="soft" x="12" y="12" width="76" height="28" rx="10"/>
+              <path class="soft" d="M22 22h52M22 30h30"/>
+              <g class="i3-reply">
+                <rect class="i3-box" x="58" y="50" width="90" height="34" rx="10"/>
+                <circle class="i3-dot" cx="93" cy="67" r="2.6"/>
+                <circle class="i3-dot b" cx="103" cy="67" r="2.6"/>
+                <circle class="i3-dot c" cx="113" cy="67" r="2.6"/>
+                <path class="i3-txt" d="M70 62h64M70 72h40"/>
+              </g>
+            </svg>
+          </div>
+          <h3>Richieste dei clienti</h3>
+          <p>Le domande che ricevi ogni giorno trovano una bozza di risposta già pronta, con le informazioni giuste. Tu controlli e invii.</p>
+        </article>
+
+        <article class="p-case">
+          <span class="p-case-n">04</span>
+          <div class="p-case-art" aria-hidden="true">
+            <svg class="ill" viewBox="0 0 160 100">
+              <rect x="40" y="8" width="80" height="84" rx="6"/>
+              <path class="soft" d="M50 22h30"/>
+              <path class="i4-r" d="M50 36h38"/><path class="soft" d="M100 36h10"/>
+              <path class="i4-r b" d="M50 46h30"/><path class="soft" d="M100 46h10"/>
+              <path class="i4-r c" d="M50 56h42"/><path class="soft" d="M100 56h10"/>
+              <path class="soft" d="M50 66h60"/>
+              <text class="i4-eur" x="50" y="82">€</text>
+              <rect class="i4-total fillb" x="78" y="73" width="32" height="11" rx="2"/>
+            </svg>
+          </div>
+          <h3>Preventivi</h3>
+          <p>Dalla richiesta del cliente alla bozza di preventivo, con i tuoi listini e le tue condizioni.</p>
+        </article>
+
+        <article class="p-case">
+          <span class="p-case-n">05</span>
+          <div class="p-case-art" aria-hidden="true">
+            <svg class="ill" viewBox="0 0 160 100">
+              <rect class="soft" x="16" y="12" width="60" height="76" rx="5"/>
+              <path class="soft" d="M24 26h44M24 36h40M24 56h44M24 66h36M24 76h40"/>
+              <rect class="i5-hl" x="21" y="40" width="50" height="11" rx="2"/>
+              <path class="i5-hl-l" d="M24 46h44"/>
+              <rect x="96" y="56" width="52" height="26" rx="10"/>
+              <path class="soft" d="M106 66h30M106 73h18"/>
+              <g class="i5-lens"><circle cx="0" cy="0" r="13"/><path d="M9.5 9.5l11 11"/></g>
+            </svg>
+          </div>
+          <h3>Procedure e archivio</h3>
+          <p>Fai una domanda, come la faresti a un collega, e trovi la risposta tra contratti, manuali e procedure.</p>
+        </article>
+
+        <article class="p-case">
+          <span class="p-case-n">06</span>
+          <div class="p-case-art" aria-hidden="true">
+            <svg class="ill" viewBox="0 0 160 100">
+              <path class="soft" d="M14 86h132"/>
+              <rect class="i6-b" x="24" y="56" width="14" height="30" rx="2"/>
+              <rect class="i6-b b" x="48" y="46" width="14" height="40" rx="2"/>
+              <rect class="i6-b c" x="72" y="52" width="14" height="34" rx="2"/>
+              <rect class="i6-b d" x="96" y="34" width="14" height="52" rx="2"/>
+              <rect class="i6-b e" x="120" y="22" width="14" height="64" rx="2"/>
+              <polyline class="i6-line" points="31,44 55,34 79,40 103,22 127,12"/>
+              <circle class="i6-pt fillb" cx="127" cy="12" r="4"/>
+            </svg>
+          </div>
+          <h3>I numeri della settimana</h3>
+          <p>Vendite, acquisti e magazzino in un riepilogo chiaro, ogni lunedì. Senza copiare e incollare.</p>
+        </article>
+
+        <a class="p-case p-case-cta" href="/check-up-ai/" data-cta="checkup" data-placement="cases">
+          <span class="p-case-n">+</span>
+          <span class="p-case-big" aria-hidden="true">→</span>
+          <h3>Non vedi la tua attività?</h3>
+          <p>Raccontacela nel check-up.</p>
+        </a>
       </div>
+
     </section>
 
     <!-- Manifesto: le parole si accendono mentre scorri -->
@@ -254,155 +327,8 @@
       </div>
     </section>
 
-    <!-- Invito subito dopo il manifesto: titolo grande e pulsante (la pallina è nella hero) -->
-    <section class="p-final">
-      <div class="p-final-glow" aria-hidden="true"></div>
-      <div class="wrap">
-        <h2 class="p-final-h" data-split>Scopri come l'AI sta cambiando il tuo settore e cosa puoi fare tu, da subito.</h2>
-        <a class="btn btn-primary p-btn-xl p-final-btn" data-magnetic href="/check-up-ai/" data-cta="checkup" data-placement="stats">Prenota il check-up AI <span class="p-arr" aria-hidden="true">→</span></a>
-        <p class="p-final-sub">30 minuti · Gratuito · Con uno dei fondatori</p>
-      </div>
-    </section>
-
-    <!-- 3 · DA DOVE SI PARTE (scorrimento orizzontale) -->
-    <section id="cosa-facciamo" class="p-cases">
-      <div class="p-cases-pin">
-        <div class="wrap p-cases-head">
-          <div>
-            <p class="eyebrow">Da dove si parte</p>
-            <h2 class="p-h2" data-split>Le attività che l'AI può togliere dalla tua settimana</h2>
-          </div>
-          <p class="lede">Ogni impresa è diversa, ma i punti di partenza si somigliano. Qualche esempio.</p>
-        </div>
-
-        <div class="p-cases-track">
-          <article class="p-case">
-            <span class="p-case-n">01</span>
-            <div class="p-case-art" aria-hidden="true">
-              <svg class="ill" viewBox="0 0 160 100">
-                <rect class="soft" x="10" y="36" width="36" height="28" rx="4"/>
-                <path class="soft" d="M18 46h20M18 54h12"/>
-                <path class="i1-flow" d="M52 50h22"/>
-                <path d="M72 45l6 5-6 5"/>
-                <rect x="88" y="14" width="62" height="72" rx="6"/>
-                <rect class="i1-img" x="96" y="22" width="22" height="18" rx="3"/>
-                <path class="i1-l" d="M96 50h44"/>
-                <path class="i1-l b" d="M96 59h34"/>
-                <path class="i1-l c" d="M96 68h22"/>
-                <g class="i1-ok"><circle class="fillb" cx="138" cy="74" r="8"/><path d="M134.5 74l2.5 2.5 5-5" stroke="#fff"/></g>
-              </svg>
-            </div>
-            <h3>Schede prodotto</h3>
-            <p>Dal link della pagina di origine alla scheda pubblicata sul tuo negozio online. L'AI compila i campi e li controlla. Tu approvi con un clic.</p>
-          </article>
-
-          <article class="p-case">
-            <span class="p-case-n">02</span>
-            <div class="p-case-art" aria-hidden="true">
-              <svg class="ill" viewBox="0 0 160 100">
-                <g class="i2-in"><rect x="8" y="38" width="32" height="24" rx="3"/><path d="M8 41l16 11 16-11"/></g>
-                <path class="soft i1-flow" d="M44 50h12"/>
-                <g class="i2-doc"><rect x="62" y="24" width="26" height="34" rx="3"/><path class="soft" d="M68 33h14M68 40h14M68 47h9"/></g>
-                <g class="i2-doc b"><rect x="94" y="24" width="26" height="34" rx="3"/><path class="soft" d="M100 33h14M100 40h8"/><circle class="fillb" cx="112" cy="49" r="4"/></g>
-                <g class="i2-doc c"><rect x="126" y="28" width="26" height="26" rx="3"/><path d="M126 37h26M139 28v9"/></g>
-                <path class="soft" d="M62 72h90"/>
-                <circle class="i2-run" cx="62" cy="72" r="3"/>
-              </svg>
-            </div>
-            <h3>Ordini e documenti</h3>
-            <p>Arriva un ordine e il resto parte da solo: contratto, fattura elettronica, spedizione.</p>
-          </article>
-
-          <article class="p-case">
-            <span class="p-case-n">03</span>
-            <div class="p-case-art" aria-hidden="true">
-              <svg class="ill" viewBox="0 0 160 100">
-                <rect class="soft" x="12" y="12" width="76" height="28" rx="10"/>
-                <path class="soft" d="M22 22h52M22 30h30"/>
-                <g class="i3-reply">
-                  <rect class="i3-box" x="58" y="50" width="90" height="34" rx="10"/>
-                  <circle class="i3-dot" cx="93" cy="67" r="2.6"/>
-                  <circle class="i3-dot b" cx="103" cy="67" r="2.6"/>
-                  <circle class="i3-dot c" cx="113" cy="67" r="2.6"/>
-                  <path class="i3-txt" d="M70 62h64M70 72h40"/>
-                </g>
-              </svg>
-            </div>
-            <h3>Richieste dei clienti</h3>
-            <p>Le domande che ricevi ogni giorno trovano una bozza di risposta già pronta, con le informazioni giuste. Tu controlli e invii.</p>
-          </article>
-
-          <article class="p-case">
-            <span class="p-case-n">04</span>
-            <div class="p-case-art" aria-hidden="true">
-              <svg class="ill" viewBox="0 0 160 100">
-                <rect x="40" y="8" width="80" height="84" rx="6"/>
-                <path class="soft" d="M50 22h30"/>
-                <path class="i4-r" d="M50 36h38"/><path class="soft" d="M100 36h10"/>
-                <path class="i4-r b" d="M50 46h30"/><path class="soft" d="M100 46h10"/>
-                <path class="i4-r c" d="M50 56h42"/><path class="soft" d="M100 56h10"/>
-                <path class="soft" d="M50 66h60"/>
-                <text class="i4-eur" x="50" y="82">€</text>
-                <rect class="i4-total fillb" x="78" y="73" width="32" height="11" rx="2"/>
-              </svg>
-            </div>
-            <h3>Preventivi</h3>
-            <p>Dalla richiesta del cliente alla bozza di preventivo, con i tuoi listini e le tue condizioni.</p>
-          </article>
-
-          <article class="p-case">
-            <span class="p-case-n">05</span>
-            <div class="p-case-art" aria-hidden="true">
-              <svg class="ill" viewBox="0 0 160 100">
-                <rect class="soft" x="16" y="12" width="60" height="76" rx="5"/>
-                <path class="soft" d="M24 26h44M24 36h40M24 56h44M24 66h36M24 76h40"/>
-                <rect class="i5-hl" x="21" y="40" width="50" height="11" rx="2"/>
-                <path class="i5-hl-l" d="M24 46h44"/>
-                <rect x="96" y="56" width="52" height="26" rx="10"/>
-                <path class="soft" d="M106 66h30M106 73h18"/>
-                <g class="i5-lens"><circle cx="0" cy="0" r="13"/><path d="M9.5 9.5l11 11"/></g>
-              </svg>
-            </div>
-            <h3>Procedure e archivio</h3>
-            <p>Fai una domanda, come la faresti a un collega, e trovi la risposta tra contratti, manuali e procedure.</p>
-          </article>
-
-          <article class="p-case">
-            <span class="p-case-n">06</span>
-            <div class="p-case-art" aria-hidden="true">
-              <svg class="ill" viewBox="0 0 160 100">
-                <path class="soft" d="M14 86h132"/>
-                <rect class="i6-b" x="24" y="56" width="14" height="30" rx="2"/>
-                <rect class="i6-b b" x="48" y="46" width="14" height="40" rx="2"/>
-                <rect class="i6-b c" x="72" y="52" width="14" height="34" rx="2"/>
-                <rect class="i6-b d" x="96" y="34" width="14" height="52" rx="2"/>
-                <rect class="i6-b e" x="120" y="22" width="14" height="64" rx="2"/>
-                <polyline class="i6-line" points="31,44 55,34 79,40 103,22 127,12"/>
-                <circle class="i6-pt fillb" cx="127" cy="12" r="4"/>
-              </svg>
-            </div>
-            <h3>I numeri della settimana</h3>
-            <p>Vendite, acquisti e magazzino in un riepilogo chiaro, ogni lunedì. Senza copiare e incollare.</p>
-          </article>
-
-          <a class="p-case p-case-cta" href="/check-up-ai/" data-cta="checkup" data-placement="cases">
-            <span class="p-case-n">+</span>
-            <span class="p-case-big" aria-hidden="true">→</span>
-            <h3>Non vedi la tua attività?</h3>
-            <p>Raccontacela nel check-up.</p>
-          </a>
-        </div>
-
-        <div class="wrap p-cases-foot" aria-hidden="true">
-          <div class="p-rail"><i></i></div>
-          <span class="p-cases-count"><b>01</b> / 06</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- 4 · COME LAVORIAMO: il telaio racconta i quattro passi.
-         La sezione si ferma mentre scorri e sulla tela si tesse il tessuto, fino al marchio (motion.js, initRacconto).
-         Senza animazioni: i quattro passi in elenco e, accanto, il tessuto finito disegnato fermo. -->
+    <!-- 4 · COME LAVORIAMO: i quattro passi in elenco e, accanto, il tessuto finito disegnato fermo (motion.js, initRacconto).
+         Con data-racconto="vivo" sulla sezione torna la scena animata: la sezione si ferma mentre scorri e sulla tela si tesse il tessuto. -->
     <section id="come-lavoriamo" class="p-sec p-method p-racconto">
       <div class="wrap p-rac-slot"></div>
       <div class="p-rac-pin">
@@ -505,7 +431,7 @@
         <div>
           <details class="qa" data-reveal data-question-id="what"><summary>Cosa fa Telaio?</summary><div class="a"><p>Telaio aiuta le piccole e medie imprese a usare l'intelligenza artificiale dove crea valore. Partiamo da un problema reale, scegliamo lo strumento giusto, lo mettiamo al lavoro e restiamo finché produce risultati. Hai un solo referente, dall'analisi alla soluzione che funziona. Lavoriamo anche sulla strategia d'impresa: mercati e clienti, offerta, organizzazione, crescita.</p></div></details>
           <details class="qa" data-reveal data-question-id="checkup"><summary>Cos'è il check-up AI?</summary><div class="a"><p>È una videochiamata gratuita di 30 minuti con uno dei fondatori. Ti raccontiamo come l'AI sta cambiando il tuo settore, troviamo due o tre attività da cui partire e ti diciamo con franchezza se conviene.</p></div></details>
-          <details class="qa" data-reveal data-question-id="timeline"><summary>In quanto tempo vedo un risultato?</summary><div class="a"><!-- TODO(conferma): definizione delle 4 settimane (da quando partono, cosa vuol dire "in uso") --><p>In 4 settimane hai il primo strumento AI in uso. Le settimane partono quando hai approvato la proposta e abbiamo gli accessi che servono.</p></div></details>
+          <details class="qa" data-reveal data-question-id="timeline"><summary>In quanto tempo vedo un risultato?</summary><div class="a"><p>In 4 settimane hai il primo strumento AI in uso. Le settimane partono quando hai approvato la proposta e ci hai dato gli accessi che servono. «In uso» vuol dire che le tue persone lo usano nel lavoro vero, non in prova. Se qualcosa ci rallenta, te lo diciamo subito, per iscritto.</p></div></details>
           <details class="qa" data-reveal data-question-id="cost"><summary>Quanto costa lavorare con Telaio?</summary><div class="a"><p>Dipende dal problema da risolvere e dalla soluzione. Prima di iniziare ricevi una proposta scritta con tempi, costi e limiti, così sai a cosa vai incontro. Il check-up è gratuito.</p></div></details>
           <details class="qa" data-reveal data-question-id="size"><summary>La mia impresa è troppo piccola per l'AI?</summary><div class="a"><p>Di solito no. Molti strumenti di AI costano poco e si adattano anche a chi ha pochi collaboratori, e in un'impresa piccola il tempo risparmiato si sente subito. Nel check-up ti diciamo se conviene partire adesso.</p></div></details>
           <details class="qa" data-reveal data-question-id="data"><summary>I miei dati sono al sicuro?</summary><div class="a"><p>Prima di iniziare ti diciamo quali dati usa lo strumento, dove vengono conservati e chi può vederli. Scegliamo con te soluzioni coerenti con il GDPR e con le regole della tua azienda, e ti diciamo subito i limiti.</p></div></details>
@@ -517,7 +443,7 @@
     <section class="p-sec p-close">
       <div class="wrap">
         <div class="p-cta-row" data-reveal>
-          <p class="p-cta-row-h">Scopri come l'AI sta cambiando il tuo settore e cosa puoi fare tu, da subito.</p>
+          <p class="p-cta-row-h">Trenta minuti, gratuiti, con uno di noi tre. Se oggi l'AI non ti conviene, te lo diciamo.</p>
           <a class="btn btn-primary p-btn-xl" data-magnetic href="/check-up-ai/" data-cta="checkup" data-placement="final">Prenota il check-up AI <span class="p-arr" aria-hidden="true">→</span></a>
         </div>
       </div>
@@ -539,7 +465,7 @@
       <nav class="foot-col" aria-label="Pagine">
         <a href="/come-lavoriamo/">Come lavoriamo</a>
         <a href="/cosa-facciamo/">Cosa facciamo</a>
-        <a href="/consulenza-strategica/">Consulenza strategica</a>
+        <a href="/consulenza-strategica/">Strategia</a>
         <a href="/chi-siamo/">Chi siamo</a>
         <a href="/domande-frequenti/">Domande frequenti</a>
         <a href="/check-up-ai/">Check-up AI</a>

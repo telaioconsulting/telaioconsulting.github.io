@@ -2,8 +2,7 @@
    TELAIO — motion graphic di tutte le pagine
    GSAP + ScrollTrigger + SplitText + Lenis (ospitate in /assets/vendor/).
    Ogni effetto parte solo se la pagina ha gli elementi che gli servono.
-   Le home hanno l'apertura (.p-intro: il marchio diventa il tessuto); le altre pagine
-   un ingresso breve del titolo. Senza librerie o con "riduci movimento"
+   Ogni pagina ha un ingresso breve del titolo. Senza librerie o con "riduci movimento"
    la pagina resta statica: il telaio in apertura viene disegnato una volta, fermo.
    ============================================================ */
 (function () {
@@ -16,19 +15,16 @@
   if (!motion) root.classList.remove("motion");
 
   var isEn = (root.lang || "").toLowerCase().indexOf("en") === 0;
-  // l'apertura si vede una volta per visita: la classe .no-intro la mette l'<head> quando è già stata vista
-  var hasIntro = !!document.querySelector(".p-intro") && !root.classList.contains("no-intro");
 
   var weave = initWeave();
   var racconto = initRacconto(); // «Come lavoriamo» nella home: il telaio racconta i passi (fermo senza animazioni)
   if (!motion) return;
 
-  // Arrivo diretto su una sezione (es. /en/#faq): niente apertura, si va dritti lì.
+  // Arrivo diretto su una sezione (es. /en/#faq): l'ingresso del titolo si salta.
   var deepLink = null;
   try { deepLink = location.hash.length > 1 ? document.querySelector(location.hash) : null; } catch (e) {}
-  if (hasIntro && !deepLink) window.scrollTo(0, 0);
 
-  // Si parte a font caricati (SplitText misura le righe); l'apertura copre l'attesa.
+  // Si parte a font caricati (SplitText misura le righe).
   var booted = false;
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(boot).catch(function (e) { console.error(e && e.stack); });
@@ -85,170 +81,27 @@
     gsap.to(".p-progress", { scaleX: 1, ease: "none", scrollTrigger: { start: 0, end: "max", scrub: 0.3 } });
 
     /* ============================================================
-       APERTURA: il marchio si disegna, le sue linee diventano i fili del tessuto, entra il titolo.
-       Sulle pagine senza apertura: solo l'ingresso del titolo.
+       INGRESSO DEL TITOLO: il tessuto si stende, le righe del titolo salgono, entra il resto della hero.
        ============================================================ */
     (function () {
-      var intro = hasIntro ? document.querySelector(".p-intro") : null;
       var h1 = document.querySelector(".p-h1");
       if (!h1) return;
       var h1Split = Split ? Split.create(h1, { type: "lines", mask: "lines", linesClass: "p-line" }) : null;
       var accent = h1.querySelector(".p-accent");
-      // la pallina della hero cade e rimbalza mentre entra il resto, poi saltella (.is-hop in motion.css).
-      // Il saltello parte da una chiamata della timeline, non dalla fine della caduta: se il mouse passa sulla
-      // pallina mentre cade, l'effetto magnetico prende il suo posto e la caduta non finisce
-      var orb = document.querySelector(".p-hero .p-orb");
-      function orbFall(at) {
-        tl.from(orb, { y: -160, duration: 1.2, ease: "bounce.out" }, at)
-          .call(function () { orb.classList.add("is-hop"); }, null, at + 1.2);
-      }
       gsap.set(h1, { visibility: "visible" });
       if (h1Split) gsap.set(h1Split.lines, { yPercent: 112 });
       if (accent) gsap.set(accent, { "--mark": 0 });
 
       var tl = gsap.timeline({ defaults: { ease: "expo.out" } });
-      if (!intro) {
-        tl.to(weave, { weave: 1, duration: 2.4, ease: "power2.out" }, 0)
-          .to(h1Split ? h1Split.lines : h1, { yPercent: 0, duration: 1.2, stagger: 0.08 }, 0.1);
-        if (accent) tl.to(accent, { "--mark": 1, duration: 1, ease: "expo.inOut" }, 0.6);
-        tl.fromTo("[data-hero-item]", { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 1, stagger: 0.07 }, 0.05);
-        if (orb) orbFall(0.3);
-        // le righe tornano testo normale appena il titolo è entrato (e l'evidenziatore è passato), non alla fine
-        // del tessuto: Google misura il titolo da quel momento (Largest Contentful Paint), prima arrivava a 2,4 s
-        var linesEnd = 1.3 + 0.08 * ((h1Split ? h1Split.lines.length : 1) - 1);
-        tl.add(function () { if (h1Split) h1Split.revert(); }, Math.max(linesEnd, accent ? 1.6 : 0));
-        if (deepLink) tl.progress(1);
-        heroExit();
-        return;
-      }
-      if (lenis) lenis.stop();
-      var loom = weave ? buildLoom(19, 9) : null;
-      tl.to(".p-intro-mk path", { strokeDashoffset: 0, duration: 0.8, stagger: 0.07, ease: "power3.inOut" }, 0)
-        .fromTo(".p-intro-wm span", { y: 0, yPercent: 110 }, { yPercent: 0, duration: 0.9, stagger: 0.045 }, 0.25)
-        .to(".p-intro-tag", { opacity: 1, duration: 0.6, ease: "power2.out" }, 0.55);
-
-      // ORDITO E TRAMA: le quattro linee del marchio diventano i fili del tessuto della hero
-      var S = 1.45, END = S + 2.85, HERO = S + 1.9, mk = intro.querySelector(".p-intro-mk");
-      if (loom) {
-        gsap.set(".p-weave", { opacity: 0 });
-        var ground = getComputedStyle(intro).backgroundColor.replace(/rgba?\(([^,]+),([^,]+),([^,)]+).*/, "rgba($1,$2,$3,0)");
-        // 1. le lettere scivolano via, il marchio va al centro dello schermo e si ingrandisce
-        tl.to(".p-intro-wm span", { x: 90, opacity: 0, filter: "blur(4px)", stagger: 0.05, duration: 0.5, ease: "power2.in" }, S)
-          .to(".p-intro-tag", { opacity: 0, duration: 0.25 }, S)
-          .to(mk, {
-            x: function () { var r = mk.getBoundingClientRect(); return innerWidth / 2 - (r.left + r.width / 2); },
-            y: function () { var r = mk.getBoundingClientRect(); return innerHeight / 2 - (r.top + r.height / 2); },
-            scale: 2.6, duration: 0.85, ease: "expo.inOut"
-          }, S)
-          .call(loom.swap, null, S + 0.9);
-        // 2. le quattro linee, grosse e blu, si allungano fino ai bordi
-        loom.warp.forEach(function (l) { tl.to(l, { attr: { y1: -30, y2: innerHeight + 30 }, stroke: "#3F36F5", duration: 0.6, ease: "expo.inOut" }, S + 0.92); });
-        loom.weft.forEach(function (l) { tl.to(l, { attr: { x1: -30, x2: innerWidth + 30 }, stroke: "#8E9DFF", duration: 0.6, ease: "expo.inOut" }, S + 0.92); });
-        tl.to(intro, { backgroundColor: ground, duration: 0.6, ease: "power2.inOut" }, S + 0.95)
-        // 3. si moltiplicano e si posano sui fili del tessuto
-          .call(loom.aim, null, S + 1.58);
-        loom.spread(tl, S + 1.6);
-        // 4. il tessuto vero prende il loro posto
-        tl.set(weave, { weave: 1 }, END)
-          .to(".p-weave", { opacity: 1, duration: 0.6, ease: "power1.inOut" }, END)
-          .to(loom.svg, { opacity: 0, duration: 0.6, ease: "power1.inOut" }, END);
-      } else {
-        tl.to(intro, { clipPath: "inset(0% 0% 100% 0%)", duration: 1.1, ease: "expo.inOut" }, S)
-          .to(weave, { weave: 1, duration: 2.8, ease: "power2.out" }, S);
-        HERO = S + 0.5; END = S + 1.1;
-      }
-      tl.fromTo(".top", { y: 0, yPercent: -100 }, { yPercent: 0, duration: 1 }, HERO + 0.2)
-        .fromTo(".p-kicker", { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 1 }, HERO)
-        .to(h1Split ? h1Split.lines : h1, { yPercent: 0, duration: 1.3, stagger: 0.09 }, HERO + 0.05);
-      if (accent) tl.to(accent, { "--mark": 1, duration: 1, ease: "expo.inOut" }, HERO + 0.6);
-      tl.fromTo("[data-hero-item]:not(.p-kicker)", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 1.1, stagger: 0.09 }, HERO + 0.35);
-      if (orb) orbFall(HERO + 0.6);
-      tl.add(endIntro, END + 0.65)
-        .add(function () { if (h1Split) h1Split.revert(); });
-      // appena lo sfondo dell'apertura è trasparente, testata e pulsante della hero si possono già cliccare;
-      // lo scorrimento riparte quando il tessuto è al suo posto
-      tl.set(intro, { pointerEvents: "none" }, S + 0.95)
-        .call(function () { if (lenis) lenis.start(); }, null, END);
-      // Un clic, lo scroll o un tasto durante l'apertura: accelera fino alla fine, senza tagli
-      var hurryOn = ["wheel", "touchstart", "keydown", "pointerdown"];
-      function hurry() {
-        if (tl.progress() < 1 && tl.timeScale() < 2) gsap.to(tl, { timeScale: 8, duration: 0.25, ease: "power1.in" });
-      }
-      hurryOn.forEach(function (t) { window.addEventListener(t, hurry, { passive: true }); });
-      if (deepLink) {
-        tl.progress(1);
-        endIntro();
-      }
-      function endIntro() {
-        hurryOn.forEach(function (t) { window.removeEventListener(t, hurry); });
-        if (intro.parentNode) intro.parentNode.removeChild(intro);
-        if (loom && loom.svg.parentNode) loom.svg.parentNode.removeChild(loom.svg);
-        if (lenis) lenis.start();
-      }
-
-      // Le linee del marchio: un SVG sopra l'apertura, con tante linee pronte (ordito e trama).
-      // swap: prendono il posto dei quattro tratti del marchio; aim: chiedono al tessuto dove stanno i suoi fili;
-      // spread: ognuna va sul suo filo, si assottiglia e ne prende il colore.
-      function buildLoom(nW, nR) {
-        var W = innerWidth, H = innerHeight, NS = "http://www.w3.org/2000/svg", targets = null;
-        var svg = document.createElementNS(NS, "svg");
-        svg.setAttribute("class", "p-loom"); svg.setAttribute("viewBox", "0 0 " + W + " " + H); svg.setAttribute("aria-hidden", "true");
-        // maschera: all'inizio tutto visibile; alla fine la stessa sfumatura del tessuto verso l'orizzonte
-        svg.innerHTML = '<defs><linearGradient id="p-loom-g" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="' + H + '">' +
-          '<stop offset="0" stop-color="#000"/><stop offset="0.45" stop-color="#888"/><stop offset="1" stop-color="#fff"/></linearGradient>' +
-          '<mask id="p-loom-m" maskUnits="userSpaceOnUse" x="0" y="0" width="' + W + '" height="' + H + '">' +
-          '<rect width="' + W + '" height="' + H + '" fill="url(#p-loom-g)"/><rect class="p-loom-full" width="' + W + '" height="' + H + '" fill="#fff"/></mask></defs>' +
-          '<g mask="url(#p-loom-m)"></g>';
-        var g = svg.querySelector("g"), warp = [], weft = [], i;
-        for (i = 0; i < nW; i++) warp.push(g.appendChild(document.createElementNS(NS, "line")));
-        for (i = 0; i < nR; i++) weft.push(g.appendChild(document.createElementNS(NS, "line")));
-        gsap.set(warp.concat(weft), { opacity: 0 });
-        document.body.appendChild(svg);
-
-        function swap() {
-          var r = mk.getBoundingClientRect(), s = r.width / 64;
-          var v = [r.left + 24 * s, r.left + 40 * s], h = [r.top + 24 * s, r.top + 40 * s];
-          warp.forEach(function (l, k) {
-            var x = v[k < nW / 2 ? 0 : 1];
-            gsap.set(l, { attr: { x1: x, y1: r.top + 10 * s, x2: x, y2: r.top + 54 * s }, strokeWidth: 7 * s, stroke: "#1307ED", opacity: 1 });
-          });
-          weft.forEach(function (l, k) {
-            var y = h[k < nR / 2 ? 0 : 1];
-            gsap.set(l, { attr: { x1: r.left + 10 * s, y1: y, x2: r.left + 54 * s, y2: y }, strokeWidth: 7 * s, stroke: "#1307ED", opacity: 1 });
-          });
-          gsap.set(mk, { opacity: 0 });
-          gsap.set(svg, { filter: "drop-shadow(0 0 14px rgba(19,7,237,0.9))" });
-        }
-        function aim() {
-          // lo sfondo dell'apertura è già sparito: le linee passano dietro al titolo e al velo della hero, come il tessuto
-          var hero = document.querySelector(".p-hero"), veil = hero && hero.querySelector(".p-hero-veil");
-          if (veil) { hero.insertBefore(svg, veil); svg.style.zIndex = 1; }
-          targets = weave.threads(nW, nR);
-          // se un filo non è sullo schermo, la linea va sull'ultimo che c'è
-          while (targets.warp.length < nW) targets.warp.push(targets.warp[targets.warp.length - 1] || { x1: W / 2, y1: H, x2: W / 2, y2: H });
-          while (targets.weft.length < nR) targets.weft.push(targets.weft[targets.weft.length - 1] || { x1: 0, y1: H, x2: W, y2: H });
-          var grad = svg.querySelector("linearGradient");
-          grad.setAttribute("y1", targets.top - 30); grad.setAttribute("y2", H);
-        }
-        function spread(t, at) {
-          var cw = (nW - 1) / 2;
-          warp.forEach(function (l, k) {
-            t.to(l, {
-              attr: { x1: function () { return targets.warp[k].x1; }, y1: function () { return targets.warp[k].y1; }, x2: function () { return targets.warp[k].x2; }, y2: function () { return targets.warp[k].y2; } },
-              strokeWidth: 1, stroke: function () { return targets.warpColor; }, duration: 1.1, ease: "expo.inOut"
-            }, at + Math.abs(k - cw) * 0.025);
-          });
-          weft.forEach(function (l, k) {
-            t.to(l, {
-              attr: { x1: function () { return targets.weft[k].x1; }, y1: function () { return targets.weft[k].y1; }, x2: function () { return targets.weft[k].x2; }, y2: function () { return targets.weft[k].y2; } },
-              strokeWidth: 1, stroke: function () { return targets.weftColor; }, duration: 0.95, ease: "power3.inOut"
-            }, at + 0.1 + k * 0.04);
-          });
-          t.to(svg.querySelector(".p-loom-full"), { opacity: 0, duration: 1.1, ease: "power2.inOut" }, at)
-            .to(svg, { filter: "drop-shadow(0 0 0px rgba(19,7,237,0))", duration: 0.9 }, at);
-        }
-        return { svg: svg, warp: warp, weft: weft, swap: swap, aim: aim, spread: spread };
-      }
+      tl.to(weave, { weave: 1, duration: 2.4, ease: "power2.out" }, 0)
+        .to(h1Split ? h1Split.lines : h1, { yPercent: 0, duration: 1.2, stagger: 0.08 }, 0.1);
+      if (accent) tl.to(accent, { "--mark": 1, duration: 1, ease: "expo.inOut" }, 0.6);
+      tl.fromTo("[data-hero-item]", { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 1, stagger: 0.07 }, 0.05);
+      // le righe tornano testo normale appena il titolo è entrato (e l'evidenziatore è passato), non alla fine
+      // del tessuto: Google misura il titolo da quel momento (Largest Contentful Paint), prima arrivava a 2,4 s
+      var linesEnd = 1.3 + 0.08 * ((h1Split ? h1Split.lines.length : 1) - 1);
+      tl.add(function () { if (h1Split) h1Split.revert(); }, Math.max(linesEnd, accent ? 1.6 : 0));
+      if (deepLink) tl.progress(1);
 
       heroExit();
 
@@ -289,341 +142,11 @@
       }
     });
 
-    /* ---- Nastro: velocità e inclinazione seguono lo scroll ---- */
-    (function () {
-      var track = document.querySelector(".p-marquee-track");
-      if (!track) return;
-      var group = track.children[0], w = group.offsetWidth, x = 0, boost = 0, dir = 1, visible = false;
-      var setX = gsap.quickSetter(track, "x", "px"), setSkew = gsap.quickSetter(track, "skewX", "deg");
-      window.addEventListener("resize", function () { w = group.offsetWidth; });
-      ST.create({ start: 0, end: "max", onUpdate: function (s) { dir = s.direction; boost = Math.min(Math.abs(s.getVelocity()) / 240, 14); } });
-      ST.create({ trigger: ".p-marquee", start: "top bottom", end: "bottom top", onToggle: function (s) { visible = s.isActive; } });
-      gsap.ticker.add(function (time, dtMs) {
-        if (!visible) return;
-        x -= (1 + boost) * dir * dtMs * 0.055;
-        if (x <= -w) x += w; else if (x > 0) x -= w;
-        boost *= 0.9;
-        setX(x); setSkew(-boost * 0.6 * dir);
-      });
-    })();
-
-    /* ============================================================
-       NUMERI TESSUTI: le cifre grandi delle statistiche si tessono quando entrano nello schermo (2 secondi).
-       1. l'ordito (fili verticali, chiari) scende dentro le cifre, da sinistra a destra;
-       2. la trama (fili orizzontali, blu) passa riga per riga dal basso in su, una volta da sinistra
-          e una da destra come la navetta, sopra e sotto l'ordito: il tessuto cresce come sul telaio;
-       3. il pettine batte la trama e i fili si stringono finché la cifra è un tessuto pieno;
-       4. i bordi si rifilano sulla sagoma esatta e il testo vero prende il posto dei fili.
-       Il testo vero resta sempre nella pagina col valore finale: lo leggono i lettori di schermo.
-       I fili sono un canvas sopra la cifra, nascosto ai lettori di schermo, che sparisce a fine animazione.
-       Le cifre sono disegnate con lo stesso carattere, una per una nelle posizioni del testo vero
-       (le cifre tabellari del sito sono più larghe di quelle normali), e campionate su una griglia.
-       ============================================================ */
-    (function () {
-      var boxes = gsap.utils.toArray(".p-stat-num");
-      if (!boxes.length) return;
-      var T = 2;           // durata di tutta la tessitura (secondi)
-      var RUN_W = 0.5;     // quanto ci mette un filo d'ordito a scendere
-      var RUN_H = 0.38;    // quanto ci mette la navetta ad attraversare la cifra
-
-      function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
-      function seg(t, a, b) { return clamp((t - a) / (b - a), 0, 1); }
-      function cubicOut(x) { return 1 - Math.pow(1 - x, 3); }
-      function inOut(x) { return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; }
-      function sineInOut(x) { return -(Math.cos(Math.PI * x) - 1) / 2; }
-      function mix(a, b, k) { return "rgb(" + Math.round(a[0] + (b[0] - a[0]) * k) + "," + Math.round(a[1] + (b[1] - a[1]) * k) + "," + Math.round(a[2] + (b[2] - a[2]) * k) + ")"; }
-      // numeri casuali ma sempre uguali: i fili arrivano sempre nello stesso ordine
-      function rnd(i, k) { var s = Math.sin(i * 127.1 + k * 311.7) * 43758.5453; return s - Math.floor(s); }
-      function make(tag, cls) { var e = document.createElement(tag); e.className = cls; e.setAttribute("aria-hidden", "true"); return e; }
-      // Colori: ordito chiaro e trama nel blu del marchio, come una tela di cotone.
-      // Stringendosi vanno verso il colore del testo vero, che alla fine prende il loro posto.
-      function palette() {
-        return root.getAttribute("data-theme") === "light"
-          ? { warp: [[86, 93, 109], [20, 23, 19]], weft: [[19, 7, 237], [22, 14, 160]] }
-          : { warp: [[155, 160, 147], [236, 238, 231]], weft: [[63, 54, 245], [150, 158, 255]] };
-      }
-
-      var weaves = boxes.map(weave).filter(Boolean);
-      // cambio di tema a metà tessitura: i fili si ridisegnano coi colori nuovi
-      document.addEventListener("telaio:tema", function () { weaves.forEach(function (w) { w.redraw(); }); });
-      var lastW = window.innerWidth, rT = 0;
-      window.addEventListener("resize", function () {
-        if (window.innerWidth === lastW) return; // la barra del telefono che compare non cambia le cifre
-        lastW = window.innerWidth;
-        clearTimeout(rT);
-        rT = setTimeout(function () { weaves.forEach(function (w) { w.measure(); }); }, 150);
-      });
-
-      function weave(box, idx) {
-        var val = box.querySelector("span"), unit = box.querySelector("small");
-        var cv = make("canvas", "p-woven");
-        if (!val || !cv.getContext) return null;
-        // tre canvas dentro la cifra, così ereditano carattere e cifre tabellari del testo:
-        // quello che si vede, uno per campionare le cifre, uno con la sagoma esatta
-        var sp = make("canvas", "p-woven-aux"), mk = make("canvas", "p-woven-aux"), meas = make("span", "p-woven-meas");
-        box.appendChild(cv); box.appendChild(sp); box.appendChild(mk); box.appendChild(meas);
-        var ctx = cv.getContext("2d"), sctx = sp.getContext("2d", { willReadFrequently: true }), mctx = mk.getContext("2d");
-        var text = val.textContent.trim();
-        var fs, ls, font, P, base, x0, gL, gT, cols, rows, bl, br, bt, cw, ch, dpr;
-        var g = null, maskOk = false, dW = [], dH = [];
-        var st = { t: 0 }, tl = null, played = false;
-
-        function measure() {
-          var cs = getComputedStyle(val);
-          fs = parseFloat(cs.fontSize); ls = parseFloat(cs.letterSpacing) || 0;
-          font = cs.fontWeight + " " + fs + "px " + cs.fontFamily;
-          // passo della griglia: fili che si vedono come fili; sul telefono relativamente più grossi (meno fili)
-          P = Math.max(5, Math.round(fs / (window.innerWidth <= 560 ? 11 : 17)));
-          var bx = box.getBoundingClientRect(), vr = val.getBoundingClientRect();
-          // la linea di base del testo: un segnaposto alto zero, allineato alla base
-          var probe = document.createElement("span");
-          probe.style.cssText = "display:inline-block;width:0;height:0;vertical-align:baseline";
-          val.appendChild(probe);
-          base = probe.getBoundingClientRect().top - bx.top;
-          val.removeChild(probe);
-          x0 = vr.left - bx.left;
-          // la griglia copre la cifra (dalla cima al fondo della virgola) con un passo di margine
-          cols = Math.ceil(vr.width / P) + 2; rows = Math.ceil(fs * 1.02 / P);
-          gL = x0 - P; gT = base - fs * 0.8;
-          // un po' di spazio attorno (la trama battuta all'inizio è più alta), senza uscire dallo schermo
-          var roomL = bx.left + gL, roomR = window.innerWidth - (bx.left + gL + cols * P);
-          bl = Math.max(0, Math.min(P * 2, roomL - 2)); br = Math.max(0, Math.min(P * 2, roomR - 2));
-          bt = Math.round(fs * 0.16);
-          cw = Math.round(bl + cols * P + br); ch = Math.round(rows * P + 2 * bt);
-          dpr = Math.min(window.devicePixelRatio || 1, 1.75);
-          cv.style.left = (gL - bl) + "px"; cv.style.top = (gT - bt) + "px";
-          cv.style.width = cw + "px"; cv.style.height = ch + "px";
-          cv.width = Math.round(cw * dpr); cv.height = Math.round(ch * dpr);
-          mk.width = cv.width; mk.height = cv.height;
-          sp.width = cols * P; sp.height = rows * P;
-          g = null; maskOk = false;
-          if (tl && st.t > 0 && st.t < T) frame(st.t);
-        }
-
-        // Posizione di ogni carattere, misurata sul testo vero (stesse cifre, stessa spaziatura)
-        function layout() {
-          meas.textContent = text;
-          var tn = meas.firstChild, mr = meas.getBoundingClientRect(), out = [], rg = document.createRange();
-          for (var i = 0; i < text.length; i++) {
-            rg.setStart(tn, i); rg.setEnd(tn, i + 1);
-            var rr = rg.getBoundingClientRect();
-            out.push({ ch: text[i], x: rr.left - mr.left, w: rr.width - ls });
-          }
-          return out;
-        }
-        // Le cifre una per una nelle posizioni del testo vero; se il canvas non usa le cifre tabellari
-        // (alcuni browser), la cifra va al centro della sua casella
-        function drawText(c2d, items, ox, oy) {
-          c2d.font = font; c2d.textBaseline = "alphabetic"; c2d.textAlign = "left";
-          if ("letterSpacing" in c2d) c2d.letterSpacing = "0px";
-          for (var i = 0; i < items.length; i++) {
-            var it = items[i];
-            c2d.fillText(it.ch, ox + it.x + (it.w - c2d.measureText(it.ch).width) / 2, oy);
-          }
-        }
-
-        // Le cifre sulla griglia: le caselle dentro e i tratti di filo (righe di trama e colonne d'ordito)
-        function sample() {
-          var items = layout(), w = sp.width, r, c, a, b;
-          sctx.setTransform(1, 0, 0, 1, 0, 0);
-          sctx.clearRect(0, 0, sp.width, sp.height);
-          sctx.fillStyle = "#000";
-          drawText(sctx, items, x0 - gL, base - gT);
-          var d = sctx.getImageData(0, 0, sp.width, sp.height).data, inside = new Uint8Array(rows * cols), f = [0.2, 0.5, 0.8];
-          for (r = 0; r < rows; r++) for (c = 0; c < cols; c++) {
-            var n = 0;
-            for (a = 0; a < 3; a++) for (b = 0; b < 3; b++) {
-              if (d[(Math.floor((r + f[b]) * P) * w + Math.floor((c + f[a]) * P)) * 4 + 3] > 127) n++;
-            }
-            // generosi sul bordo: i fili escono appena dalla cifra, la sagoma esatta li rifila alla fine
-            inside[r * cols + c] = n >= 2 ? 1 : 0;
-          }
-          var H = [], V = [], s0, r0 = rows, r1 = -1;
-          for (r = 0; r < rows; r++) for (c = 0; c < cols;) {
-            if (!inside[r * cols + c]) { c++; continue; }
-            s0 = c; while (c < cols && inside[r * cols + c]) c++;
-            H.push(r, s0, c - 1);
-            if (r < r0) r0 = r;
-            r1 = r;
-          }
-          for (c = 0; c < cols; c++) for (r = 0; r < rows;) {
-            if (!inside[r * cols + c]) { r++; continue; }
-            s0 = r; while (r < rows && inside[r * cols + c]) r++;
-            V.push(c, s0, r - 1);
-          }
-          // ordine di arrivo: l'ordito da sinistra a destra, la trama dal basso in su (dove c'è la cifra)
-          dW = []; dH = [];
-          for (c = 0; c < cols; c++) dW.push((c / cols) * 0.3 + rnd(c + idx * 31, 1) * 0.04);
-          for (r = 0; r < rows; r++) dH.push(0.34 + clamp((r1 - r) / Math.max(1, r1 - r0), 0, 1) * 0.6 + rnd(r + idx * 17, 2) * 0.03);
-          return { inside: inside, H: H, V: V, items: items };
-        }
-
-        // La sagoma esatta delle cifre per rifilare i bordi: tutto pieno tranne le cifre
-        function buildMask() {
-          maskOk = true;
-          mctx.setTransform(1, 0, 0, 1, 0, 0);
-          mctx.globalCompositeOperation = "source-over";
-          mctx.clearRect(0, 0, mk.width, mk.height);
-          mctx.fillStyle = "#000";
-          mctx.fillRect(0, 0, mk.width, mk.height);
-          mctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-          mctx.globalCompositeOperation = "destination-out";
-          drawText(mctx, g.items, bl + x0 - gL, bt + base - gT);
-          mctx.globalCompositeOperation = "source-over";
-        }
-
-        function frame(t) {
-          if (!g) g = sample();
-          var pal = palette(), k, r, c, a, b;
-          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-          ctx.globalCompositeOperation = "source-over";
-          ctx.globalAlpha = 1;
-          ctx.clearRect(0, 0, cw, ch);
-          var ox = bl, oy = bt, by = base - gT;
-          // stringere: fili sottili con i vuoti tra l'uno e l'altro, poi ingrossano fino al tessuto pieno
-          // (i vuoti non si chiudono mai del tutto: resta un tessuto, non una scacchiera)
-          var tight = inOut(seg(t, 1.0, 1.55));
-          var th = P * (0.32 + 0.4 * tight), gap = Math.max(1, P * (0.13 - 0.04 * tight)), cap = Math.min(th / 2, P * 0.3);
-          // battere la trama: all'inizio le righe sono un poco più distanti, poi il pettine le avvicina
-          var beat = 1 + 0.1 * (1 - cubicOut(seg(t, 0.35, 1.5)));
-          var tone = inOut(seg(t, 1.05, 1.6));
-          var warpC = mix(pal.warp[0], pal.warp[1], tone), weftC = mix(pal.weft[0], pal.weft[1], tone);
-          function X(cc) { return ox + (cc + 0.5) * P; }
-          function Y(rr) { return oy + by + ((rr + 0.5) * P - by) * beat; }
-          var half = P * beat / 2;
-          // fin dove è arrivato ogni filo: l'ordito scende, la navetta attraversa (una riga da sinistra, la dopo da destra)
-          var wy = [], hx0 = [], hx1 = [];
-          for (c = 0; c < cols; c++) wy.push(Y(cubicOut(seg(t, dW[c], dW[c] + RUN_W)) * (rows + 1) - 1) + half);
-          for (r = 0; r < rows; r++) {
-            var reach = sineInOut(seg(t, dH[r], dH[r] + RUN_H)) * (cols + 1) * P;
-            if (r % 2) { hx0.push(ox + cols * P - reach); hx1.push(ox + cols * P + P); }
-            else { hx0.push(ox - P); hx1.push(ox + reach); }
-          }
-          ctx.lineCap = "round";
-          ctx.lineWidth = th;
-
-          // 1. la trama: un tratto per ogni pezzo di riga dentro la cifra, fin dove è passata la navetta
-          ctx.strokeStyle = weftC;
-          ctx.beginPath();
-          for (k = 0; k < g.H.length; k += 3) {
-            r = g.H[k];
-            a = Math.max(X(g.H[k + 1]) - P / 2 + cap, hx0[r] + cap);
-            b = Math.min(X(g.H[k + 2]) + P / 2 - cap, hx1[r] - cap);
-            if (b > a) { ctx.moveTo(a, Y(r)); ctx.lineTo(b, Y(r)); }
-          }
-          ctx.stroke();
-
-          // 2. l'ordito, fin dove è sceso; prima un alone che taglia la trama accanto al filo:
-          //    così si vede che passa sopra
-          ctx.beginPath();
-          for (k = 0; k < g.V.length; k += 3) {
-            c = g.V[k];
-            a = Y(g.V[k + 1]) - half + cap;
-            b = Math.min(Y(g.V[k + 2]) + half - cap, wy[c] - cap);
-            if (b > a) { ctx.moveTo(X(c), a); ctx.lineTo(X(c), b); }
-          }
-          ctx.globalCompositeOperation = "destination-out";
-          ctx.lineWidth = th + 2 * gap;
-          ctx.stroke();
-          ctx.globalCompositeOperation = "source-over";
-          ctx.lineWidth = th;
-          ctx.strokeStyle = warpC;
-          ctx.stroke();
-
-          // 3. la tela: a caselle alterne la trama torna sopra l'ordito (sopra, sotto, sopra…),
-          //    con lo stesso alone che taglia l'ordito sopra e sotto
-          ctx.lineCap = "butt";
-          ctx.beginPath();
-          for (r = 0; r < rows; r++) {
-            for (c = r % 2; c < cols; c += 2) {
-              if (!g.inside[r * cols + c]) continue;
-              a = Math.max(X(c) - P / 2, hx0[r]); b = Math.min(X(c) + P / 2, hx1[r]);
-              if (b > a) { ctx.moveTo(a, Y(r)); ctx.lineTo(b, Y(r)); }
-            }
-          }
-          ctx.globalCompositeOperation = "destination-out";
-          ctx.lineWidth = th + 2 * gap;
-          ctx.stroke();
-          ctx.globalCompositeOperation = "source-over";
-          ctx.lineWidth = th;
-          ctx.strokeStyle = weftC;
-          ctx.stroke();
-
-          // 4. alla fine i bordi seguono la sagoma esatta: il passaggio al testo vero è pulito
-          var edge = inOut(seg(t, 1.4, 1.56));
-          if (edge > 0) {
-            if (!maskOk) buildMask();
-            ctx.setTransform(1, 0, 0, 1, 0, 0);
-            ctx.globalAlpha = edge;
-            ctx.globalCompositeOperation = "destination-out";
-            ctx.drawImage(mk, 0, 0);
-            ctx.globalCompositeOperation = "source-over";
-            ctx.globalAlpha = 1;
-          }
-        }
-
-        function hide() {
-          gsap.set(val, { opacity: 0 });
-          if (unit) gsap.set(unit, { opacity: 0, x: -10 });
-          ctx.setTransform(1, 0, 0, 1, 0, 0);
-          ctx.clearRect(0, 0, cv.width, cv.height);
-          gsap.set(cv, { opacity: 1, filter: "blur(0px)", visibility: "visible" });
-        }
-        // subito il numero vero, senza fili (la cifra è già passata sopra lo schermo)
-        function finish() {
-          played = true;
-          if (tl) tl.kill();
-          gsap.set(unit ? [val, unit] : val, { opacity: 1, x: 0 });
-          gsap.set(cv, { visibility: "hidden" });
-        }
-        function play() {
-          played = true;
-          if (box.getBoundingClientRect().bottom < 0) { finish(); return; }
-          if (tl) tl.kill();
-          hide();
-          st.t = 0;
-          tl = gsap.timeline();
-          tl.to(st, { t: T, duration: T, ease: "none", onUpdate: function () { frame(st.t); } }, 0);
-          if (unit) tl.to(unit, { opacity: 1, x: 0, duration: 0.8, ease: "expo.out" }, 1.2);
-          // il testo vero prende il posto dei fili (un filo di sfocatura: i due stati si fondono),
-          // poi il canvas si nasconde e non costa più niente
-          tl.to(val, { opacity: 1, duration: 0.38, ease: "power2.inOut" }, 1.62)
-            .to(cv, { opacity: 0, filter: "blur(3px)", duration: 0.38, ease: "power2.inOut" }, 1.62)
-            .set(cv, { visibility: "hidden" }, T);
-        }
-
-        measure();
-        hide();
-        ST.create({
-          trigger: box, start: "top 84%", end: "bottom top",
-          onEnter: function () { if (!played) play(); },
-          onEnterBack: function () { if (!played) play(); },
-          onLeave: function () { if (!played) finish(); }
-        });
-        if (box.getBoundingClientRect().bottom < 0) finish();
-
-        return {
-          measure: measure,
-          redraw: function () { if (tl && tl.isActive()) frame(st.t); }
-        };
-      }
-    })();
-    /* ---- fine numeri tessuti ---- */
-
-    /* ---- Statistiche: mini grafici e testi accanto ai numeri ---- */
-    gsap.utils.toArray(".p-stat").forEach(function (st) {
-      var tl = gsap.timeline({ defaults: { ease: "expo.out" }, scrollTrigger: { trigger: st, start: "top 80%", toggleActions: "play none none none" } });
-      function add(sel, vars, at) { var els = st.querySelectorAll(sel); if (els.length) tl.from(els, vars, at); }
-      add(".p-col i", { scaleY: 0, duration: 1.3, stagger: 0.18 }, 0.2);
-      add(".p-hrow em", { scaleX: 0, duration: 1.5, stagger: 0.18 }, 0.2);
-      add(".p-viz-dots i", { scale: 0.6, opacity: 0, duration: 0.9, stagger: 0.14, ease: "back.out(1.4)" }, 0.2);
-      add(".p-stat-body > p", { y: 24, opacity: 0, duration: 1, stagger: 0.08 }, 0.35);
-    });
-
     /* ---- Manifesto e frasi grandi: le parole si accendono una a una ---- */
     if (Split) {
       gsap.utils.toArray(".p-manifesto-text, [data-scrub]").forEach(function (el) {
-        var s = Split.create(el, { type: "words", wordsClass: "p-word" });
+        // aria "none": le parole restano testo normale per i lettori di schermo (un aria-label su un <p> lo ignorano)
+        var s = Split.create(el, { type: "words", wordsClass: "p-word", aria: "none" });
         // sul fondo chiaro le parole ancora spente sparivano: lì partono un po' più visibili
         gsap.fromTo(s.words, { opacity: function () { return root.getAttribute("data-theme") === "light" ? 0.24 : 0.13; } }, {
           opacity: 1, ease: "none", stagger: 0.1,
@@ -632,41 +155,13 @@
       });
     }
 
-    /* ---- Casi: scorrimento orizzontale con la sezione bloccata ---- */
-    var mm = gsap.matchMedia();
-    mm.add("(min-width: 900px)", function () {
-      var pin = document.querySelector(".p-cases-pin"), track = document.querySelector(".p-cases-track");
-      if (!pin || !track) return;
-      var rail = document.querySelector(".p-rail i"), count = document.querySelector(".p-cases-count b");
-      var cards = track.querySelectorAll(".p-case:not(.p-case-cta)").length;
-      function dist() { return Math.max(0, track.scrollWidth - document.documentElement.clientWidth); }
-      var tw = gsap.to(track, {
-        x: function () { return -dist(); }, ease: "none",
-        scrollTrigger: {
-          trigger: pin, start: "top top", end: function () { return "+=" + dist(); },
-          pin: true, scrub: 0.9, invalidateOnRefresh: true, anticipatePin: 1,
-          onUpdate: function (self) {
-            gsap.set(rail, { scaleX: self.progress });
-            var n = Math.min(cards, 1 + Math.floor(self.progress * cards));
-            count.textContent = (n < 10 ? "0" : "") + n;
-          }
-        }
-      });
-      gsap.utils.toArray(".p-case", track).forEach(function (c) {
-        gsap.fromTo(c, { y: 80, rotation: 2.5, opacity: 0.15 }, {
-          y: 0, rotation: 0, opacity: 1, ease: "none",
-          scrollTrigger: { trigger: c, containerAnimation: tw, start: "left 100%", end: "left 68%", scrub: true }
-        });
-      });
-    });
-    mm.add("(max-width: 899px)", function () {
-      ST.batch(".p-cases-track .p-case", {
-        start: "top 90%",
-        onEnter: function (els) {
-          els = firstTime(els);
-          if (els.length) gsap.fromTo(els, { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: "expo.out", stagger: 0.08 });
-        }
-      });
+    /* ---- Casi: una griglia, le card entrano mentre arrivano sullo schermo ---- */
+    ST.batch(".p-cases-track .p-case", {
+      start: "top 90%",
+      onEnter: function (els) {
+        els = firstTime(els);
+        if (els.length) gsap.fromTo(els, { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: "expo.out", stagger: 0.08 });
+      }
     });
 
     /* ---- Passi: il filo si tesse e il contatore scorre ---- */
@@ -746,17 +241,6 @@
         scrollTrigger: { trigger: ".p-final", start: "top 85%", end: "center center", scrub: true }
       });
     }
-    // la pallina delle chiusure: cade dall'alto e rimbalza quando arriva sullo schermo, poi ogni tanto fa un saltello
-    // (.is-hop, p-hop in motion.css). Si misura dal titolo sopra di lei: la pallina ha già lo spostamento dell'entrata.
-    // Quella della hero entra con la hero (sopra)
-    gsap.utils.toArray(".p-orb").filter(function (o) { return !o.closest(".p-hero"); }).forEach(function (orb) {
-      gsap.timeline({
-        scrollTrigger: { trigger: orb.previousElementSibling || orb, start: "bottom 72%", toggleActions: "play none none none" },
-        onComplete: function () { orb.classList.add("is-hop"); }
-      })
-        .from(orb, { y: -150, duration: 1.2, ease: "bounce.out" }, 0)
-        .from(orb, { opacity: 0, scale: 0.85, duration: 0.4, ease: "power2.out" }, 0);
-    });
     // con il tessuto in WebGL la parola si tesse riga dopo riga (initParolaTessuta): le lettere restano ferme
     if (document.querySelector(".p-bigword") && !(weave && weave.gl)) {
       gsap.fromTo(".p-bigword span", { yPercent: 100 }, {
@@ -784,7 +268,7 @@
       // Il pulsante segue il mouse in modo morbido; il rimbalzo elastico solo quando lo lasci andare
       // (rifatto a ogni movimento faceva tremolare il pulsante).
       gsap.utils.toArray("[data-magnetic]").forEach(function (el) {
-        var k = el.classList.contains("p-orb") ? 0.4 : 0.22, back = null;
+        var k = 0.22, back = null;
         var xTo = gsap.quickTo(el, "x", { duration: 0.45, ease: "power3.out" });
         var yTo = gsap.quickTo(el, "y", { duration: 0.45, ease: "power3.out" });
         el.addEventListener("pointermove", function (e) {
@@ -1224,7 +708,8 @@
     var canvas = sec && sec.querySelector(".p-rac-canvas");
     if (!canvas || !canvas.getContext) return null;
     var ctx = canvas.getContext("2d");
-    var still = !motion;
+    // fermo per tutti; la scena animata solo con data-racconto="vivo" sulla sezione (e con le animazioni)
+    var still = !motion || sec.getAttribute("data-racconto") !== "vivo";
     var pin = sec.querySelector(".p-rac-pin"), stage = sec.querySelector(".p-rac-stage");
     var glow = sec.querySelector(".p-rac-glow"), callout = sec.querySelector(".p-rac-callout");
     var head = sec.querySelector(".p-rac-head"), side = sec.querySelector(".p-rac-side"), slot = sec.querySelector(".p-rac-slot");
