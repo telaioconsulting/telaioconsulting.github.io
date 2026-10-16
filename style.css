@@ -219,7 +219,7 @@ a, button, summary { touch-action: manipulation; }
    e la toglie se script.js non parte. */
 html:not(.js) .menu-btn, html:not(.js) #themeBtn, html:not(.js) .mobile-bar { display: none !important; }
 .no-js-only { display: none; }
-html:not(.js) .no-js-only { display: block; }
+html:not(.js) .no-js-only, .no-js-only.is-shown { display: block; }
 
 /* ============================================================
    HEADER
@@ -352,10 +352,12 @@ html:not(.js) .no-js-only { display: block; }
 .ck-field input::placeholder, .ck-field textarea::placeholder { color: var(--muted); opacity: 1; }
 .ck-field input:focus-visible, .ck-field textarea:focus-visible { outline-offset: 1px; border-color: transparent; }
 .ck-hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
-.ck-form .btn { min-height: 48px; margin-top: 4px; }
+.ck-send { margin-top: 4px; }
+.ck-form .btn { min-height: 48px; }
 .ck-form .btn:disabled { opacity: .72; cursor: progress; }
-.ck-status { font-size: var(--step--1); line-height: 1.5; }
-.ck-status:empty { display: none; }
+/* la riga di stato resta sempre nella pagina (i lettori di schermo la annunciano solo se c'era già) */
+.ck-status { font-size: var(--step--1); line-height: 1.5; margin-top: 10px; }
+.ck-status:empty { margin-top: 0; }
 .ck-status.is-error { color: #FFB4A8; }
 :root[data-theme="light"] .ck-status.is-error { color: #B3261E; }
 .ck-status a, .ck-note a { color: var(--weft); }
@@ -370,6 +372,9 @@ html:not(.js) .no-js-only { display: block; }
   border: 1px solid var(--line-strong); border-radius: var(--r-lg); box-shadow: var(--shadow-lg);
   overflow: auto; overscroll-behavior: contain;
 }
+/* con la finestra aperta la pagina sotto resta ferma (classe messa da script.js); al posto della barra di
+   scorrimento resta il suo spazio, così la pagina non scatta di lato dove la barra è visibile */
+html.ck-open { overflow: hidden; padding-right: var(--ck-gutter, 0px); }
 .ck-dialog::backdrop { background: rgba(9, 12, 8, .72); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
 :root[data-theme="light"] .ck-dialog::backdrop { background: rgba(9, 12, 8, .45); }
 .ck-dialog-in { position: relative; padding: clamp(24px, 5vw, 40px); }
@@ -379,8 +384,6 @@ html:not(.js) .no-js-only { display: block; }
 .ck-title { font-size: var(--step-3); margin-top: 12px; padding-right: 40px; }
 .ck-lede { margin-top: 10px; color: var(--muted); line-height: 1.55; }
 .ck-dialog .ck-form, .ck-dialog .ck-done { margin-top: 24px; }
-/* con la finestra aperta la pagina sotto resta ferma */
-html:has(.ck-dialog[open]) { overflow: hidden; }
 @media (max-width: 560px) { .ck-two { grid-template-columns: 1fr; } }
 
 /* Domande a fisarmonica */

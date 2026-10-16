@@ -77,10 +77,9 @@
       messaggio: "What would you like to talk about?", facoltativo: "optional",
       esempio: "For example: answering customer emails takes us hours every week.",
       invia: "Send request", invio: "Sending…", chiudi: "Close",
-      privacy: 'We only use this information to organise and prepare the call. <a href="/en/privacy/">Read our privacy notice.</a>',
+      privacy: 'We only use this information to organise and prepare the call. <a href="/en/privacy/" target="_blank" rel="noopener">Read our privacy notice.</a>',
       grazie: function (n, e) { return ["Thank you, " + n + ".", "Your request has reached us. We’ll write to you at " + e + " to set a day and time."]; },
-      errore: "The request could not be sent. Please try again in a moment, or write to us at " + EMAIL + ".",
-      senzaModulo: "<p>Write to us at " + EMAIL + " and we’ll suggest a day and time.</p>"
+      errore: "The request could not be sent. Please try again in a moment, or write to us at " + EMAIL + "."
     } : {
       kicker: "Check-up AI · 30 minuti · Gratuito",
       titolo: "Prenota il check-up AI",
@@ -89,15 +88,16 @@
       messaggio: "Di cosa vorresti parlare?", facoltativo: "facoltativo",
       esempio: "Per esempio: rispondere alle email dei clienti ci porta via ore ogni settimana.",
       invia: "Invia la richiesta", invio: "Invio in corso…", chiudi: "Chiudi",
-      privacy: 'Usiamo questi dati solo per organizzare e preparare la call. <a href="/privacy/">Leggi l’informativa privacy.</a>',
+      privacy: 'Usiamo questi dati solo per organizzare e preparare la call. <a href="/privacy/" target="_blank" rel="noopener">Leggi l’informativa privacy.</a>',
       grazie: function (n, e) { return ["Grazie, " + n + ".", "La tua richiesta è arrivata. Ti scriviamo a " + e + " per fissare giorno e ora."]; },
-      errore: "La richiesta non è partita. Riprova tra poco, oppure scrivici a " + EMAIL + ".",
-      senzaModulo: "<p>Scrivici a " + EMAIL + ": ti proponiamo noi giorno e ora.</p>"
+      errore: "La richiesta non è partita. Riprova tra poco, oppure scrivici a " + EMAIL + "."
     };
 
     var box = document.querySelector("[data-booking]");
     if (!MODULO_URL || !window.fetch || !window.URLSearchParams) {
-      if (box) { box.innerHTML = T.senzaModulo; box.hidden = false; }
+      // senza modulo vale il paragrafo con l'email già scritto nella pagina (quello di chi non ha JavaScript)
+      var senza = box && box.parentNode.querySelector(".no-js-only");
+      if (senza) senza.classList.add("is-shown");
       return;
     }
 
@@ -119,8 +119,8 @@
           '<textarea id="' + id + '-msg" name="messaggio" rows="4" maxlength="3000" placeholder="' + T.esempio + '"></textarea></div>' +
         // campo trappola: invisibile alle persone, lo riempiono solo i programmi che mandano spam
         '<div class="ck-hp" aria-hidden="true"><label>Lascia vuoto <input name="sito_web" type="text" tabindex="-1" autocomplete="off"></label></div>' +
-        '<button class="btn btn-primary btn-block" type="submit"><span class="ck-label">' + T.invia + "</span></button>" +
-        '<p class="ck-status" role="status" aria-live="polite"></p>' +
+        '<div class="ck-send"><button class="btn btn-primary btn-block" type="submit"><span class="ck-label">' + T.invia + "</span></button>" +
+          '<p class="ck-status" role="status" aria-live="polite"></p></div>' +
         (conNota ? '<p class="ck-note">' + T.privacy + "</p>" : "");
 
       var btn = f.querySelector("button"), label = f.querySelector(".ck-label"), stato = f.querySelector(".ck-status");
@@ -187,22 +187,38 @@
     document.body.appendChild(dlg);
 
     dlg.querySelector(".ck-close").addEventListener("click", function () { dlg.close(); });
-    // un clic sullo sfondo chiude; non se il clic è partito dentro (es. selezionando il testo di un campo)
-    var giu = null;
-    dlg.addEventListener("pointerdown", function (ev) { giu = ev.target; });
-    dlg.addEventListener("click", function (ev) { if (ev.target === dlg && giu === dlg) dlg.close(); });
+    // un clic sullo sfondo chiude; non se è partito dentro (selezionando il testo di un campo) e non
+    // sulla barra di scorrimento della finestra, che per il browser è la finestra stessa
+    function fuori(ev) {
+      var r = dlg.getBoundingClientRect();
+      return ev.target === dlg && (ev.clientX < r.left || ev.clientX > r.right || ev.clientY < r.top || ev.clientY > r.bottom);
+    }
+    var giuFuori = false;
+    dlg.addEventListener("pointerdown", function (ev) { giuFuori = fuori(ev); });
+    dlg.addEventListener("click", function (ev) { if (giuFuori && fuori(ev)) dlg.close(); });
+    // chiusa dopo un invio, alla prossima apertura la finestra ha un modulo nuovo e vuoto
+    dlg.addEventListener("close", function () {
+      root.classList.remove("ck-open");
+      var fatto = dlg.querySelector(".ck-done");
+      if (fatto) fatto.parentNode.replaceChild(modulo("ck-d", function () { return daPulsante; }, true), fatto);
+    });
 
+    // in fase di cattura: così il clic risulta già gestito per lo scorrimento morbido di motion.js,
+    // qualunque sia l'ordine degli script
     document.addEventListener("click", function (ev) {
       var a = ev.target.closest ? ev.target.closest("a[data-cta='checkup']") : null;
       if (!a || ev.defaultPrevented || ev.button !== 0 || ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.altKey) return;
       ev.preventDefault();
       daPulsante = a.getAttribute("data-placement") || "";
       closeMenu();
+      // la pagina sotto resta ferma; lo spazio della sua barra di scorrimento resta occupato, così nulla si sposta
+      root.style.setProperty("--ck-gutter", (window.innerWidth - root.clientWidth) + "px");
+      root.classList.add("ck-open");
       if (!dlg.open) dlg.showModal();
       // con mouse e tastiera si parte dal nome; sul telefono no, la tastiera coprirebbe la finestra
       var nome = dlg.querySelector("input[name='nome']");
       if (nome && window.matchMedia("(pointer: fine)").matches) nome.focus();
-    });
+    }, true);
   })();
 
   /* ---- Barra fissa su telefono col pulsante principale ---- */
