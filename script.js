@@ -101,8 +101,9 @@
       return;
     }
 
-    // il modulo: id distinti per ogni copia (finestra e pagina), «punto» dice da quale pulsante si è partiti
-    function modulo(id, punto, conNota) {
+    // il modulo: id distinti per ogni copia (finestra e pagina), «punto» dice da quale pulsante si è partiti,
+    // «dopo» (solo la finestra) riceve il ringraziamento appena c'è
+    function modulo(id, punto, conNota, dopo) {
       var opz = ' <span class="ck-opt">(' + T.facoltativo + ")</span>";
       var f = document.createElement("form");
       f.className = "ck-form";
@@ -142,7 +143,8 @@
           .then(function (r) { return r.json(); })
           .then(function (res) {
             if (!res || !res.ok) throw new Error((res && res.errore) || "risposta");
-            grazie(f, dati.get("nome"), dati.get("email"));
+            var fatto = grazie(f, dati.get("nome"), dati.get("email"));
+            if (dopo) dopo(fatto);
           })
           .catch(function () { stato.innerHTML = T.errore; stato.classList.add("is-error"); })
           .then(function () { clearTimeout(attesa); inVolo = false; btn.disabled = false; label.textContent = T.invia; });
@@ -162,6 +164,7 @@
       fatto.appendChild(h); fatto.appendChild(p);
       f.parentNode.replaceChild(fatto, f);
       fatto.focus();
+      return fatto;
     }
 
     // nella pagina del check-up il modulo prende il posto dell'email nel riquadro blu
@@ -183,7 +186,8 @@
       '<p class="ck-kicker">' + T.kicker + "</p>" +
       '<h2 class="ck-title" id="ck-titolo">' + T.titolo + "</h2>" +
       '<p class="ck-lede">' + T.lede + "</p></div>";
-    dlg.firstChild.appendChild(modulo("ck-d", function () { return daPulsante; }, true));
+    function moduloFinestra() { return modulo("ck-d", function () { return daPulsante; }, true, avviaChiusura); }
+    dlg.firstChild.appendChild(moduloFinestra());
     document.body.appendChild(dlg);
 
     dlg.querySelector(".ck-close").addEventListener("click", function () { dlg.close(); });
@@ -196,11 +200,37 @@
     var giuFuori = false;
     dlg.addEventListener("pointerdown", function (ev) { giuFuori = fuori(ev); });
     dlg.addEventListener("click", function (ev) { if (giuFuori && fuori(ev)) dlg.close(); });
+
+    // dopo il ringraziamento la finestra si chiude da sola: una barra sottile si svuota nel frattempo.
+    // Non parte a finestra chiusa (la risposta è arrivata dopo un Esc: parte quando si riapre), né a scheda
+    // nascosta, né con «riduci movimento». Chi tocca, scorre o usa la tastiera dentro la finestra la tiene
+    // aperta, e anche chi passa a un'altra scheda: tornando, trova ancora il ringraziamento
+    var CHIUDI_DOPO = 8000, timerChiudi = 0, barra = null;
+    var fermo = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    function fermaChiusura() {
+      clearTimeout(timerChiudi); timerChiudi = 0;
+      if (barra && barra.parentNode) barra.parentNode.removeChild(barra);
+      barra = null;
+    }
+    function avviaChiusura(fatto) {
+      fermaChiusura();
+      if (!dlg.open || document.hidden || fermo) return;
+      barra = document.createElement("i");
+      barra.className = "ck-done-bar"; barra.setAttribute("aria-hidden", "true");
+      barra.style.animationDuration = CHIUDI_DOPO + "ms";
+      fatto.appendChild(barra);
+      timerChiudi = setTimeout(function () { dlg.close(); }, CHIUDI_DOPO); // la pulizia la fa «close»
+    }
+    ["pointerdown", "keydown", "wheel", "touchmove"].forEach(function (t) {
+      dlg.addEventListener(t, function () { if (timerChiudi) fermaChiusura(); }, { passive: true });
+    });
+    document.addEventListener("visibilitychange", function () { if (document.hidden && timerChiudi) fermaChiusura(); });
     // chiusa dopo un invio, alla prossima apertura la finestra ha un modulo nuovo e vuoto
     dlg.addEventListener("close", function () {
+      fermaChiusura();
       root.classList.remove("ck-open");
       var fatto = dlg.querySelector(".ck-done");
-      if (fatto) fatto.parentNode.replaceChild(modulo("ck-d", function () { return daPulsante; }, true), fatto);
+      if (fatto) fatto.parentNode.replaceChild(moduloFinestra(), fatto);
     });
 
     // in fase di cattura: così il clic risulta già gestito per lo scorrimento morbido di motion.js,
@@ -215,6 +245,9 @@
       root.style.setProperty("--ck-gutter", (window.innerWidth - root.clientWidth) + "px");
       root.classList.add("ck-open");
       if (!dlg.open) dlg.showModal();
+      // un ringraziamento arrivato a finestra chiusa: lo si vede ora, poi la finestra si chiude da sola
+      var giaFatto = dlg.querySelector(".ck-done");
+      if (giaFatto && !timerChiudi) avviaChiusura(giaFatto);
       // un link che dice già di cosa parlare («Parliamone nel check-up» di un'area) scrive il messaggio;
       // quello che la persona ha scritto da sé non si tocca
       var msg = dlg.querySelector("textarea[name='messaggio']"), testo = a.getAttribute("data-messaggio") || "";
