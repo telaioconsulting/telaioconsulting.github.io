@@ -188,9 +188,9 @@ strong, b { font-weight: 600; color: var(--ink); }
 html { -webkit-tap-highlight-color: transparent; }
 a, button, summary { touch-action: manipulation; }
 
-/* Link «Vai al contenuto»: invisibile finché non lo raggiunge il tasto Tab */
 /* testo solo per i lettori di schermo (titoli di sezione che a schermo non servono) */
 .vh { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+/* Link «Vai al contenuto»: invisibile finché non lo raggiunge il tasto Tab */
 .skip {
   position: absolute; left: 12px; top: -80px; z-index: 400;
   padding: 12px 16px; border-radius: var(--r-sm);
@@ -236,8 +236,8 @@ html:not(.js) .no-js-only, .no-js-only.is-shown { display: block; }
   border-bottom: 1px solid var(--line);
 }
 /* tema chiaro: i testi piccoli in mono, grigi su fondo chiaro, erano troppo sottili; un peso in più */
-:root[data-theme="light"] :is(.p-meta, .p-scroll, .p-src, .p-hrow, .p-col span, .crumbs, .lang-link,
-  .p-cases-count, .p-final-sub, .p-tl-seg span, .arrow-link, .p-founder .role) { font-weight: 500; }
+:root[data-theme="light"] :is(.p-meta, .p-scroll, .p-src, .crumbs, .lang-link,
+  .p-final-sub, .p-tl-seg span, .arrow-link, .p-founder .role) { font-weight: 500; }
 /* tema chiaro: la testata quasi piena, sopra il blocco blu non diventa più viola */
 :root[data-theme="light"] .top { background: color-mix(in srgb, var(--ground) 95%, transparent); }
 .top-in { display: flex; align-items: center; gap: 18px; height: 64px; }
@@ -357,8 +357,6 @@ html:not(.js) .no-js-only, .no-js-only.is-shown { display: block; }
   border: 1px solid var(--line-strong); border-radius: var(--r-sm);
 }
 .ck-field textarea { min-height: 112px; resize: vertical; line-height: 1.5; }
-/* telefoni bassi: il messaggio più corto, così «Invia» resta dentro la finestra */
-
 .ck-field input::placeholder, .ck-field textarea::placeholder { color: var(--muted); opacity: 1; }
 .ck-field input:focus-visible, .ck-field textarea:focus-visible { outline-offset: 1px; border-color: transparent; }
 .ck-hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
