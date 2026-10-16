@@ -710,6 +710,9 @@
     var ctx = canvas.getContext("2d");
     // fermo per tutti; la scena animata solo con data-racconto="vivo" sulla sezione (e con le animazioni)
     var still = !motion || sec.getAttribute("data-racconto") !== "vivo";
+    // nel disegno senza scena: quanto è tessuto (0 telaio vuoto, 1 tessuto finito). Con le animazioni
+    // si tesse da solo quando arriva sullo schermo; con «riduci movimento» resta finito
+    var trama = 1;
     var pin = sec.querySelector(".p-rac-pin"), stage = sec.querySelector(".p-rac-stage");
     var glow = sec.querySelector(".p-rac-glow"), callout = sec.querySelector(".p-rac-callout");
     var head = sec.querySelector(".p-rac-head"), side = sec.querySelector(".p-rac-side"), slot = sec.querySelector(".p-rac-slot");
@@ -831,7 +834,7 @@
     /* ---- POSA: dove sta ogni filo per un certo avanzamento P (e tempo T) ---- */
     function pose() {
       var a, b, c, d;
-      if (still) { a = 1; b = 1; c = 0.21; d = 0; }
+      if (still) { a = c01(trama / 0.45); b = c01((trama - 0.4) / 0.5); c = 0.21 * smooth((trama - 0.85) / 0.15); d = 0; }
       else {
         a = c01((P - 0.012) / 0.17);   // 1 · ordito       (P 0    → 0,2)
         b = c01((P - 0.212) / 0.29);   // 2 · trama        (P 0,2  → 0,52)
@@ -1250,12 +1253,34 @@
       else if (W) { pose(); render(); }
     });
 
-    /* ---- Senza animazioni: un disegno fermo, rifatto se cambiano misura o tema ---- */
+    /* ---- Senza scena: il disegno del tessuto (che si tesse una volta all'arrivo, o fermo), rifatto se cambiano misura o tema ---- */
     function redrawStill() { resize(); if (!W) return; pose(); render(); }
     if (still) {
       sec.classList.add("p-rac-still");
       if ("ResizeObserver" in window) new ResizeObserver(redrawStill).observe(canvas);
       else window.addEventListener("resize", redrawStill);
+      // con le animazioni: l'ordito scende, poi passa la trama, in circa 3 s, quando il telaio arriva sullo
+      // schermo; la pagina continua a scorrere (niente sezione bloccata)
+      if (motion && "IntersectionObserver" in window) {
+        trama = 0;
+        var finito = false;
+        var arrivo = new IntersectionObserver(function (es) {
+          // parte quando se ne vede almeno un terzo (la prima risposta arriva anche se ne spunta solo un bordo)
+          if (!es[0].isIntersecting || es[0].intersectionRatio < 0.35) return;
+          arrivo.disconnect();
+          var t0 = -1, DURATA = 3200;
+          requestAnimationFrame(function passo(t) {
+            if (finito) return;
+            if (t0 < 0) t0 = t;
+            trama = Math.min(1, (t - t0) / DURATA);
+            if (W) { pose(); render(); }
+            if (trama < 1) requestAnimationFrame(passo);
+          });
+        }, { threshold: 0.35 });
+        arrivo.observe(canvas);
+        // in stampa il tessuto è finito, anche se nessuno l'ha mai visto tessere
+        window.addEventListener("beforeprint", function () { finito = true; arrivo.disconnect(); trama = 1; redrawStill(); });
+      }
       redrawStill();
       if (document.fonts && document.fonts.ready) document.fonts.ready.then(redrawStill);
       return null;

@@ -397,7 +397,6 @@ html:not(.motion) .p-manifesto-text em {
 .p-rac-still .p-rac-canvas { display: block; position: relative; z-index: 1; width: 100%; aspect-ratio: 1 / 1.04; max-width: 600px; margin-inline: auto; }
 .p-rac-still .p-rac-glow { display: block; position: absolute; inset: 4% 4% auto; aspect-ratio: 1; z-index: 0; }
 .p-rac-still .p-rac-callout { position: relative; z-index: 1; margin: 20px auto 0; }
-@media (max-width: 760px) { .p-rac-still .p-rac-canvas, .p-rac-still .p-rac-glow { display: none; } .p-rac-still .p-rac-callout { margin: 0; } }
 
 /* ---- Scena: la sezione si ferma, la tela racconta i quattro passi ---- */
 /* fondo pieno (lo stesso della pagina): la trama delle sezioni, che scorrerebbe sotto la scena ferma, qui non si disegna */

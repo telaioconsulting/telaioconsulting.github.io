@@ -373,6 +373,9 @@ html:not(.js) .no-js-only, .no-js-only.is-shown { display: block; }
 .ck-done:focus { outline: none; }
 .ck-done-h { font-family: var(--f-display); font-weight: 700; font-size: var(--step-2); letter-spacing: -.01em; line-height: 1.2; color: var(--ink); }
 .ck-done p + p { margin-top: 8px; color: var(--muted); line-height: 1.55; }
+/* la finestra si chiude da sola dopo il ringraziamento: la barra si svuota nel frattempo (script.js) */
+.ck-done-bar { display: block; height: 2px; margin-top: 22px; border-radius: 2px; background: var(--brand); transform-origin: 0 50%; animation: ck-svuota linear forwards; }
+@keyframes ck-svuota { to { transform: scaleX(0); } }
 
 .ck-dialog {
   width: min(560px, calc(100vw - 32px)); max-width: calc(100vw - 32px); max-height: calc(100dvh - 32px);
