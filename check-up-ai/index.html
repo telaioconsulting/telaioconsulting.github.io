@@ -85,10 +85,10 @@
           { "@type": "Question", "name": "Quanto costa il check-up?", "acceptedAnswer": { "@type": "Answer", "text": "Niente. Il check-up è gratuito e non ti impegna a nulla." } },
           { "@type": "Question", "name": "Chi incontro?", "acceptedAnswer": { "@type": "Answer", "text": "Uno dei tre fondatori di Telaio." } },
           { "@type": "Question", "name": "Devo preparare qualcosa?", "acceptedAnswer": { "@type": "Answer", "text": "No. Se vuoi, pensa a un'attività che ti porta via tempo ogni settimana. Basta quella." } },
-          { "@type": "Question", "name": "Come ci colleghiamo?", "acceptedAnswer": { "@type": "Answer", "text": "In videochiamata. Il link arriva nella mail di conferma." } },
+          { "@type": "Question", "name": "Come ci colleghiamo?", "acceptedAnswer": { "@type": "Answer", "text": "In videochiamata. Quando fissiamo giorno e ora ti mandiamo anche il link." } },
           { "@type": "Question", "name": "E se poi non voglio andare avanti?", "acceptedAnswer": { "@type": "Answer", "text": "Va benissimo. Ti resta il quadro che abbiamo visto insieme." } }
         ],
-        "dateModified": "2026-10-04"
+        "dateModified": "2026-10-16"
       },
       {
         "@type": "Organization",
@@ -190,7 +190,7 @@
           <div class="p-tl-seg" style="--m:5"><i></i><span>04 · 5 min</span></div>
         </div>
         <div class="p-moments">
-          <div class="p-moment" data-reveal><span class="p-moment-dur">5 min</span><h3>La tua impresa</h3><p>Ci racconti cosa fate e dove va il tempo. Abbiamo già letto le tue risposte, quindi andiamo dritti al punto.</p></div>
+          <div class="p-moment" data-reveal><span class="p-moment-dur">5 min</span><h3>La tua impresa</h3><p>Ci racconti cosa fate e dove va il tempo. Se ci hai scritto due righe le abbiamo già lette, quindi andiamo dritti al punto.</p></div>
           <div class="p-moment" data-reveal><span class="p-moment-dur">10 min</span><h3>Il tuo settore</h3><p>Ti mostriamo cosa cambia con l'AI nel tuo settore, con esempi concreti.</p></div>
           <div class="p-moment" data-reveal><span class="p-moment-dur">10 min</span><h3>Le tue opportunità</h3><p>Troviamo due o tre attività dove l'AI può far risparmiare tempo o errori. Ti diciamo cosa servirebbe.</p></div>
           <div class="p-moment" data-reveal><span class="p-moment-dur">5 min</span><h3>Il passo successivo</h3><p>Ti diciamo da dove partiremmo e perché. Se oggi l'AI non conviene, te lo diciamo.</p></div>
@@ -251,21 +251,17 @@
       </div>
     </section>
 
-    <!-- SCEGLI GIORNO E ORA (blocco blu a tutta pagina) -->
+    <!-- PRENOTA: il modulo (blocco blu a tutta pagina) -->
     <section id="prenota" class="p-checkup">
       <div class="p-checkup-bg" aria-hidden="true"></div>
       <div class="wrap p-checkup-in is-top">
         <div>
-          <h2 class="p-h2" data-split>Scegli giorno e ora</h2>
-          <p class="p-lede-inv" data-reveal>Ti chiediamo poche informazioni. Servono a prepararci, così la call parte dal tuo caso.</p>
+          <h2 class="p-h2" data-split>Prenota il check-up</h2>
+          <p class="p-lede-inv" data-reveal>Lasciaci nome e contatti: ti scriviamo noi per fissare giorno e ora. Due righe sulla tua impresa ci aiutano a preparare la call.</p>
         </div>
         <div>
-          <!-- TODO(conferma): link della pagina di prenotazione Google, da mettere in due punti: il link di incorporamento in BOOKING_EMBED_URL_IT (script.js) e, qui sotto, al posto del testo con l'email per chi non ha JavaScript, il link «Apri il calendario» alla stessa pagina, in una scheda nuova. Finché manca, il riquadro mostra l'email. -->
           <div class="booking-box" data-reveal>
-            <div data-booking hidden>
-              <button class="btn btn-primary" type="button" data-booking-loader>Mostra i giorni disponibili</button>
-              <p class="micro">Il calendario è di Google: si carica solo quando lo apri.</p>
-            </div>
+            <div data-booking hidden></div>
             <p class="no-js-only">Scrivici a <a href="mailto:info@telaioconsulting.com" data-email-link>info@telaioconsulting.com</a>: ti proponiamo noi giorno e ora.</p>
           </div>
           <p class="booking-meta" data-reveal>Usiamo questi dati solo per organizzare e preparare la call. <a href="/privacy/">Leggi l'informativa privacy.</a></p>
@@ -284,7 +280,7 @@
           <details class="qa" data-reveal data-question-id="checkup-cost"><summary>Quanto costa il check-up?</summary><div class="a"><p>Niente. Il check-up è gratuito e non ti impegna a nulla.</p></div></details>
           <details class="qa" data-reveal data-question-id="who"><summary>Chi incontro?</summary><div class="a"><p>Uno dei tre fondatori di Telaio.</p></div></details>
           <details class="qa" data-reveal data-question-id="prepare"><summary>Devo preparare qualcosa?</summary><div class="a"><p>No. Se vuoi, pensa a un'attività che ti porta via tempo ogni settimana. Basta quella.</p></div></details>
-          <details class="qa" data-reveal data-question-id="call"><summary>Come ci colleghiamo?</summary><div class="a"><!-- TODO(conferma): piattaforma della videochiamata --><p>In videochiamata. Il link arriva nella mail di conferma.</p></div></details>
+          <details class="qa" data-reveal data-question-id="call"><summary>Come ci colleghiamo?</summary><div class="a"><!-- TODO(conferma): piattaforma della videochiamata --><p>In videochiamata. Quando fissiamo giorno e ora ti mandiamo anche il link.</p></div></details>
           <details class="qa" data-reveal data-question-id="no-go"><summary>E se poi non voglio andare avanti?</summary><div class="a"><p>Va benissimo. Ti resta il quadro che abbiamo visto insieme.</p></div></details>
         </div>
       </div>

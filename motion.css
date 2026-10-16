@@ -911,8 +911,12 @@ html:not(.motion) .p-manifesto-text em {
 .p-checkup .booking-box .btn-primary { background: #fff; color: var(--brand); }
 .p-checkup .booking-box .btn-primary:hover { box-shadow: 0 16px 40px -12px rgba(0, 0, 0, .55); }
 .p-checkup .booking-box .btn-primary::after { background: linear-gradient(105deg, transparent 32%, rgba(19, 7, 237, .14) 50%, transparent 68%); }
-.p-checkup .booking-box .micro { color: rgba(255, 255, 255, .78); }
-.p-checkup .booking-frame { background: #fff; }
+.p-checkup .ck-field label, .p-checkup .ck-done-h { color: #fff; }
+.p-checkup .ck-opt { color: rgba(255, 255, 255, .78); }
+.p-checkup .ck-field input, .p-checkup .ck-field textarea { background: #fff; color: #090C08; border-color: transparent; }
+.p-checkup .ck-field input::placeholder, .p-checkup .ck-field textarea::placeholder { color: #5A5F55; }
+.p-checkup .ck-field input:focus-visible, .p-checkup .ck-field textarea:focus-visible { outline-offset: 2px; }
+.p-checkup .ck-status.is-error { color: #fff; font-weight: 600; }
 .p-checkup-in.is-top { align-items: start; }
 
 /* ---- Cosa facciamo: aree con le loro card ---- */
