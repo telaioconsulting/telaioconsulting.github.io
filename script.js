@@ -12,7 +12,7 @@
   /* Indirizzo che riceve il modulo del check-up: lo script Google dell'account info@,
      pubblicato come App web. Finché è vuoto, i pulsanti portano alla pagina del check-up
      e lì il riquadro mostra l'email. */
-  var MODULO_URL = "";
+  var MODULO_URL = "https://script.google.com/macros/s/AKfycbzJmiY4G_pbbwvgdwyeIiqgITCb_plU3cYFLQ9vrBKGVN-VcL90GIzHZD7A5dZu4g0r7g/exec";
 
   /* ---- Cambio tema (scuro predefinito ⇄ chiaro) ---- */
   var themeBtn = document.getElementById("themeBtn");
