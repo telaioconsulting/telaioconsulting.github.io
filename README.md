@@ -2,7 +2,7 @@
 
 Public marketing website for **Telaio Consulting**, served via GitHub Pages.
 
-- **Live:** https://telaioconsulting.github.io
+- **Live:** https://telaioconsulting.com (the old https://telaioconsulting.github.io addresses redirect there)
 - **Stack:** static site, no build step. Shared `style.css` and `script.js`, plus `robots.txt`, `sitemap.xml` and `.nojekyll`. Each page is a folder with an `index.html`.
 - **Motion:** every page also loads `motion.css` and `motion.js` (woven 3D hero, scroll animations, a faint weave behind the sections that lights up around the pointer), built on GSAP (ScrollTrigger, SplitText) and Lenis. Every page, the homes included, opens with a short title entrance: the title and the hero button are there from the first moment. On the homes the «where to start» cards are a grid and «how we work» shows the four steps beside the finished fabric, drawn still; `data-racconto="vivo"` on the method section brings back the scene that holds the page while the fabric weaves. Each effect only runs if the page has the elements it needs. The libraries are hosted in `assets/vendor/` (versions and licences in its README), so no page calls an external server. Without JavaScript, or with "reduce motion" on, the page stays static and fully readable.
 - **Languages:** Italian at `/`, English at `/en/` (switch via the IT/EN toggle in the header).
@@ -38,9 +38,6 @@ Change the files and push to `main` — GitHub Pages redeploys automatically in 
 
 ## Custom domain
 
-To use `telaioconsulting.com`: first point the domain's DNS to GitHub Pages (A/AAAA records for the apex,
-CNAME `www` → `telaioconsulting.github.io`), then add a `CNAME` file containing the domain and set it in
-repo Settings → Pages. Do it in this order: with the `CNAME` file in place GitHub redirects every visit to the
-domain, so the site would be unreachable until the DNS is ready. Then replace `https://telaioconsulting.github.io`
-with the new address everywhere (canonical and hreflang links, Open Graph, JSON-LD, `sitemap.xml`, `robots.txt`,
-`llms.txt`) and resubmit the sitemaps in Search Console and Bing Webmaster Tools.
+The site is served at `telaioconsulting.com` (the `CNAME` file). The DNS of the domain is on Squarespace: four `A` records on the apex to GitHub Pages (`185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`), the matching `AAAA` records (`2606:50c0:8000::153` … `8003::153`) and `www` as a `CNAME` to `telaioconsulting.github.io`; GitHub sends `www` and the old `telaioconsulting.github.io` addresses to the domain. The domain's other records (mail and other services) are not part of the site: never touch them. The other Pages site of the account, `/ecommerce-automations/`, follows the same domain.
+
+Every absolute address in the pages (canonical and hreflang links, Open Graph, JSON-LD, `sitemap.xml`, `robots.txt`, `llms.txt`) uses `https://telaioconsulting.com`; keep it so when adding a page.
