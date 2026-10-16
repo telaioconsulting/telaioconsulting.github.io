@@ -332,11 +332,56 @@ html:not(.js) .no-js-only { display: block; }
 /* Prenotazione */
 .booking-box { border: 1px solid var(--line-strong); border-radius: var(--r-lg); background: var(--surface); padding: clamp(22px,4vw,36px); }
 .booking-box p { color: var(--muted); line-height: 1.55; }
-.booking-box .micro { font-family: var(--f-mono); font-size: var(--step--1); margin-top: 14px; }
 .booking-box a { color: var(--weft); }
-.booking-frame { width: 100%; border: 0; border-radius: var(--r-md); min-height: 640px; background: var(--panel); display: block; }
 .booking-meta { margin-top: 16px; font-size: var(--step--1); color: var(--muted); }
 .booking-meta a { color: var(--weft); }
+
+/* Modulo del check-up (script.js): nella finestra e nel riquadro della pagina del check-up */
+.ck-form { display: grid; gap: 16px; }
+.ck-two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.ck-field { display: grid; gap: 6px; min-width: 0; }
+.ck-field label { font-size: var(--step--1); font-weight: 600; color: var(--ink); }
+.ck-opt { font-weight: 400; color: var(--muted); }
+/* 16 px nei campi: sotto, Safari su iPhone ingrandisce la pagina quando si tocca il campo */
+.ck-field input, .ck-field textarea {
+  width: 100%; min-height: 48px; padding: 12px 14px; margin: 0;
+  font: inherit; font-size: var(--step-0); color: var(--ink); background: var(--ground);
+  border: 1px solid var(--line-strong); border-radius: var(--r-sm);
+}
+.ck-field textarea { min-height: 112px; resize: vertical; line-height: 1.5; }
+.ck-field input::placeholder, .ck-field textarea::placeholder { color: var(--muted); opacity: 1; }
+.ck-field input:focus-visible, .ck-field textarea:focus-visible { outline-offset: 1px; border-color: transparent; }
+.ck-hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.ck-form .btn { min-height: 48px; margin-top: 4px; }
+.ck-form .btn:disabled { opacity: .72; cursor: progress; }
+.ck-status { font-size: var(--step--1); line-height: 1.5; }
+.ck-status:empty { display: none; }
+.ck-status.is-error { color: #FFB4A8; }
+:root[data-theme="light"] .ck-status.is-error { color: #B3261E; }
+.ck-status a, .ck-note a { color: var(--weft); }
+.ck-note { font-size: var(--step--1); color: var(--muted); line-height: 1.5; }
+.ck-done:focus { outline: none; }
+.ck-done-h { font-family: var(--f-display); font-weight: 700; font-size: var(--step-2); letter-spacing: -.01em; line-height: 1.2; color: var(--ink); }
+.ck-done p + p { margin-top: 8px; color: var(--muted); line-height: 1.55; }
+
+.ck-dialog {
+  width: min(560px, calc(100vw - 32px)); max-width: calc(100vw - 32px); max-height: calc(100dvh - 32px);
+  margin: auto; padding: 0; color: var(--ink); background: var(--surface);
+  border: 1px solid var(--line-strong); border-radius: var(--r-lg); box-shadow: var(--shadow-lg);
+  overflow: auto; overscroll-behavior: contain;
+}
+.ck-dialog::backdrop { background: rgba(9, 12, 8, .72); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+:root[data-theme="light"] .ck-dialog::backdrop { background: rgba(9, 12, 8, .45); }
+.ck-dialog-in { position: relative; padding: clamp(24px, 5vw, 40px); }
+.ck-close { position: absolute; top: 12px; right: 12px; }
+.ck-close svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+.ck-kicker { font-family: var(--f-mono); font-size: var(--step--1); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--weft); padding-right: 52px; }
+.ck-title { font-size: var(--step-3); margin-top: 12px; padding-right: 40px; }
+.ck-lede { margin-top: 10px; color: var(--muted); line-height: 1.55; }
+.ck-dialog .ck-form, .ck-dialog .ck-done { margin-top: 24px; }
+/* con la finestra aperta la pagina sotto resta ferma */
+html:has(.ck-dialog[open]) { overflow: hidden; }
+@media (max-width: 560px) { .ck-two { grid-template-columns: 1fr; } }
 
 /* Domande a fisarmonica */
 .qa { border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); margin-bottom: 12px; overflow: hidden; }

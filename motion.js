@@ -53,7 +53,8 @@
       // Link a una sezione di questa stessa pagina ("#faq" o "/en/#faq"): scorrimento morbido
       document.addEventListener("click", function (e) {
         var a = e.target.closest ? e.target.closest("a[href*='#']") : null;
-        if (!a || a.pathname !== location.pathname || a.hash.length < 2) return;
+        // clic già gestito altrove (il pulsante del check-up apre la finestra del modulo): niente scorrimento
+        if (!a || e.defaultPrevented || a.pathname !== location.pathname || a.hash.length < 2) return;
         var target = null;
         try { target = document.querySelector(a.hash); } catch (err) {}
         if (!target) return;
