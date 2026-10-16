@@ -72,24 +72,24 @@
     var T = isEn ? {
       kicker: "AI check-up · 30 minutes · Free",
       titolo: "Book your AI check-up",
-      lede: "Leave your name and contact details: we’ll write to you to set a day and time.",
+      lede: "Leave your name and contact details: we’ll write to you within one working day to set a day and time.",
       nome: "Name and surname", email: "Email", telefono: "Phone",
       messaggio: "What would you like to talk about?", facoltativo: "optional",
       esempio: "For example: answering customer emails takes us hours every week.",
       invia: "Send request", invio: "Sending…", chiudi: "Close",
       privacy: 'We only use this information to organise and prepare the call. <a href="/en/privacy/" target="_blank" rel="noopener">Read our privacy notice.</a>',
-      grazie: function (n, e) { return ["Thank you, " + n + ".", "Your request has reached us. We’ll write to you at " + e + " to set a day and time."]; },
+      grazie: function (n, e) { return ["Thank you, " + n + ".", "Your request has reached us. We’ll write to you at " + e + " within one working day to set a day and time."]; },
       errore: "The request could not be sent. Please try again in a moment, or write to us at " + EMAIL + "."
     } : {
       kicker: "Check-up AI · 30 minuti · Gratuito",
       titolo: "Prenota il check-up AI",
-      lede: "Lasciaci nome e contatti: ti scriviamo noi per fissare giorno e ora.",
+      lede: "Lasciaci nome e contatti: ti scriviamo noi entro un giorno lavorativo per fissare giorno e ora.",
       nome: "Nome e cognome", email: "Email", telefono: "Telefono",
       messaggio: "Di cosa vorresti parlare?", facoltativo: "facoltativo",
       esempio: "Per esempio: rispondere alle email dei clienti ci porta via ore ogni settimana.",
       invia: "Invia la richiesta", invio: "Invio in corso…", chiudi: "Chiudi",
       privacy: 'Usiamo questi dati solo per organizzare e preparare la call. <a href="/privacy/" target="_blank" rel="noopener">Leggi l’informativa privacy.</a>',
-      grazie: function (n, e) { return ["Grazie, " + n + ".", "La tua richiesta è arrivata. Ti scriviamo a " + e + " per fissare giorno e ora."]; },
+      grazie: function (n, e) { return ["Grazie, " + n + ".", "La tua richiesta è arrivata. Ti scriviamo a " + e + " entro un giorno lavorativo per fissare giorno e ora."]; },
       errore: "La richiesta non è partita. Riprova tra poco, oppure scrivici a " + EMAIL + "."
     };
 
@@ -174,7 +174,7 @@
     // la finestra: si apre da ogni pulsante del check-up. Il link resta per chi lo apre in una
     // scheda nuova (Ctrl, Cmd, rotella) e per i browser senza <dialog>
     if (typeof HTMLDialogElement !== "function") return;
-    var dlg = document.createElement("dialog"), daPulsante = "";
+    var dlg = document.createElement("dialog"), daPulsante = "", testoDato = "";
     dlg.className = "ck-dialog";
     dlg.setAttribute("aria-labelledby", "ck-titolo");
     dlg.setAttribute("data-lenis-prevent", ""); // dentro la finestra scorre il browser, non Lenis (motion.js)
@@ -215,6 +215,11 @@
       root.style.setProperty("--ck-gutter", (window.innerWidth - root.clientWidth) + "px");
       root.classList.add("ck-open");
       if (!dlg.open) dlg.showModal();
+      // un link che dice già di cosa parlare («Parliamone nel check-up» di un'area) scrive il messaggio;
+      // quello che la persona ha scritto da sé non si tocca
+      var msg = dlg.querySelector("textarea[name='messaggio']"), testo = a.getAttribute("data-messaggio") || "";
+      if (msg && (!msg.value || msg.value === testoDato)) msg.value = testo;
+      testoDato = testo;
       // con mouse e tastiera si parte dal nome; sul telefono no, la tastiera coprirebbe la finestra
       var nome = dlg.querySelector("input[name='nome']");
       if (nome && window.matchMedia("(pointer: fine)").matches) nome.focus();
@@ -277,20 +282,9 @@
   /* ---------- 1 · Cambio pagina col filo ----------
      La transizione la fa il browser (motion.css). Qui, un attimo prima che la pagina che se ne va
      venga fotografata («pageswap»): si chiude il menu del telefono e si aggiunge il filo, che così
-     ha una sua immagine e può attraversare lo schermo sopra la pagina e sotto la testata.
-     Verso una home che deve ancora mostrare l'apertura il filo non serve: l'ingresso lo fa
-     l'apertura, che tiene anche la testata fuori dallo schermo. */
+     ha una sua immagine e può attraversare lo schermo sopra la pagina e sotto la testata. */
   window.addEventListener("pageswap", function (e) {
-    var vt = e.viewTransition;
-    if (!vt) return;
-    var verso = "", apertura = false;
-    try { verso = new URL(e.activation.entry.url).pathname; } catch (err) {}
-    try { apertura = sessionStorage.getItem("telaio-intro") !== "1"; } catch (err) {}
-    if (apertura && /^\/(en\/)?(index\.html)?$/.test(verso)) {
-      if (vt.ready) vt.ready.catch(function () {});
-      vt.skipTransition();
-      return;
-    }
+    if (!e.viewTransition) return;
     var nav = document.getElementById("nav"), menuBtn = document.getElementById("menuBtn");
     if (nav) nav.classList.remove("open");
     if (menuBtn) menuBtn.setAttribute("aria-expanded", "false");
@@ -380,11 +374,10 @@
     // al passaggio del mouse sul logo si ritesse (non mentre si sta già tessendo)
     var brand = marchio.closest ? marchio.closest(".brand") : null;
     if (brand) brand.addEventListener("pointerenter", function (e) { if (e.pointerType === "mouse") tessi(marchio); });
-    // all'arrivo si tesse, tranne arrivando col filo e sulla home con l'apertura.
+    // all'arrivo si tesse, tranne arrivando col filo.
     // Se «pagereveal» non è ancora arrivato si aspetta: è lui a dire se la pagina arriva col filo.
-    var conApertura = !!document.querySelector(".p-intro") && root.classList.contains("motion") && !root.classList.contains("no-intro");
     var allArrivo = function (colFilo) {
-      if (colFilo || conApertura || !anima) marchio.classList.add("p-tessuto");
+      if (colFilo || !anima) marchio.classList.add("p-tessuto");
       else tessi(marchio);
     };
     if (!("onpagereveal" in window) || root.classList.contains("p-rivelata") || root.classList.contains("p-filo-arrivo")) {

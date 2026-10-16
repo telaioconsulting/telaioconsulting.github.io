@@ -189,6 +189,9 @@ html { -webkit-tap-highlight-color: transparent; }
 a, button, summary { touch-action: manipulation; }
 
 /* Link «Vai al contenuto»: invisibile finché non lo raggiunge il tasto Tab */
+/* testo solo per i lettori di schermo (titoli di sezione che a schermo non servono) */
+.vh { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.nowrap { white-space: nowrap; }
 .skip {
   position: absolute; left: 12px; top: -80px; z-index: 400;
   padding: 12px 16px; border-radius: var(--r-sm);
@@ -234,7 +237,7 @@ html:not(.js) .no-js-only, .no-js-only.is-shown { display: block; }
   border-bottom: 1px solid var(--line);
 }
 /* tema chiaro: i testi piccoli in mono, grigi su fondo chiaro, erano troppo sottili; un peso in più */
-:root[data-theme="light"] :is(.p-meta, .p-trust, .p-scroll, .p-src, .p-hrow, .p-col span, .crumbs, .lang-link,
+:root[data-theme="light"] :is(.p-meta, .p-scroll, .p-src, .p-hrow, .p-col span, .crumbs, .lang-link,
   .p-cases-count, .p-final-sub, .p-tl-seg span, .arrow-link, .p-founder .role) { font-weight: 500; }
 /* tema chiaro: la testata quasi piena, sopra il blocco blu non diventa più viola */
 :root[data-theme="light"] .top { background: color-mix(in srgb, var(--ground) 95%, transparent); }
@@ -339,7 +342,7 @@ html:not(.js) .no-js-only, .no-js-only.is-shown { display: block; }
 .booking-box { border: 1px solid var(--line-strong); border-radius: var(--r-lg); background: var(--surface); padding: clamp(22px,4vw,36px); }
 .booking-box p { color: var(--muted); line-height: 1.55; }
 .booking-box a { color: var(--weft); }
-.booking-meta { margin-top: 16px; font-size: var(--step--1); color: var(--muted); }
+.booking-meta { margin-top: 16px; font-size: .9375rem; color: var(--muted); }
 .booking-meta a { color: var(--weft); }
 
 /* Modulo del check-up (script.js): nella finestra e nel riquadro della pagina del check-up */
@@ -355,6 +358,8 @@ html:not(.js) .no-js-only, .no-js-only.is-shown { display: block; }
   border: 1px solid var(--line-strong); border-radius: var(--r-sm);
 }
 .ck-field textarea { min-height: 112px; resize: vertical; line-height: 1.5; }
+/* telefoni bassi: il messaggio più corto, così «Invia» resta dentro la finestra */
+
 .ck-field input::placeholder, .ck-field textarea::placeholder { color: var(--muted); opacity: 1; }
 .ck-field input:focus-visible, .ck-field textarea:focus-visible { outline-offset: 1px; border-color: transparent; }
 .ck-hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
@@ -391,6 +396,14 @@ html.ck-open { overflow: hidden; padding-right: var(--ck-gutter, 0px); }
 .ck-lede { margin-top: 10px; color: var(--muted); line-height: 1.55; }
 .ck-dialog .ck-form, .ck-dialog .ck-done { margin-top: 24px; }
 @media (max-width: 560px) { .ck-two { grid-template-columns: 1fr; } }
+/* telefoni bassi: spazi più stretti e messaggio più corto, così «Invia» resta dentro la finestra */
+@media (max-height: 720px) {
+  .ck-dialog-in { padding-block: 20px; }
+  .ck-dialog .ck-title { margin-top: 8px; }
+  .ck-dialog .ck-form { margin-top: 16px; gap: 10px; }
+  .ck-dialog .ck-two { gap: 10px; }
+  .ck-dialog .ck-field textarea { min-height: 56px; height: 56px; }
+}
 
 /* Domande a fisarmonica */
 .qa { border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); margin-bottom: 12px; overflow: hidden; }
@@ -458,9 +471,13 @@ footer { border-top: 1px solid var(--line); padding: 48px 0; background: var(--s
   .nav a { padding: 12px 8px; border-bottom: 1px solid var(--line); border-radius: 0; }
   .nav a[aria-current="page"]::after { left: 8px; right: auto; width: 24px; bottom: 6px; }
 }
-/* Telefono: il pulsante principale passa nella barra fissa */
+/* il pulsante principale in fondo al menu aperto: solo su telefono, dove la testata non ce l'ha */
+.nav a.nav-cta { display: none; }
+/* Telefono: il pulsante principale passa nella barra fissa (e in fondo al menu) */
 @media (max-width: 760px) {
   .top-actions .btn-primary { display: none; }
+  .nav a.nav-cta { display: inline-flex; justify-content: center; margin-top: 14px; padding: 14px 20px; border: 0; border-radius: var(--r-sm); color: #fff; }
+  .nav a.nav-cta:hover { color: #fff; background: var(--brand-lift); }
   .mobile-bar { display: block; }
   body { padding-bottom: 76px; }
   .foot-in { grid-template-columns: 1fr; }

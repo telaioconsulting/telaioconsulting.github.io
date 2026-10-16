@@ -33,41 +33,6 @@ html:not(.motion) .p-progress { display: none; }
 .motion [data-reveal] { opacity: 0; }
 .motion [data-hero-item] { opacity: 0; }
 .motion .p-h1 { visibility: hidden; }
-/* con l'apertura il titolo c'è già dal primo fotogramma, sotto l'apertura che è opaca: Google misura quando
-   compare il contenuto principale (Largest Contentful Paint) e prima lo trovava solo dopo l'apertura.
-   motion.js nasconde le righe prima che l'apertura si apra e le fa entrare come prima */
-.motion:not(.no-intro) .p-intro ~ main .p-h1 { visibility: visible; }
-/* la testata scende alla fine dell'apertura, solo nelle home */
-.motion .p-intro ~ .top { transform: translateY(-100%); }
-/* apertura già vista in questa visita (classe messa nell'<head>): niente apertura, testata al suo posto */
-.motion.no-intro .p-intro { display: none; }
-.motion.no-intro .p-intro ~ .top { transform: none; }
-
-/* ============================================================
-   APERTURA
-   ============================================================ */
-.p-intro { display: none; }
-.motion .p-intro {
-  position: fixed; inset: 0; z-index: 300; display: grid; place-items: center;
-  background: var(--ground); clip-path: inset(0% 0% 0% 0%);
-}
-.p-intro-in { display: flex; align-items: center; gap: clamp(14px, 2vw, 22px); }
-.p-intro-mk { width: clamp(52px, 7vw, 76px); height: auto; color: var(--brand); }
-.p-intro-mk path { stroke-dasharray: 40; stroke-dashoffset: 40; }
-.p-intro-wm {
-  display: flex; overflow: hidden; padding-bottom: .06em;
-  font-family: var(--f-display); font-weight: 700; color: var(--ink);
-  font-size: clamp(2.8rem, 8vw, 5.2rem); line-height: 1; letter-spacing: -.045em;
-}
-.p-intro-wm span { display: inline-block; transform: translateY(110%); }
-/* le linee del marchio che diventano i fili del tessuto (ordito e trama), sopra l'apertura */
-.p-loom { position: fixed; inset: 0; z-index: 301; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
-.p-loom line { stroke-linecap: round; fill: none; }
-.p-intro-tag {
-  position: absolute; left: 0; right: 0; bottom: clamp(28px, 6vh, 56px); text-align: center;
-  font-family: var(--f-mono); font-size: var(--step--1); letter-spacing: .3em; text-transform: uppercase;
-  color: var(--muted); opacity: 0;
-}
 
 /* ============================================================
    HERO
@@ -128,18 +93,15 @@ html:not(.motion) .p-progress { display: none; }
 .p-meta { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 18px; font-family: var(--f-mono); font-size: .8125rem; color: var(--muted); }
 .p-meta li { display: inline-flex; align-items: center; gap: 8px; }
 .p-meta li + li::before { content: ""; width: 4px; height: 4px; background: var(--brand); transform: rotate(45deg); }
-/* home: al posto del pulsante la pallina che rimbalza (.p-orb, più sotto); accanto le tre voci in colonna, ognuna col suo rombo */
-.p-hero-orb { flex-direction: row; align-items: center; gap: clamp(20px, 2.4vw, 32px); }
-.p-hero-orb .p-orb { margin-top: 0; width: clamp(132px, 11vw, 164px); flex: none; }
-/* le voci stanno sopra la parte chiara del tessuto: un fondo vetro come l'etichetta in alto, e testo più chiaro */
-.p-hero-orb .p-meta {
-  flex-direction: column; gap: 10px; padding: 14px 18px;
+/* home: sotto il pulsante le tre voci (30 minuti, gratuito, con chi). Stanno sopra la parte chiara del tessuto:
+   un fondo vetro come l'etichetta in alto, e testo più chiaro */
+.p-hero .p-meta {
+  padding: 10px 14px; font-family: var(--f-body); font-size: .9375rem;
   border: 1px solid color-mix(in srgb, var(--weft) 22%, transparent); border-radius: var(--r-md);
   background: color-mix(in srgb, var(--ground) 78%, transparent);
   -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
   color: color-mix(in srgb, var(--ink) 86%, var(--muted));
 }
-.p-hero-orb .p-meta li::before { content: ""; width: 4px; height: 4px; background: var(--brand); transform: rotate(45deg); }
 
 .p-btn-xl { padding: 18px 26px; font-size: 1.04rem; gap: 12px; }
 /* sui pulsanti magnetici la posizione la muove GSAP: una transizione CSS su transform la rallentava a ogni passo */
@@ -151,21 +113,20 @@ html:not(.motion) .p-progress { display: none; }
   --i-arr: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4.5 12h15M13.5 6l6 6-6 6'/%3E%3C/svg%3E");
   --i-arr-thin: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4.5 12h15M13.5 6l6 6-6 6'/%3E%3C/svg%3E");
 }
-.p-arr, .p-orb-arr, .p-case-big {
+.p-arr, .p-case-big {
   width: 1em; height: 1em; overflow: hidden; text-indent: 200%; white-space: nowrap;
   background: currentColor;
   -webkit-mask: var(--i-arr) center / contain no-repeat; mask: var(--i-arr) center / contain no-repeat;
 }
-.p-orb-arr, .p-case-big { -webkit-mask-image: var(--i-arr-thin); mask-image: var(--i-arr-thin); }
+.p-case-big { -webkit-mask-image: var(--i-arr-thin); mask-image: var(--i-arr-thin); }
 .p-arr { display: inline-block; transition: transform .35s var(--ease); }
 @media (hover: hover) { .btn:hover .p-arr { transform: translateX(4px); } }
 
 .p-hero-foot {
   position: relative; z-index: 2; width: 100%;
-  display: flex; justify-content: space-between; align-items: center; gap: 24px;
+  display: flex; justify-content: flex-end; align-items: center; gap: 24px;
   padding-top: clamp(40px, 7vh, 80px); padding-bottom: 28px;
 }
-.p-trust { font-family: var(--f-mono); font-size: .8125rem; color: var(--muted); max-width: 46ch; }
 .p-scroll {
   display: inline-flex; align-items: center; gap: 12px; min-height: 44px;
   font-family: var(--f-mono); font-size: 11px; letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--muted); text-decoration: none;
@@ -175,17 +136,21 @@ html:not(.motion) .p-progress { display: none; }
 @keyframes p-drop { to { transform: translateY(250%); } }
 
 /* ============================================================
-   NASTRO
+   TRE MOTIVI (home, subito sotto la hero)
    ============================================================ */
-.p-marquee { position: relative; z-index: 2; overflow: hidden; padding: clamp(18px, 2.4vw, 28px) 0; border-block: 1px solid var(--line); background: var(--ground); }
-.p-marquee-track { display: flex; width: max-content; will-change: transform; }
-.p-marquee-group { display: flex; align-items: center; gap: clamp(22px, 3.4vw, 48px); padding-right: clamp(22px, 3.4vw, 48px); }
-.p-marquee span {
-  font-family: var(--f-display); font-weight: 700; white-space: nowrap;
-  font-size: clamp(2.2rem, 6.4vw, 5.6rem); line-height: 1; letter-spacing: -.045em; color: var(--ink);
+.p-reasons { position: relative; z-index: 2; border-block: 1px solid var(--line); background: var(--ground); }
+.p-reasons-in { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.p-reason { display: flex; flex-direction: column; gap: 8px; padding: clamp(24px, 3vw, 36px) clamp(20px, 2.6vw, 32px); }
+.p-reason + .p-reason { border-left: 1px solid var(--line); }
+.p-reason:first-child { padding-left: 0; }
+.p-reason h3 { font-size: var(--step-1); letter-spacing: -.02em; }
+.p-reason h3::before { content: ""; display: block; width: 7px; height: 7px; margin-bottom: 14px; background: var(--brand); transform: rotate(45deg); }
+.p-reason p { color: var(--muted); line-height: 1.5; max-width: 36ch; }
+@media (max-width: 760px) {
+  .p-reasons-in { grid-template-columns: 1fr; }
+  .p-reason { padding: 20px 0; }
+  .p-reason + .p-reason { border-left: 0; border-top: 1px solid var(--line); }
 }
-.p-marquee span.o { color: transparent; -webkit-text-stroke: 1.4px color-mix(in srgb, var(--ink) 55%, transparent); }
-.p-marquee .mk { width: clamp(28px, 3.6vw, 52px); height: auto; color: var(--brand); }
 
 /* ============================================================
    SEZIONI
@@ -236,7 +201,8 @@ html:not(.motion) .p-progress { display: none; }
 /* il blu chiaro resta per le piccole etichette (brand book): l'unità accanto al numero grande è grigia */
 .p-stat-num small { font-size: .3em; letter-spacing: -.02em; color: var(--muted); white-space: nowrap; }
 .p-stat-body > p { color: var(--muted); font-size: var(--step-1); line-height: 1.5; max-width: 40ch; }
-.p-stat-body > .p-src { margin-top: 14px; font-family: var(--f-mono); font-size: 12px; line-height: 1.5; }
+.p-src { font-family: var(--f-mono); font-size: 12px; line-height: 1.5; color: var(--muted); }
+.p-stat-body > .p-src { margin-top: 14px; }
 .p-src a { color: var(--weft); }
 
 /* ---- Numeri tessuti (motion.js): il canvas dei fili sta sopra la cifra; il testo vero resta sotto,
@@ -297,13 +263,24 @@ html:not(.motion) .p-manifesto-text em {
 .p-cases-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 20px 48px; margin-bottom: clamp(36px, 4vw, 56px); }
 .p-cases-head .p-h2 { max-width: 16ch; font-size: clamp(2.1rem, 4.4vw, 4rem); }
 .p-cases-head .lede { max-width: 34ch; }
-.p-cases-track { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px; padding-inline: clamp(20px, 5vw, 48px); max-width: var(--maxw); margin: 0 auto; }
+.p-cases-track { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; padding-inline: clamp(20px, 5vw, 48px); max-width: var(--maxw); margin: 0 auto; }
+.p-cases-track .p-case-cta { grid-column: span 2; }
+.p-cases-lede { display: grid; gap: 10px; max-width: 40ch; }
+@media (max-width: 1099px) { .p-cases-track { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) {
+  .p-cases-track { grid-template-columns: 1fr; gap: 12px; }
+  .p-cases-track .p-case-cta { grid-column: auto; }
+  /* sul telefono le schede della home sono una lista: niente illustrazione, si legge prima */
+  .p-cases-track .p-case-art { display: none; }
+  .p-cases-track .p-case { padding: 22px; }
+  .p-cases-track .p-case-cta { min-height: 140px; }
+}
 .p-cases-foot { display: none; }
 
 .p-case {
   position: relative; overflow: hidden;
   display: flex; flex-direction: column; gap: 12px;
-  padding: 26px; min-height: 380px;
+  padding: 26px; min-height: 0;
   background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg);
   color: var(--ink); text-decoration: none;
   transition: border-color .4s var(--ease);
@@ -313,7 +290,7 @@ html:not(.motion) .p-manifesto-text em {
 /* le esperienze non hanno un ordine: niente numero decorativo (resta il + sulla card blu) */
 .p-case:not(.p-case-cta) .p-case-n { display: none; }
 .p-case-art {
-  position: relative; height: 140px; margin: 4px 0 10px; border-radius: var(--r-md); overflow: hidden;
+  position: relative; height: clamp(96px, 10vw, 140px); margin: 4px 0 10px; border-radius: var(--r-md); overflow: hidden;
   display: grid; place-items: center; color: var(--weft);
   background:
     repeating-linear-gradient(90deg, color-mix(in srgb, var(--weft) 7%, transparent) 0 1px, transparent 1px 16px),
@@ -328,18 +305,18 @@ html:not(.motion) .p-manifesto-text em {
 .p-case-big { position: absolute; top: 18px; right: 24px; font-family: var(--f-display); font-weight: 700; font-size: 6rem; line-height: 1; transition: transform .5s var(--ease); }
 @media (hover: hover) { .p-case-cta:hover .p-case-big { transform: translateX(10px) rotate(-45deg); } }
 
-/* Versione orizzontale (schermi larghi, con motion) */
+/* Versione orizzontale (schermi larghi, con motion, solo con data-scorre sulla sezione) */
 @media (min-width: 900px) {
-  .motion .p-cases { padding: 0; }
-  .motion .p-cases-pin { height: 100vh; height: 100svh; display: flex; flex-direction: column; justify-content: center; padding-top: 64px; overflow: hidden; }
-  .motion .p-cases-track {
+  .motion .p-cases[data-scorre] { padding: 0; }
+  .motion .p-cases[data-scorre] .p-cases-pin { height: 100vh; height: 100svh; display: flex; flex-direction: column; justify-content: center; padding-top: 64px; overflow: hidden; }
+  .motion .p-cases[data-scorre] .p-cases-track {
     display: flex; gap: 22px; width: max-content; max-width: none; margin: 0; will-change: transform;
     padding-inline: max(clamp(20px, 5vw, 48px), calc((100vw - var(--maxw)) / 2 + clamp(20px, 5vw, 48px)));
   }
-  .motion .p-cases-track .p-case { width: clamp(320px, 29vw, 420px); flex: none; }
+  .motion .p-cases[data-scorre] .p-cases-track .p-case { width: clamp(320px, 29vw, 420px); flex: none; }
   /* nella colonna centrata il titolo si stringeva al suo contenuto e rientrava rispetto alle altre sezioni */
-  .motion .p-cases-head { width: 100%; }
-  .motion .p-cases-foot { display: flex; align-items: center; gap: 22px; margin-top: clamp(28px, 4vh, 44px); width: 100%; }
+  .motion .p-cases[data-scorre] .p-cases-head { width: 100%; }
+  .motion .p-cases[data-scorre] .p-cases-foot { display: flex; align-items: center; gap: 22px; margin-top: clamp(28px, 4vh, 44px); width: 100%; }
 }
 .p-rail { flex: 1; height: 2px; background: var(--line); border-radius: 2px; overflow: hidden; }
 .p-rail i { display: block; height: 100%; background: var(--brand); transform-origin: 0 50%; transform: scaleX(0); }
@@ -493,6 +470,7 @@ html:not(.motion) .p-manifesto-text em {
 .p-rac-still .p-rac-canvas { display: block; position: relative; z-index: 1; width: 100%; aspect-ratio: 1 / 1.04; max-width: 600px; margin-inline: auto; }
 .p-rac-still .p-rac-glow { display: block; position: absolute; inset: 4% 4% auto; aspect-ratio: 1; z-index: 0; }
 .p-rac-still .p-rac-callout { position: relative; z-index: 1; margin: 20px auto 0; }
+@media (max-width: 760px) { .p-rac-still .p-rac-canvas, .p-rac-still .p-rac-glow { display: none; } .p-rac-still .p-rac-callout { margin: 0; } }
 
 /* ---- Scena: la sezione si ferma, la tela racconta i quattro passi ---- */
 /* fondo pieno (lo stesso della pagina): la trama delle sezioni, che scorrerebbe sotto la scena ferma, qui non si disegna */
@@ -656,7 +634,7 @@ html:not(.motion) .p-manifesto-text em {
 @media (hover: hover) { .p-founder:hover .p-founder-art b { transform: scale(1.08); } }
 .p-founder h3 { font-size: var(--step-2); letter-spacing: -.02em; padding-inline: 8px; }
 .p-founder .role { font-family: var(--f-mono); font-size: 12px; letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--weft); padding-inline: 8px; }
-.p-founder .bio { color: var(--muted); font-size: .9rem; line-height: 1.55; padding-inline: 8px; margin-top: 4px; }
+.p-founder .bio { color: var(--muted); font-size: 1rem; line-height: 1.55; padding-inline: 8px; margin-top: 4px; }
 
 /* ---- Check-up: blocco blu ---- */
 .p-checkup { position: relative; isolation: isolate; color: #fff; padding-block: clamp(110px, 14vw, 200px); }
@@ -684,7 +662,7 @@ html:not(.motion) .p-manifesto-text em {
 .p-btn-inv { background: #fff; color: var(--brand); }
 .p-btn-inv:hover { background: #fff; box-shadow: 0 16px 40px -12px rgba(0, 0, 0, .55); }
 .p-btn-inv::after { background: linear-gradient(105deg, transparent 32%, rgba(19, 7, 237, .14) 50%, transparent 68%); }
-.p-micro { margin-top: 16px; font-family: var(--f-mono); font-size: 12px; color: rgba(255, 255, 255, .78); }
+.p-micro { margin-top: 16px; font-size: .9375rem; color: rgba(255, 255, 255, .86); }
 .p-takeaways { list-style: none; margin: 18px 0 0; padding: 0; }
 .p-takeaways li {
   display: grid; grid-template-columns: 48px 1fr; gap: 12px; align-items: baseline;
@@ -726,35 +704,9 @@ html:not(.motion) .p-manifesto-text em {
     radial-gradient(closest-side, color-mix(in srgb, var(--brand) 10%, transparent), transparent);
 }
 .p-final .wrap { position: relative; }
-/* nella home l'invito viene subito dopo il manifesto: ne è il seguito, niente riga e meno spazio sopra */
-.p-manifesto + .p-final { border-top: 0; padding-top: clamp(24px, 4vw, 56px); }
 .p-final-btn { margin-top: clamp(40px, 5vw, 60px); }
 .p-final-h { margin: 0 auto; max-width: 19ch; font-size: clamp(2.3rem, 5.6vw, 5.2rem); line-height: 1; letter-spacing: -.045em; }
-.p-orb {
-  position: relative; display: inline-grid; place-items: center; margin-top: clamp(44px, 6vw, 76px);
-  width: clamp(156px, 15vw, 196px); aspect-ratio: 1; border-radius: 50%;
-  background: var(--brand); color: #fff; text-decoration: none;
-  box-shadow: 0 30px 80px -18px rgba(19, 7, 237, .85), inset 0 0 0 1px rgba(255, 255, 255, .18);
-  transition: background .3s var(--ease), scale .12s ease-out;
-}
-.p-orb:hover { background: var(--brand-lift); }
-.p-orb:active { scale: .97; }
-.p-orb-ring { position: absolute; inset: 0; width: 100%; height: 100%; animation: p-spin 16s linear infinite; }
-.p-orb-ring text { font-family: var(--f-mono); font-size: 12.4px; letter-spacing: .19em; text-transform: uppercase; fill: #fff; }
-.p-orb-arr { font-family: var(--f-display); font-weight: 700; font-size: 2.6rem; line-height: 1; transition: transform .5s var(--ease); }
-@media (hover: hover) { .p-orb:hover .p-orb-arr { transform: rotate(-45deg) scale(1.1); } }
-/* la pallina saltellante (hero della home, chiusura di Come lavoriamo): dopo l'entrata (motion.js) ogni tanto un saltello e un rimbalzino.
-   Usa «translate», così non tocca lo spostamento magnetico (x/y di GSAP); sotto il mouse o il dito si ferma */
-.motion .p-orb.is-hop { animation: p-hop 3.8s 1.2s infinite; }
-.p-orb.is-hop:is(:hover, :focus-visible, :active) { animation-play-state: paused; }
-@keyframes p-hop {
-  0%, 64% { translate: 0 0; animation-timing-function: cubic-bezier(.2, .8, .3, 1); }
-  72% { translate: 0 -22px; animation-timing-function: cubic-bezier(.6, 0, .9, .4); }
-  80% { translate: 0 0; animation-timing-function: cubic-bezier(.2, .8, .3, 1); }
-  85% { translate: 0 -7px; animation-timing-function: cubic-bezier(.6, 0, .9, .4); }
-  90%, 100% { translate: 0 0; }
-}
-.p-final-sub { margin-top: 28px; font-family: var(--f-mono); font-size: var(--step--1); color: var(--muted); }
+.p-final-sub { margin-top: 28px; font-size: .9375rem; color: var(--muted); }
 
 /* chiusura della home: una riga con il testo e il pulsante */
 .p-close { border-top: 1px solid var(--line); }
@@ -791,7 +743,7 @@ html:not(.motion) .p-manifesto-text em {
     linear-gradient(180deg, color-mix(in srgb, var(--ground) 60%, transparent) 0%, transparent 22%, transparent 62%, color-mix(in srgb, var(--ground) 70%, transparent) 86%, var(--ground) 100%);
 }
 /* i testi piccoli (briciole, dettagli dell'offerta, riga in fondo) stanno sopra il telo: un alone del colore della pagina */
-.p-weave-gl :is(.crumbs, .p-meta, .p-trust, .p-scroll, .p-kicker) { text-shadow: 0 0 10px var(--ground), 0 0 4px var(--ground), 0 0 2px var(--ground); }
+.p-weave-gl :is(.crumbs, .p-meta, .p-scroll, .p-kicker) { text-shadow: 0 0 10px var(--ground), 0 0 4px var(--ground), 0 0 2px var(--ground); }
 /* tema chiaro: il telo chiaro coi fili scuri è più fitto dietro il testo, il velo arriva più in là e copre di più */
 :root[data-theme="light"] .p-weave-gl .p-hero-veil {
   background:
@@ -839,9 +791,15 @@ html:not(.motion) .p-manifesto-text em {
    ============================================================ */
 
 /* ---- Hero di pagina: lo stesso tessuto, più bassa, senza apertura ---- */
-.p-hero.is-page { min-height: min(88svh, 860px); }
+.p-hero.is-page { min-height: min(72svh, 700px); }
 .p-hero.is-compact { min-height: min(62svh, 540px); }
 .p-hero.is-page .p-hero-in { padding-top: clamp(36px, 8vh, 104px); padding-bottom: clamp(56px, 10vh, 120px); }
+.p-hero-cta-page { margin-top: clamp(24px, 3.4vh, 36px); }
+/* telefono: niente altezza minima, così titolo, testo e pulsante stanno nel primo schermo */
+@media (max-width: 760px) {
+  .p-hero.is-page, .p-hero.is-compact { min-height: 0; }
+  .p-hero.is-page .p-hero-in { padding-top: 40px; padding-bottom: 48px; }
+}
 .p-hero .crumbs { position: relative; z-index: 2; padding-top: 0; margin-bottom: clamp(16px, 2.6vh, 28px); }
 .p-hero.is-page .p-h1 { margin-top: 0; max-width: 19ch; font-size: clamp(2.4rem, 5.4vw, 5.2rem); }
 .p-hero.is-page .p-kicker + .p-h1 { margin-top: clamp(18px, 2.6vh, 28px); }
@@ -923,6 +881,7 @@ html:not(.motion) .p-manifesto-text em {
 .p-group { display: grid; grid-template-columns: minmax(0, .75fr) minmax(0, 1.6fr); gap: clamp(28px, 5vw, 80px); align-items: start; padding-block: clamp(40px, 6vw, 72px); border-top: 1px solid var(--line); }
 .p-group:last-child { border-bottom: 1px solid var(--line); }
 .p-group-side { position: sticky; top: 112px; }
+.p-group-side .p-group-ask { margin-top: 18px; }
 /* le aree non hanno un ordine: il numero era solo decorazione */
 .p-group-n { display: none; }
 .p-group-side h2 { font-size: clamp(1.9rem, 3.4vw, 3rem); letter-spacing: -.04em; line-height: 1.02; max-width: 12ch; }
@@ -964,9 +923,8 @@ html:not(.motion) .p-manifesto-text em {
 .p-loom-art .frame { fill: none; stroke: var(--line); stroke-width: 1.5; stroke-dasharray: 4 6; }
 
 /* ---- Domande frequenti: pannello fisso a lato ---- */
-.p-faq-side .p-faq-count { display: flex; align-items: baseline; gap: 12px; margin-bottom: clamp(24px, 3vw, 36px); font-family: var(--f-display); font-weight: 700; letter-spacing: -.06em; }
-.p-faq-count b { font-size: clamp(5rem, 11vw, 9.5rem); line-height: .85; color: var(--ink); }
-.p-faq-count span { font-size: clamp(1.3rem, 2.2vw, 1.9rem); color: var(--muted); letter-spacing: -.02em; }
+.p-faq-ask { margin-bottom: clamp(20px, 2.6vw, 28px); font-family: var(--f-display); font-weight: 500; font-size: clamp(1.3rem, 2.2vw, 1.7rem); line-height: 1.25; color: var(--ink); max-width: 18ch; }
+.p-faq-ask a { color: var(--weft); }
 .p-faq-list .qa .a .arrow-link { margin-top: 10px; }
 /* i gruppi di domande (Domande frequenti): un'etichetta piccola, ma è un titolo vero per Google e per le AI */
 .p-faq-h { display: flex; margin: clamp(36px, 4vw, 52px) 0 16px; line-height: 1.4; }
@@ -1008,14 +966,13 @@ html:not(.motion) .p-manifesto-text em {
 @media (max-width: 560px) {
   /* su telefono il tessuto resta visibile in alto e si scurisce sotto il testo */
   .p-hero-veil { background: linear-gradient(180deg, transparent 0%, transparent 16%, color-mix(in srgb, var(--ground) 72%, transparent) 42%, color-mix(in srgb, var(--ground) 88%, transparent) 100%); }
-  .p-hero-foot .p-trust { display: none; }
   .p-hero-foot { justify-content: flex-end; }
   .p-hrow { grid-template-columns: 92px 1fr 48px; }
   .p-viz-dots i { width: 46px; height: 46px; }
   .p-values { grid-template-columns: 1fr; }
   .p-btn-xl { width: 100%; }
   /* i testi di servizio da 11-12 px sul telefono erano troppo piccoli */
-  .p-scroll, .p-stat-body > .p-src, .p-founder .role, .p-micro { font-size: .8125rem; }
+  .p-scroll, .p-stat-body > .p-src, .p-founder .role { font-size: .8125rem; }
   /* l'etichetta della hero: sul telefono va a capo, quindi niente riquadro a pillola (sembrava un blocco di testo) */
   .p-kicker { padding: 0; border: 0; background: none; -webkit-backdrop-filter: none; backdrop-filter: none; align-items: flex-start; letter-spacing: .1em; line-height: 1.5; }
   .p-kicker .p-dot { margin-top: .45em; }
@@ -1027,7 +984,7 @@ html:not(.motion) .p-manifesto-text em {
    RIDUCI MOVIMENTO: tutto fermo, nella posizione finale
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
-  .p-dot, .p-scroll i::after, .p-viz-dots i.is-q::before, .p-checkup-bg::before, .p-orb-ring, .p-orb,
+  .p-dot, .p-scroll i::after, .p-viz-dots i.is-q::before, .p-checkup-bg::before,
   .ill *, .ill g { animation: none !important; }
   .i1-l, .i3-txt, .i4-r, .i5-hl-l, .i6-line { stroke-dashoffset: 0; }
   .i3-dot { opacity: 0; }
@@ -1035,10 +992,10 @@ html:not(.motion) .p-manifesto-text em {
   .p-rows li::before, .p-founder-art::before { transition: none; }
   /* gli effetti al passaggio del mouse cambiano colore ma non spostano niente */
   .p-rows li:hover b, .p-rows li:hover h3, .btn:hover .p-arr, .p-case-cta:hover .p-case-big,
-  .p-orb:hover .p-orb-arr, .p-founder:hover .p-founder-art b { transform: none; }
+  .p-founder:hover .p-founder-art b { transform: none; }
   .p-founder:hover .p-founder-art::before { transform: rotate(-14deg); }
   .btn-primary::after { display: none; }
-  .btn:active, .icon-btn:active, .p-orb:active { scale: none; }
+  .btn:active, .icon-btn:active { scale: none; }
 }
 
 /* ============================================================
@@ -1106,10 +1063,8 @@ html:active-view-transition-type(p-filo)::view-transition-group(p-segno) {
    script.js sostituisce il <use> del marchio in testata con i tratti veri e li disegna:
    prima l'ordito, poi la trama che passa sopra e sotto. Finché non parte resta nascosto
    (niente lampo del marchio intero). Si vede subito intero arrivando col filo (la testata
-   resta ferma) e sulla home con l'apertura (il marchio lo disegna già l'apertura).
-   Se script.js non partisse, ricompare comunque dopo 2,5 s. */
+   resta ferma). Se script.js non partisse, ricompare comunque dopo 2,5 s. */
 .motion:not(.p-filo-arrivo) .top .brand .mk:not(.p-tessuto) { visibility: hidden; animation: p-mk-mostra 0s 2.5s forwards; }
-.motion:not(.no-intro) .p-intro ~ .top .brand .mk { visibility: visible; animation: none; }
 @keyframes p-mk-mostra { to { visibility: visible; } }
 /* il pezzo d'ordito che resta sotto la trama: si vede solo mentre si tesse */
 .top .brand .mk .p-ponte { visibility: hidden; }
