@@ -72,24 +72,24 @@
     var T = isEn ? {
       kicker: "AI check-up · 30 minutes · Free",
       titolo: "Book your AI check-up",
-      lede: "Leave your name and contact details: we’ll write to you within one working day to set a day and time.",
+      lede: "Leave your name and contact details: we’ll write to you within 48 hours to set a day and time.",
       nome: "Name and surname", email: "Email", telefono: "Phone",
       messaggio: "What would you like to talk about?", facoltativo: "optional",
       esempio: "For example: answering customer emails takes us hours every week.",
       invia: "Send request", invio: "Sending…", chiudi: "Close",
       privacy: 'We only use this information to organise and prepare the call. <a href="/en/privacy/" target="_blank" rel="noopener">Read our privacy notice.</a>',
-      grazie: function (n, e) { return ["Thank you, " + n + ".", "Your request has reached us. We’ll write to you at " + e + " within one working day to set a day and time."]; },
+      grazie: function (n, e) { return ["Thank you, " + n + ".", "Your request has reached us. We’ll write to you at " + e + " within 48 hours to set a day and time."]; },
       errore: "The request could not be sent. Please try again in a moment, or write to us at " + EMAIL + "."
     } : {
       kicker: "Check-up AI · 30 minuti · Gratuito",
       titolo: "Prenota il check-up AI",
-      lede: "Lasciaci nome e contatti: ti scriviamo noi entro un giorno lavorativo per fissare giorno e ora.",
+      lede: "Lasciaci nome e contatti: ti scriviamo noi entro 48 ore per fissare giorno e ora.",
       nome: "Nome e cognome", email: "Email", telefono: "Telefono",
       messaggio: "Di cosa vorresti parlare?", facoltativo: "facoltativo",
       esempio: "Per esempio: rispondere alle email dei clienti ci porta via ore ogni settimana.",
       invia: "Invia la richiesta", invio: "Invio in corso…", chiudi: "Chiudi",
       privacy: 'Usiamo questi dati solo per organizzare e preparare la call. <a href="/privacy/" target="_blank" rel="noopener">Leggi l’informativa privacy.</a>',
-      grazie: function (n, e) { return ["Grazie, " + n + ".", "La tua richiesta è arrivata. Ti scriviamo a " + e + " entro un giorno lavorativo per fissare giorno e ora."]; },
+      grazie: function (n, e) { return ["Grazie, " + n + ".", "La tua richiesta è arrivata. Ti scriviamo a " + e + " entro 48 ore per fissare giorno e ora."]; },
       errore: "La richiesta non è partita. Riprova tra poco, oppure scrivici a " + EMAIL + "."
     };
 
