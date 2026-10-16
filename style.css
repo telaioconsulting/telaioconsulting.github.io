@@ -121,6 +121,8 @@
 
   /* angoli del brand book (telaio-tokens.css): 3 e 6 px, la pillola solo dove serve */
   --r-sm: 3px; --r-md: 6px; --r-lg: 6px; --r-pill: 999px;
+  /* altezza dei comandi della testata (lingua, tema, menu, «Prenota»): 44 px dove si tocca (in fondo al file) */
+  --ctl-h: 36px;
   --tracking-label: .14em;
   --shadow-lg: 0 2px 6px rgba(0,0,0,.5), 0 30px 60px -24px rgba(0,0,0,.85);
   --ease: cubic-bezier(.2,.7,.2,1);
@@ -265,12 +267,16 @@ html:not(.js) .no-js-only, .no-js-only.is-shown { display: block; }
   transition: color .15s, border-color .15s, scale .12s ease-out;
 }
 .icon-btn:hover { color: var(--ink); border-color: var(--line-strong); }
+/* nella testata tema e menu sono alti quanto il pulsante «Prenota» accanto */
+.top-actions .icon-btn { width: var(--ctl-h); height: var(--ctl-h); }
 .menu-btn { display: none; }
 /* Icone del tema e del menu disegnate a tratto (come le icone del marchio) invece dei caratteri ◐ ☾ ≡,
-   che arrivavano da un font di sistema. Il carattere resta nel pulsante ma non si vede. */
-#themeBtn, #menuBtn { font-size: 0; }
+   che arrivavano da un font di sistema. Il carattere resta nel pulsante ma non si vede. L'icona sta fuori
+   dalla griglia, al centro esatto: nella griglia il carattere nascosto occupava una seconda riga e la spingeva in alto */
+#themeBtn, #menuBtn { font-size: 0; position: relative; }
 #themeBtn::before, #menuBtn::before {
-  content: ""; width: 20px; height: 20px; background: currentColor;
+  content: ""; position: absolute; top: 0; right: 0; bottom: 0; left: 0; margin: auto;
+  width: 20px; height: 20px; background: currentColor;
   -webkit-mask: var(--i-icon) center / contain no-repeat; mask: var(--i-icon) center / contain no-repeat;
 }
 #themeBtn { --i-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='8'/%3E%3Cpath d='M12 4a8 8 0 0 1 0 16z' fill='%23000'/%3E%3C/svg%3E"); }
@@ -281,7 +287,7 @@ html:not(.js) .no-js-only, .no-js-only.is-shown { display: block; }
 /* Selettore lingua */
 .lang { display: inline-flex; align-items: center; gap: 2px; font-family: var(--f-mono); font-size: 12px; }
 .lang-link {
-  display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px;
+  display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: var(--ctl-h);
   padding: 6px 8px; color: var(--muted); text-decoration: none; border-radius: var(--r-sm); letter-spacing: .06em;
 }
 .lang-link:hover { color: var(--ink); background: var(--panel); }
@@ -300,7 +306,7 @@ html:not(.js) .no-js-only, .no-js-only.is-shown { display: block; }
 }
 /* risposta al tocco: il pulsante si abbassa appena (scale, non transform: GSAP usa transform sui pulsanti magnetici) */
 .btn:active, .icon-btn:active { scale: .97; }
-.btn-sm { padding: 9px 15px; font-size: var(--step--1); white-space: nowrap; }
+.btn-sm { padding: 9px 15px; min-height: var(--ctl-h); font-size: var(--step--1); white-space: nowrap; }
 .btn-primary { background: var(--brand); color: #fff; position: relative; overflow: hidden; }
 .btn-primary::after {
   content: ""; position: absolute; inset: 0; pointer-events: none; transform: translateX(-130%);
@@ -462,9 +468,12 @@ footer { border-top: 1px solid var(--line); padding: 48px 0; background: var(--s
 /* Aree toccabili di almeno 44 px su telefono e schermi touch */
 @media (max-width: 760px), (pointer: coarse) {
   .nav a, .arrow-link, .crumbs a, .foot-col a { display: inline-flex; align-items: center; min-height: 44px; }
-  .btn-sm { min-height: 44px; }
   .crumbs a { min-width: 44px; }
   .foot-col { gap: 2px; }
+}
+/* comandi della testata: 44 px anche dove il tocco è solo una possibilità (portatili con schermo touch) */
+@media (max-width: 760px), (any-pointer: coarse) {
+  :root { --ctl-h: 44px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
