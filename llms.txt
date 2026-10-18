@@ -11,25 +11,25 @@ In breve:
 - Costi: dipendono dal problema e dalla soluzione; prima di iniziare arriva una proposta scritta con tempi, costi e limiti. Il check-up è gratuito e non impegna a nulla.
 - Dati: prima di iniziare Telaio dice quali dati usa lo strumento, dove vengono conservati e chi può vederli, con soluzioni coerenti con il GDPR.
 - Fondatori: Dan Alessandro Podasca (AI e prodotto, Politecnico di Milano), Pasquale Silvestre (strategia e sviluppo, Innovation Management, esperienza nel private equity), Rod Lonardo (business e crescita, Università Bocconi, fintech).
-- Contatti: info@telaioconsulting.com. Prenotazione del check-up: https://telaioconsulting.github.io/check-up-ai/
+- Contatti: info@telaioconsulting.com. Prenotazione del check-up: https://telaioconsulting.com/check-up-ai/
 
 ## Pagine principali
 
-- [Home](https://telaioconsulting.github.io/): consulenza AI per PMI, il primo strumento in 4 settimane
-- [Check-up AI](https://telaioconsulting.github.io/check-up-ai/): cosa succede nei 30 minuti gratuiti, cosa ti porti a casa, per chi è, prenotazione
-- [Come lavoriamo](https://telaioconsulting.github.io/come-lavoriamo/): i 4 passi, cosa cambia lavorando con Telaio, cosa trovi sempre per iscritto, cosa non facciamo
-- [Cosa facciamo](https://telaioconsulting.github.io/cosa-facciamo/): le attività da cui partire, divise per area (vendite e negozio online, clienti e assistenza, amministrazione e documenti, direzione)
-- [Consulenza strategica](https://telaioconsulting.github.io/consulenza-strategica/): le scelte di fondo dell'impresa mentre l'AI cambia il mercato
-- [E-commerce su Shopify](https://telaioconsulting.github.io/cosa-facciamo/e-commerce/): automazioni con l'AI per clienti, spedizioni, magazzino e conti; i servizi sono descritti sul sito [Telaio - Ecommerce Automations](https://telaioconsulting.github.io/ecommerce-automations/)
-- [Chi siamo](https://telaioconsulting.github.io/chi-siamo/): i tre fondatori e perché esiste Telaio
-- [Domande frequenti](https://telaioconsulting.github.io/domande-frequenti/): costi, tempi, dati, AI Act, strumenti che usi già
+- [Home](https://telaioconsulting.com/): consulenza AI per PMI, il primo strumento in 4 settimane
+- [Check-up AI](https://telaioconsulting.com/check-up-ai/): cosa succede nei 30 minuti gratuiti, cosa ti porti a casa, per chi è, prenotazione
+- [Come lavoriamo](https://telaioconsulting.com/come-lavoriamo/): i 4 passi, cosa cambia lavorando con Telaio, cosa trovi sempre per iscritto, cosa non facciamo
+- [Cosa facciamo](https://telaioconsulting.com/cosa-facciamo/): le attività da cui partire, divise per area (vendite e negozio online, clienti e assistenza, amministrazione e documenti, direzione)
+- [Consulenza strategica](https://telaioconsulting.com/consulenza-strategica/): le scelte di fondo dell'impresa mentre l'AI cambia il mercato
+- [E-commerce su Shopify](https://telaioconsulting.com/cosa-facciamo/e-commerce/): automazioni con l'AI per clienti, spedizioni, magazzino e conti; i servizi sono descritti sul sito [Telaio - Ecommerce Automations](https://telaioconsulting.com/ecommerce-automations/)
+- [Chi siamo](https://telaioconsulting.com/chi-siamo/): i tre fondatori e perché esiste Telaio
+- [Domande frequenti](https://telaioconsulting.com/domande-frequenti/): costi, tempi, dati, AI Act, strumenti che usi già
 
 ## English
 
-- [Home](https://telaioconsulting.github.io/en/): AI consulting for small and mid-sized businesses, first AI tool in use in 4 weeks
-- [AI check-up](https://telaioconsulting.github.io/en/ai-check-up/): a free 30-minute video call with a Telaio founder, in English or Italian
+- [Home](https://telaioconsulting.com/en/): AI consulting for small and mid-sized businesses, first AI tool in use in 4 weeks
+- [AI check-up](https://telaioconsulting.com/en/ai-check-up/): a free 30-minute video call with a Telaio founder, in English or Italian
 
 ## Optional
 
-- [Informativa privacy](https://telaioconsulting.github.io/privacy/) · [Privacy notice](https://telaioconsulting.github.io/en/privacy/)
-- [Cookie](https://telaioconsulting.github.io/cookie/) · [Cookies](https://telaioconsulting.github.io/en/cookies/)
+- [Informativa privacy](https://telaioconsulting.com/privacy/) · [Privacy notice](https://telaioconsulting.com/en/privacy/)
+- [Cookie](https://telaioconsulting.com/cookie/) · [Cookies](https://telaioconsulting.com/en/cookies/)
