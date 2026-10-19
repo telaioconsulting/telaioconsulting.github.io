@@ -1,5 +1,5 @@
 /* ============================================================
-   TELAIO — interazioni. Nessun tracker, nessun cookie.
+   TELAIO — interazioni. Nessun tracker, nessun cookie: il banner e le statistiche sono in misura.js.
    Vanilla JS, nessuna libreria/build. Le animazioni sono in motion.js.
    ============================================================ */
 (function () {
@@ -145,6 +145,8 @@
             if (!res || !res.ok) throw new Error((res && res.errore) || "risposta");
             var fatto = grazie(f, dati.get("nome"), dati.get("email"));
             if (dopo) dopo(fatto);
+            // per misura.js: solo da quale pulsante si è partiti, mai i dati della persona
+            document.dispatchEvent(new CustomEvent("telaio:checkup-inviato", { detail: { pulsante: dati.get("pulsante") } }));
           })
           .catch(function () { stato.innerHTML = T.errore; stato.classList.add("is-error"); })
           .then(function () { clearTimeout(attesa); inVolo = false; btn.disabled = false; label.textContent = T.invia; });

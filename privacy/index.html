@@ -66,7 +66,7 @@
         "about": { "@id": "https://telaioconsulting.com/#organization" },
         "publisher": { "@id": "https://telaioconsulting.com/#organization" },
         "breadcrumb": { "@id": "https://telaioconsulting.com/privacy/#breadcrumb" },
-        "dateModified": "2026-10-16"
+        "dateModified": "2026-10-19"
       },
       {
         "@type": "Organization",
@@ -154,6 +154,7 @@
         <h2>2. Quali dati trattiamo</h2>
         <ul>
           <li><strong>Navigazione.</strong> Il servizio che ospita il sito, GitHub Pages, registra l'indirizzo IP di chi visita il sito per motivi di sicurezza. Lo spiega la <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages#data-collection" target="_blank" rel="noopener">documentazione di GitHub</a>.</li>
+          <li><strong>Statistiche delle visite.</strong> Con PostHog contiamo le pagine viste. Se accetti le statistiche registriamo anche i clic, i tempi di caricamento, il paese e la città ricavati dall'indirizzo IP, un identificativo salvato in un cookie e, per una visita su cinque, una registrazione di come usi la pagina con i campi dei moduli nascosti. Se le rifiuti contiamo solo le pagine viste, senza cookie. I dettagli sono nella <a href="/cookie/">pagina Cookie</a>.</li>
           <li><strong>Richiesta del check-up.</strong> Nome e cognome, email, il telefono se ce lo lasci e il messaggio che scrivi nel modulo del sito. Li riceviamo per email e li salviamo in un foglio di calcolo di Google, per ricontattarti e preparare la call.</li>
           <li><strong>Email.</strong> I dati che ci mandi quando ci scrivi.</li>
         </ul>
@@ -162,15 +163,17 @@
         <ul>
           <li>Per organizzare, preparare e svolgere la call, e per rispondere alle tue email: sono misure precontrattuali che chiedi tu (art. 6, paragrafo 1, lettera b del GDPR).</li>
           <li>Per la sicurezza del sito: legittimo interesse (art. 6, paragrafo 1, lettera f del GDPR).</li>
+          <li>Per le statistiche con il cookie, i clic e le registrazioni delle visite: il tuo consenso (art. 6, paragrafo 1, lettera a del GDPR), che puoi ritirare quando vuoi dal link «Preferenze cookie» in fondo a ogni pagina.</li>
+          <li>Per contare le pagine viste senza cookie, anche di chi non accetta: legittimo interesse a sapere quante persone visitano il sito (art. 6, paragrafo 1, lettera f del GDPR). Nel tuo browser non salviamo niente e il giorno dopo il conteggio non si può più ricollegare a te.</li>
         </ul>
 
         <h2>4. Chi li tratta per nostro conto</h2>
         <!-- TODO(conferma): il legale indica quali tutele citare per i trattamenti fuori dall'Unione europea -->
-        <p>Ci appoggiamo a due servizi esterni, che trattano i dati per nostro conto: Google, per ricevere e conservare le richieste del modulo, per la posta e per la videochiamata, e GitHub, che ospita il sito. Possono trattare dati anche fuori dall'Unione europea, con le tutele previste dal GDPR.</p>
+        <p>Ci appoggiamo a tre servizi esterni, che trattano i dati per nostro conto: Google, per ricevere e conservare le richieste del modulo, per la posta e per la videochiamata; GitHub, che ospita il sito; PostHog, per le statistiche delle visite, con i dati sui suoi server nell'Unione europea. Possono trattare dati anche fuori dall'Unione europea, con le tutele previste dal GDPR.</p>
 
         <h2>5. Per quanto tempo</h2>
         <!-- TODO(conferma): periodo di conservazione dei dati di prenotazione se non nasce un rapporto -->
-        <p>Conserviamo i dati solo per il tempo che serve agli scopi descritti qui sopra.</p>
+        <p>Conserviamo i dati solo per il tempo che serve agli scopi descritti qui sopra. Le statistiche delle visite restano in PostHog al massimo un anno, le registrazioni delle visite un mese.</p>
 
         <h2>6. I tuoi diritti</h2>
         <p>Puoi chiederci in qualsiasi momento di accedere ai tuoi dati, di correggerli o cancellarli, di limitarne l'uso, di opporti al trattamento o di riceverli in un formato che puoi portare altrove. Basta scrivere a <a href="mailto:info@telaioconsulting.com" data-email-link>info@telaioconsulting.com</a>.</p>
@@ -179,7 +182,7 @@
         <h2>7. Decisioni automatizzate</h2>
         <p>Non prendiamo decisioni basate solo su trattamenti automatizzati.</p>
 
-        <p class="updated">Ultimo aggiornamento: 16 ottobre 2026</p>
+        <p class="updated">Ultimo aggiornamento: 19 ottobre 2026</p>
       </div>
     </section>
   </main>
@@ -208,6 +211,7 @@
         <a href="mailto:info@telaioconsulting.com" data-email-link>info@telaioconsulting.com</a>
         <a href="/privacy/" aria-current="page">Informativa privacy</a>
         <a href="/cookie/">Cookie</a>
+        <a href="/cookie/#scelte" data-cc="show-preferencesModal">Preferenze cookie</a>
         <!-- TODO(conferma): link a LinkedIn e Instagram di Telaio quando esistono (e "sameAs" nell'Organization dei dati strutturati) -->
         <span>© 2026 Telaio</span>
       </div>
@@ -221,6 +225,7 @@
   <script src="/assets/vendor/SplitText.min.js"></script>
   <script src="/assets/vendor/lenis.min.js"></script>
   <script src="/script.js"></script>
+  <script src="/misura.js"></script>
   <script src="/motion.js"></script>
 </body>
 </html>
