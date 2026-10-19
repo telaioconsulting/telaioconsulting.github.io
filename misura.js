@@ -9,6 +9,8 @@
      della pagina, la registrazione di una parte delle visite (i campi dei moduli sempre nascosti)
      e i due eventi del piano: checkup_clicked e checkup_requested.
    - Ritirando il consenso: cookie e chiavi di PostHog si cancellano e la pagina si ricarica pulita.
+   - Ogni scelta sul banner va nel registro dei consensi (rules.consent_log del piano): la scheda
+     «Consensi» del foglio dello script Google che riceve il modulo (MODULO_URL di script.js).
    Nessun tag di Google o di Meta. Il banner (CookieConsent 3.1.0) è in assets/vendor/.
    Per spegnere tutto: togliere <script src="/misura.js"> dalle pagine.
    ============================================================ */
@@ -162,6 +164,29 @@
     applicaConsenso();
   }
 
+  /* ---- 3b. Il registro dei consensi: serve a dimostrare la scelta di chi visita. Lo script Google la
+     scrive nella scheda «Consensi»: l'id casuale del banner (lo stesso del cookie cc_cookie), le categorie,
+     la revisione, se è la prima scelta o un cambio, e l'ora. Nessun cookie parte con la richiesta
+     (credentials «omit»: per questo niente sendBeacon) e lo script non salva IP né browser.
+     Solo sul sito vero; keepalive la fa arrivare anche se la pagina si ricarica subito dopo (ritiro). */
+  function registraConsenso(azione) {
+    var CC = window.CookieConsent, url = window.TELAIO_MODULO_URL;
+    if (ENV !== "prod" || !url || !CC || !CC.getCookie || !window.fetch) return;
+    try {
+      var corpo = JSON.stringify({
+        kind: "consent",
+        consent_id: CC.getCookie("consentId"),
+        categories: CC.getCookie("categories"),
+        revision: CC.getCookie("revision"),
+        action: azione
+      });
+      window.fetch(url, {
+        method: "POST", body: corpo, keepalive: true, mode: "no-cors", credentials: "omit",
+        headers: { "Content-Type": "text/plain" }
+      })["catch"](function () { /* registro perso: la pagina non cambia */ });
+    } catch (e) { /* la misura non rompe mai la pagina */ }
+  }
+
   /* ---- 4. I testi del banner. */
   var T = isEn ? {
     consentModal: {
@@ -239,8 +264,10 @@
       onModalReady: function (e) {                       // dentro il banner scorre il browser, non Lenis (motion.js)
         if (e && e.modal) e.modal.setAttribute("data-lenis-prevent", "");
       },
+      onFirstConsent: function () { registraConsenso("first"); },
       onConsent: function () { applica(); },
       onChange: function () {
+        registraConsenso("change");                      // prima del ricaricamento qui sotto
         var prima = consenso.statistiche;
         leggiConsenso();
         if (prima && !consenso.statistiche) {            // statistiche ritirate: si cancella e si riparte puliti

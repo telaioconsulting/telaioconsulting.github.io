@@ -155,6 +155,7 @@
         <ul>
           <li><strong>Browsing.</strong> The service that hosts the site, GitHub Pages, logs visitors' IP addresses for security. <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages#data-collection" target="_blank" rel="noopener">GitHub's documentation</a> explains this.</li>
           <li><strong>Visit analytics.</strong> With PostHog we count the pages viewed. If you accept analytics we also record clicks, loading times, the country and city derived from your IP address, an identifier stored in a cookie and, for one visit in five, a recording of how you use the page with form fields hidden. If you reject them we only count the pages viewed, with no cookies. The details are on the <a href="/en/cookies/">Cookies page</a>.</li>
+          <li><strong>Cookie choices.</strong> For every choice you make on the cookie banner, a rejection too: the random code stored in your cc_cookie cookie, the categories accepted, the banner's version, whether it is your first choice or a change, and the time. No IP address and no data about your browser.</li>
           <li><strong>Requesting the check-up.</strong> Your name, email, your phone number if you give it and the message you write in the site's form. We receive them by email and keep them in a Google spreadsheet, to get back to you and prepare the call.</li>
           <li><strong>Email.</strong> The information you send us when you write to us.</li>
         </ul>
@@ -165,15 +166,18 @@
           <li>To keep the site secure: legitimate interest (GDPR Article 6(1)(f)).</li>
           <li>For analytics with the cookie, clicks and visit recordings: your consent (GDPR Article 6(1)(a)), which you can withdraw at any time from the «Cookie preferences» link at the bottom of every page.</li>
           <li>To count page views without cookies, including those of visitors who don't accept: legitimate interest in knowing how many people visit the site (GDPR Article 6(1)(f)). Nothing is stored in your browser and the next day the count can no longer be linked back to you.</li>
+          <!-- TODO(conferma): il legale conferma la base del registro delle scelte sui cookie (obbligo legale, oppure legittimo interesse) -->
+          <li>To keep the record of your cookie choices: it is the proof of consent, which the GDPR obliges us to be able to show (GDPR Article 7(1) and Article 6(1)(c)).</li>
         </ul>
 
         <h2>4. Who handles it on our behalf</h2>
         <!-- TODO(conferma): il legale indica quali tutele citare per i trattamenti fuori dall'Unione europea -->
-        <p>We rely on three outside services that handle data on our behalf: Google, to receive and keep the requests sent through the form, for email and for the video call; GitHub, which hosts the site; PostHog, for visit analytics, with the data on its servers in the European Union. They may process data outside the European Union, with the safeguards the GDPR requires.</p>
+        <p>We rely on three outside services that handle data on our behalf: Google, to receive and keep the requests sent through the form and the record of cookie choices, for email and for the video call; GitHub, which hosts the site; PostHog, for visit analytics, with the data on its servers in the European Union. They may process data outside the European Union, with the safeguards the GDPR requires.</p>
 
         <h2>5. How long we keep it</h2>
         <!-- TODO(conferma): periodo di conservazione dei dati di prenotazione se non nasce un rapporto -->
-        <p>We keep data only for as long as the purposes above require. Visit analytics stay in PostHog for at most one year, visit recordings for one month.</p>
+        <!-- TODO(conferma): per quanto tenere il registro delle scelte sui cookie -->
+        <p>We keep data only for as long as the purposes above require. Visit analytics stay in PostHog for at most one year, visit recordings for one month. We keep the record of cookie choices for as long as we might have to prove them.</p>
 
         <h2>6. Your rights</h2>
         <p>You can ask us at any time to access your data, to correct or delete it, to restrict its use, to object to its processing or to receive it in a format you can take elsewhere. Just write to <a href="mailto:info@telaioconsulting.com" data-email-link>info@telaioconsulting.com</a>.</p>
