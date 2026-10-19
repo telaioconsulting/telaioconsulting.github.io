@@ -66,7 +66,7 @@
         "about": { "@id": "https://telaioconsulting.com/#organization" },
         "publisher": { "@id": "https://telaioconsulting.com/#organization" },
         "breadcrumb": { "@id": "https://telaioconsulting.com/en/cookies/#breadcrumb" },
-        "dateModified": "2026-10-16"
+        "dateModified": "2026-10-19"
       },
       {
         "@type": "Organization",
@@ -147,19 +147,35 @@
 
     <section class="wrap p-legal">
       <div class="legal">
-        <h2>What the site uses today</h2>
-        <p>Today the site doesn't use profiling cookies or analytics tools.</p>
+        <h2>What the site uses</h2>
+        <p>The site uses the cookies it needs to work and, if you accept, PostHog for visit analytics. We don't use profiling cookies or advertising tools.</p>
 
-        <h2>Your theme choice</h2>
-        <p>If you pick the light or dark theme, the site saves that choice in your browser, so it's there next time. It's a technical tool: no consent is needed. You can delete it whenever you like from your browser settings, in the section about site data.</p>
+        <h2 id="choices">Your choices</h2>
+        <p>The first time you open the site we ask whether you accept analytics. «Accept» and «Reject» carry the same weight, and closing the banner with the X counts as a rejection. Your choice lasts six months, then we ask again. You can change it whenever you like, from here or from the «Cookie preferences» link at the bottom of every page.</p>
+        <p><a class="btn btn-primary" href="#choices" data-cc="show-preferencesModal">Change your choices</a></p>
+
+        <h2>Analytics with PostHog</h2>
+        <p>PostHog tells us how many people visit the site, where they come from and which pages work. It is a service of PostHog Inc.; the data sits on its servers in the European Union, in Frankfurt.</p>
+        <ul>
+          <li><strong>If you accept.</strong> PostHog stores a cookie in your browser to recognise the same visit from page to page and when you come back. We record the pages viewed, clicks, loading times, the country and city derived from your IP address and, for one visit in five, a recording of how you scroll and click the page. Form fields are always hidden: we don't see what you type.</li>
+          <li><strong>If you reject, or don't choose.</strong> We only count the pages viewed and when you leave a page, with no cookies and nothing stored in your browser. So as not to count the same person twice on the same day, PostHog computes a code on its servers from your IP address and browser, mixed with a value that changes every day: the next day it can no longer be linked back to you.</li>
+        </ul>
+
+        <h2>What stays in your browser</h2>
+        <ul>
+          <li><strong>cc_cookie</strong> (Telaio cookie): remembers your choice on the banner. It lasts six months. It is necessary, no consent is needed.</li>
+          <li><strong>telaio-theme</strong> (browser storage): remembers the light or dark theme, only if you change it. It stays until you delete it. It is necessary, no consent is needed.</li>
+          <li><strong>ph_phc_…_posthog</strong> (PostHog cookie) and the other entries starting with <strong>ph_</strong> or <strong>__ph_</strong> in browser storage: they hold the pages of the same visit together and recognise returning visitors. They last up to one year. Only if you accept analytics.</li>
+        </ul>
+        <p>You can delete all of it whenever you like from your browser settings, in the section about site data.</p>
+
+        <h2>If you withdraw your consent</h2>
+        <p>We delete PostHog's cookies and entries from your browser, and the page reloads. From then on we only count the pages viewed, with no cookies.</p>
 
         <h2>The check-up form</h2>
-        <p>When you send the form to request the check-up, what you write reaches us through a Google service. Sending it doesn't store any cookie in your browser. Our <a href="/en/privacy/">privacy notice</a> explains how we handle this data.</p>
+        <p>When you send the form to request the check-up, what you write reaches us through a Google service. Sending it doesn't store any cookie in your browser. If you accepted analytics, PostHog records that a request was sent and from which button: never your name, your email or your message. Our <a href="/en/privacy/">privacy notice</a> explains how we handle the form's data.</p>
 
-        <h2>What will change</h2>
-        <p>This page will change when the site starts using measurement tools. When that happens, we'll ask for your consent.</p>
-
-        <p class="updated">Last updated: 16 October 2026</p>
+        <p class="updated">Last updated: 19 October 2026</p>
       </div>
     </section>
   </main>
@@ -187,6 +203,7 @@
         <a href="mailto:info@telaioconsulting.com" data-email-link>info@telaioconsulting.com</a>
         <a href="/en/privacy/">Privacy</a>
         <a href="/en/cookies/" aria-current="page">Cookies</a>
+        <a href="/en/cookies/#choices" data-cc="show-preferencesModal">Cookie preferences</a>
         <!-- TODO(conferma): link a LinkedIn e Instagram di Telaio quando esistono (e "sameAs" nell'Organization dei dati strutturati) -->
         <span>© 2026 Telaio</span>
       </div>
@@ -200,6 +217,7 @@
   <script src="/assets/vendor/SplitText.min.js"></script>
   <script src="/assets/vendor/lenis.min.js"></script>
   <script src="/script.js"></script>
+  <script src="/misura.js"></script>
   <script src="/motion.js"></script>
 </body>
 </html>

@@ -498,3 +498,43 @@ footer { border-top: 1px solid var(--line); padding: 48px 0; background: var(--s
   body, .mobile-bar { transition: none; }
   .btn, .btn:hover { transition: none; transform: none; }
 }
+
+/* Banner dei cookie (CookieConsent, misura.js): i colori e i caratteri del sito, in tutti e due i temi.
+   I pulsanti hanno lo stesso peso (equalWeightButtons): «Rifiuta» si vede quanto «Accetta». */
+#cc-main {
+  --cc-font-family: var(--f-body);
+  --cc-modal-border-radius: var(--r-md);
+  --cc-btn-border-radius: var(--r-sm);
+  --cc-bg: var(--surface);
+  --cc-primary-color: var(--ink);
+  --cc-secondary-color: var(--muted);
+  --cc-link-color: var(--weft);
+  --cc-btn-primary-bg: var(--brand);
+  --cc-btn-primary-color: #fff;
+  --cc-btn-primary-border-color: var(--brand);
+  --cc-btn-primary-hover-bg: var(--brand-lift);
+  --cc-btn-primary-hover-color: #fff;
+  --cc-btn-primary-hover-border-color: var(--brand-lift);
+  --cc-btn-secondary-bg: var(--brand);
+  --cc-btn-secondary-color: #fff;
+  --cc-btn-secondary-border-color: var(--brand);
+  --cc-btn-secondary-hover-bg: var(--brand-lift);
+  --cc-btn-secondary-hover-color: #fff;
+  --cc-btn-secondary-hover-border-color: var(--brand-lift);
+  --cc-separator-border-color: var(--line);
+  --cc-toggle-on-bg: var(--brand);
+  --cc-toggle-off-bg: var(--line-strong);
+  --cc-toggle-readonly-bg: var(--line);
+  --cc-section-category-border: var(--line);
+  --cc-cookie-category-block-bg: var(--panel);
+  --cc-cookie-category-block-border: var(--line);
+  --cc-cookie-category-block-hover-bg: var(--panel);
+  --cc-cookie-category-block-hover-border: var(--line-strong);
+  --cc-cookie-category-expanded-block-hover-bg: var(--panel);
+  --cc-overlay-bg: rgba(9, 12, 8, .6);
+  --cc-footer-bg: var(--panel);
+  --cc-footer-color: var(--muted);
+  --cc-footer-border-color: var(--line);
+}
+#cc-main .cm, #cc-main .pm { border: 1px solid var(--line); box-shadow: var(--shadow-lg); }
+#cc-main .cm__title, #cc-main .pm__title { font-family: var(--f-display); }
