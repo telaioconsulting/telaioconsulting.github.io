@@ -13,6 +13,8 @@
      pubblicato come App web. Finché è vuoto, i pulsanti portano alla pagina del check-up
      e lì il riquadro mostra l'email. */
   var MODULO_URL = "https://script.google.com/macros/s/AKfycbzJmiY4G_pbbwvgdwyeIiqgITCb_plU3cYFLQ9vrBKGVN-VcL90GIzHZD7A5dZu4g0r7g/exec";
+  // misura.js manda allo stesso script il registro delle scelte sul banner dei cookie
+  window.TELAIO_MODULO_URL = MODULO_URL;
 
   /* ---- Cambio tema (scuro predefinito ⇄ chiaro) ---- */
   var themeBtn = document.getElementById("themeBtn");
