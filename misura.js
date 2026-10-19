@@ -262,9 +262,18 @@
     l.onload = uno;
     l.onerror = uno;
     document.head.appendChild(l);
+    // Il file UMD di CookieConsent comincia con «var e,t; e=this, t=function…»: caricato come script
+    // classico sovrascrive le globali «e» e «t» che lenis.min.js dichiara al suo primo livello (la sua
+    // funzione clamp e la classe dell'animazione). Senza rimetterle a posto ogni scrollTo di Lenis
+    // chiamerebbe la fabbrica di CookieConsent e la rotella del mouse non muoverebbe più la pagina.
+    var globali = { e: window.e, t: window.t };
     var s = document.createElement("script");
     s.src = "/assets/vendor/cookieconsent.umd.js";
-    s.onload = uno;
+    s.onload = function () {
+      window.e = globali.e;
+      window.t = globali.t;
+      uno();
+    };
     document.head.appendChild(s);
   }
 
