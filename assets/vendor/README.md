@@ -17,3 +17,7 @@ Per aggiornarle, sostituisci i file con la nuova versione e cambia la tabella.
 
 I due file di CookieConsent sono identici a quelli dello standard Telaio (`collectip/tracciamento/site/config.json` nel repository `telaio`):
 SHA-256 `vG4vLmOB/AJbJ6awr7Wg4fxonG+fxAp4cIrbIFTvRXU=` per il `.js` e `ygRrixsQlBByBZiOcJamh7JByO9fP+/l5UPtKNJmRsE=` per il `.css`, controllati il 19 ottobre 2026.
+
+Attenzione: `cookieconsent.umd.js` comincia con `var e,t; e=this, t=function…` e, caricato come script classico, sovrascrive le globali `e` e `t`
+che `lenis.min.js` dichiara al suo primo livello (la funzione clamp e la classe dell'animazione). Il file non si tocca, per restare identico allo standard:
+`misura.js` salva le due globali prima di inserire lo script e le rimette a posto appena caricato (`caricaBanner`).
