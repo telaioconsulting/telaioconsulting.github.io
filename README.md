@@ -31,6 +31,20 @@ Public marketing website for **Telaio Consulting**, served via GitHub Pages.
 - Every page has a title, description, canonical URL, Open Graph tags and JSON-LD (`WebPage` or a subtype, the `Organization`, the breadcrumb; services, FAQ and people where the page has them). `dateModified` in the JSON-LD and `lastmod` in `sitemap.xml` follow the last content change: update both when a page's text changes.
 - `llms.txt`: a plain summary of Telaio and its key pages for AI assistants. Keep it in line with the site when services, prices or contacts change.
 - `robots.txt` lets every crawler in (AI search crawlers included) and lists both sitemaps (this site and `/ecommerce-automations/`, which lives on the same host).
+- Both sitemaps are registered in Google Search Console and Bing Webmaster Tools (account info@telaioconsulting.com).
+- **IndexNow** (Bing, and the engines that share it: Yandex, Seznam, Naver, Yep) learns of new or changed pages at once, without waiting for a crawl. The key is the file `1bc619ff1501d74c3ec7270a9ade138a.txt` at the site root: its name and its content are the key (not a secret, but it lives only there and here). After a change is live on the site, run from the repository root
+
+  ```
+  python tools/indexnow.py https://telaioconsulting.com/chi-siamo/
+  ```
+
+  with the URLs that changed, were added or removed (no argument = every URL of `sitemap.xml`; an argument ending in `.xml` is a sitemap, local or `https://`, so `python tools/indexnow.py sitemap.xml https://telaioconsulting.com/ecommerce-automations/sitemap.xml` resubmits both sites). The script first checks that the key file answers on the live site, then does one POST; HTTP 200 or 202 means accepted. Without the script, the same POST by hand:
+
+  ```
+  curl -X POST https://api.indexnow.org/indexnow -H "Content-Type: application/json; charset=utf-8" -d "{\"host\":\"telaioconsulting.com\",\"key\":\"1bc619ff1501d74c3ec7270a9ade138a\",\"keyLocation\":\"https://telaioconsulting.com/1bc619ff1501d74c3ec7270a9ade138a.txt\",\"urlList\":[\"https://telaioconsulting.com/chi-siamo/\"]}"
+  ```
+
+  Submit changes, not the whole site after every deploy: IndexNow is a change notice, not a crawl request. To rotate the key, replace the file with a new `<32 hex characters>.txt`, update this paragraph and resubmit once.
 - Icons: `favicon.ico`, `favicon.svg`, `apple-touch-icon.png`, `assets/icon-192.png`, `assets/icon-512.png`, `site.webmanifest`.
 
 ## Editing
