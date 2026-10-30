@@ -455,6 +455,12 @@ html.ck-open { overflow: hidden; padding-right: var(--ck-gutter, 0px); }
 .wz-help { margin-top: 8px; color: var(--muted); }
 .wz-opts { display: grid; gap: 10px; margin-top: 22px; }
 @media (min-width: 561px) { .wz-opts.is-two, .wz-opts.is-many { grid-template-columns: 1fr 1fr; } }
+/* risposte corte (le persone): due colonne sul telefono, quattro sul computer */
+.wz-opts.is-short { grid-template-columns: 1fr 1fr; }
+@media (min-width: 561px) { .wz-opts.is-short { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+/* «Altro»: il campo per dire di cosa si occupa l'impresa (ck-field come il modulo; display grid batte hidden) */
+.wz-altro { margin-top: 16px; }
+.wz-altro[hidden] { display: none; }
 .wz-opt {
   display: flex; align-items: center; gap: 14px; min-height: 56px; padding: 12px 16px;
   border: 1px solid var(--line-strong); border-radius: var(--r-sm); background: var(--ground);
@@ -500,6 +506,7 @@ html.ck-open { overflow: hidden; padding-right: var(--ck-gutter, 0px); }
 .wz-score-n { margin-top: 10px; font-size: var(--step--1); color: var(--muted); line-height: 1.5; }
 .wz-bar { display: block; height: 4px; margin-top: 14px; border-radius: 4px; background: var(--line); overflow: hidden; }
 .wz-bar > i { display: block; height: 100%; background: var(--brand); }
+.wz-how { margin-top: 14px; }
 .wz-block { margin-top: 36px; }
 .wz-h3 { font-size: var(--step-2); letter-spacing: -.01em; }
 .wz-block .ticks { margin-top: 16px; }

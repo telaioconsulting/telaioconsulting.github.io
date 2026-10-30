@@ -20,8 +20,8 @@
   /* ---- Le domande. I codici sono quelli del piano di tracciamento (wizard_completed): non cambiarli
      senza cambiare anche company/event-tracking/tracking-plan.json nel repository telaio. */
   var DOMANDE = [
-    { id: "sector", opzioni: ["manufacturing", "retail", "professional_services", "hospitality", "construction", "other"] },
-    { id: "team_size", opzioni: ["1_9", "10_49", "50_249", "250_plus"] },
+    { id: "sector", altro: "other", opzioni: ["manufacturing", "retail", "professional_services", "hospitality", "construction", "other"] },
+    { id: "team_size", corte: true, opzioni: ["1", "2_3", "4_8", "9_15", "16_50", "51_100", "over_100"] },
     { id: "areas", piu: 3, opzioni: ["customer_requests", "quotes", "documents", "knowledge", "content", "reporting"] },
     { id: "hours", opzioni: ["under_5", "5_15", "15_40", "over_40"] },
     { id: "repetition", opzioni: ["high", "medium", "low"] },
@@ -31,18 +31,22 @@
   ];
 
   /* ---- Il calcolo (spiegato nella pagina).
-     Potenziale, 0–100: ore in gioco (fino a 50) + quanto si ripetono le attività (fino a 30) + quante
-     attività hai scelto (fino a 20). Prontezza, 25–100: dove stanno le informazioni (fino a 40) + l'AI
+     Potenziale, fino a 100: ore in gioco (fino a 50) + quanto si ripetono le attività (fino a 30) + quante
+     attività hai scelto (fino a 20). Prontezza, fino a 100: dove stanno le informazioni (fino a 40) + l'AI
      che usate già (fino a 30) + chi segue il progetto (fino a 30).
-     Ore da recuperare: le ore della fascia scelta per la quota che l'AI può togliere, prudente. */
-  var ORE = { under_5: { da: 2, a: 5, punti: 10 }, "5_15": { da: 5, a: 15, punti: 25 }, "15_40": { da: 15, a: 40, punti: 40 }, over_40: { da: 40, a: 60, punti: 50 } };
-  var RIPETIZIONE = { high: { da: 0.3, a: 0.5, punti: 30 }, medium: { da: 0.2, a: 0.35, punti: 18 }, low: { da: 0.05, a: 0.15, punti: 6 } };
-  var PUNTI_ATTIVITA = [0, 10, 16, 20];   // per 0, 1, 2, 3 attività scelte
-  var DATI = { system: 40, spreadsheets: 25, scattered: 10 };
-  var AI_OGGI = { in_processes: 30, personal: 20, none: 10 };
-  var CHI = { owner: 30, manager: 20, nobody: 5 };
+     La scala parte alta di proposito (Dan, 30 ottobre 2026): ogni piccola impresa ha un'attività da cui
+     partire, i punteggi dicono quanto c'è da guadagnare e quanto si è pronti, il minimo è circa 50.
+     Ore da recuperare: le ore della fascia scelta per la quota che l'AI può togliere, prudente; questa
+     resta una stima onesta, non segue la scala dei punteggi. */
+  var ORE = { under_5: { da: 2, a: 5, punti: 25 }, "5_15": { da: 5, a: 15, punti: 35 }, "15_40": { da: 15, a: 40, punti: 45 }, over_40: { da: 40, a: 60, punti: 50 } };
+  var RIPETIZIONE = { high: { da: 0.3, a: 0.5, punti: 30 }, medium: { da: 0.2, a: 0.35, punti: 22 }, low: { da: 0.05, a: 0.15, punti: 15 } };
+  var PUNTI_ATTIVITA = [0, 14, 17, 20];   // per 0, 1, 2, 3 attività scelte
+  var DATI = { system: 40, spreadsheets: 30, scattered: 20 };
+  var AI_OGGI = { in_processes: 30, personal: 24, none: 18 };
+  var CHI = { owner: 30, manager: 22, nobody: 12 };
   var SETTIMANE_ANNO = 46;                // settimane di lavoro in un anno, per la cifra annua
-  var SOGLIA_POTENZIALE = 40;             // sotto: «oggi l'AI ha poco da fare»
+  var SOGLIA_PICCOLO = 65;                // potenziale sotto: «Si parte in piccolo»
+  var FASCE = { molto_alto: 85, alto: 70 }; // da 85 molto alto, da 70 alto, sotto medio-alto
 
   function calcola(r) {
     var ore = ORE[r.hours], rip = RIPETIZIONE[r.repetition], n = Math.min(r.areas.length, 3);
@@ -54,21 +58,22 @@
     var blocchi = [];
     if (r.data === "scattered") blocchi.push("data");
     if (r.owner === "nobody") blocchi.push("owner");
-    var profilo = potenziale < SOGLIA_POTENZIALE ? "not_now" : blocchi.length ? "prepare_first" : "ready";
+    var profilo = blocchi.length ? "prepare_first" : potenziale < SOGLIA_PICCOLO ? "start_small" : "ready";
     return { potenziale: potenziale, prontezza: prontezza, oreDa: da, oreA: a, profilo: profilo, blocchi: blocchi };
   }
   function decina(n) { return Math.max(10, Math.round(n / 10) * 10); }   // le ore di un anno: una cifra tonda, non una falsa precisione
-  function fascia(v, alta, media) { return v >= alta ? "alta" : v >= media ? "media" : "bassa"; }
+  function fascia(v) { return v >= FASCE.molto_alto ? "molto_alto" : v >= FASCE.alto ? "alto" : "medio_alto"; }
 
   /* ---- I testi. */
   var T = isEn ? {
     domanda: function (i, n) { return "Question " + i + " of " + n; },
     avanti: "Next", vedi: "See my result", indietro: "Back",
     scegli: "Choose an answer to go on.", scegliPiu: "Choose at least one activity to go on.",
+    scegliAltro: "Tell us in a few words what your business does.",
     massimo: "You’ve chosen three. To change one, untick another first.",
     q: {
-      sector: { t: "What sector is your business in?", o: { manufacturing: "Manufacturing and production", retail: "Retail, shop or e-commerce", professional_services: "Professional services (firms, agencies, consulting)", hospitality: "Tourism, food and events", construction: "Construction, installation, building services", other: "Something else" } },
-      team_size: { t: "How many people work there?", o: { "1_9": "1–9", "10_49": "10–49", "50_249": "50–249", "250_plus": "250 or more" } },
+      sector: { t: "What sector is your business in?", altro: "What does your business do?", altroEs: "For example: we make made-to-measure furniture", o: { manufacturing: "Manufacturing and production", retail: "Retail, shop or e-commerce", professional_services: "Professional services (firms, agencies, consulting)", hospitality: "Tourism, food and events", construction: "Construction, installation, building services", other: "Something else" } },
+      team_size: { t: "How many people work there?", o: { "1": "Just me", "2_3": "2–3", "4_8": "4–8", "9_15": "9–15", "16_50": "16–50", "51_100": "51–100", over_100: "More than 100" } },
       areas: { t: "Which of these take up the most time?", h: "Choose up to three.", o: { customer_requests: "Answering customer emails, calls and requests", quotes: "Preparing quotes and offers", documents: "Handling orders, invoices and documents", knowledge: "Looking for information in files, contracts and procedures", content: "Writing copy: product pages, posts, newsletters", reporting: "Pulling together numbers to decide (sales, stock, costs)" } },
       hours: { t: "How many hours a week go into these activities, in total?", h: "Add up the hours of everyone involved. A rough idea is enough.", o: { under_5: "Fewer than 5", "5_15": "5 to 15", "15_40": "15 to 40", over_40: "More than 40" } },
       repetition: { t: "How repetitive are they?", o: { high: "Almost always the same: same questions, same forms", medium: "Similar, with a few exceptions", low: "Every case is different" } },
@@ -79,12 +84,17 @@
     risultato: "Your result",
     profili: {
       ready: ["You can start now", "You have repetitive activities, real time at stake and the basics to begin. This is the typical case where the first AI tool is in use within 4 weeks."],
-      prepare_first: ["There’s a lot to gain, but put things in order first", "The time at stake is there. Before an AI tool, you’ll probably need to sort out a few things, listed below: that’s where we would start."],
-      not_now: ["Today AI has little to do for you", "With few hours at stake, or activities that are all different, an AI tool would hardly pay for itself today. In the check-up we look at whether there’s one place where it does, or what to do first."]
+      prepare_first: ["You can start, after sorting out one thing", "The time at stake is there. Before the AI tool we sort out what you’ll find below, together, as a first step."],
+      start_small: ["Start small", "Few hours are at stake, or the activities change often. It’s best to start from a single activity, the most repetitive one: it’s the quickest way to see that it works."]
     },
     potenziale: "AI potential", prontezza: "Readiness",
-    fasce: { alta: "High", media: "Medium", bassa: "Low" },
-    fascePr: { alta: "High", media: "Medium", bassa: "To build" },
+    fasce: { molto_alto: "Very high", alto: "High", medio_alto: "Medium-high" },
+    fascePr: { molto_alto: "Very high", alto: "High", medio_alto: "Medium-high" },
+    spiega: {
+      potenziale: { molto_alto: "Many hours on activities that repeat: ideal ground for AI.", alto: "Real hours on repetitive activities: AI can take a good share of them off.", medio_alto: "Fewer hours at stake, or varied activities: we start from one, the most repetitive." },
+      prontezza: { molto_alto: "Information in order and someone to follow it: you can start right away.", alto: "The basics are there: the details get sorted in the first weeks.", medio_alto: "Something needs sorting before you start: you’ll find it below." }
+    },
+    come: "How we work out the scores", comeHref: "#how-we-calculate",
     ore: "Time you could win back",
     oreS: "hours a week",
     oreNota: function (da, a) { return "That’s about " + da + " to " + a + " hours over a working year. A rough estimate on the hours you gave us, not a promise."; },
@@ -119,7 +129,7 @@
     },
     riepilogo: function (r, c, L) {
       return "I did the AI Wizard on the site.\n" +
-        "Sector: " + L("sector", r.sector) + " · People: " + L("team_size", r.team_size) + "\n" +
+        "Sector: " + settore(r) + " · People: " + L("team_size", r.team_size) + "\n" +
         "Activities that take time: " + r.areas.map(function (a) { return L("areas", a); }).join("; ") + "\n" +
         "Hours a week: " + L("hours", r.hours) + " · " + L("repetition", r.repetition) + "\n" +
         "Information: " + L("data", r.data) + " · AI today: " + L("ai_today", r.ai_today) + " · Who follows it: " + L("owner", r.owner) + "\n" +
@@ -129,10 +139,11 @@
     domanda: function (i, n) { return "Domanda " + i + " di " + n; },
     avanti: "Avanti", vedi: "Vedi il risultato", indietro: "Indietro",
     scegli: "Scegli una risposta per andare avanti.", scegliPiu: "Scegli almeno un'attività per andare avanti.",
+    scegliAltro: "Scrivi in poche parole di cosa si occupa la tua impresa.",
     massimo: "Ne hai scelte tre. Per cambiarne una, togline prima un'altra.",
     q: {
-      sector: { t: "In che settore lavora la tua impresa?", o: { manufacturing: "Produzione e manifattura", retail: "Commercio, negozio o e-commerce", professional_services: "Servizi professionali (studi, agenzie, consulenza)", hospitality: "Turismo, ristorazione ed eventi", construction: "Edilizia, impianti e installazioni", other: "Altro" } },
-      team_size: { t: "Quante persone ci lavorano?", o: { "1_9": "1–9", "10_49": "10–49", "50_249": "50–249", "250_plus": "250 o più" } },
+      sector: { t: "In che settore lavora la tua impresa?", altro: "Di cosa si occupa la tua impresa?", altroEs: "Per esempio: produciamo mobili su misura", o: { manufacturing: "Produzione e manifattura", retail: "Commercio, negozio o e-commerce", professional_services: "Servizi professionali (studi, agenzie, consulenza)", hospitality: "Turismo, ristorazione ed eventi", construction: "Edilizia, impianti e installazioni", other: "Altro" } },
+      team_size: { t: "Quante persone ci lavorano?", o: { "1": "Solo io", "2_3": "2–3", "4_8": "4–8", "9_15": "9–15", "16_50": "16–50", "51_100": "51–100", over_100: "Più di 100" } },
       areas: { t: "Quali di queste attività vi portano via più tempo?", h: "Scegline fino a tre.", o: { customer_requests: "Rispondere a email, telefonate e richieste dei clienti", quotes: "Preparare preventivi e offerte", documents: "Gestire ordini, fatture e documenti", knowledge: "Cercare informazioni in file, contratti e procedure", content: "Scrivere testi: schede prodotto, post, newsletter", reporting: "Mettere insieme i numeri per decidere (vendite, magazzino, costi)" } },
       hours: { t: "Quante ore a settimana finiscono in queste attività, in tutto?", h: "Somma le ore di tutte le persone coinvolte. Basta un'idea di massima.", o: { under_5: "Meno di 5", "5_15": "Da 5 a 15", "15_40": "Da 15 a 40", over_40: "Più di 40" } },
       repetition: { t: "Quanto si ripetono?", o: { high: "Quasi sempre uguali: stesse domande, stessi moduli", medium: "Simili, con qualche eccezione", low: "Ogni caso è diverso" } },
@@ -143,12 +154,17 @@
     risultato: "Il tuo risultato",
     profili: {
       ready: ["Puoi partire subito", "Hai attività che si ripetono, tempo vero in gioco e le basi per cominciare. È il caso tipico in cui in 4 settimane il primo strumento AI è in uso."],
-      prepare_first: ["C'è molto da guadagnare, ma prima serve ordine", "Il tempo in gioco c'è. Prima di uno strumento AI probabilmente servirà sistemare qualcosa, qui sotto: è da lì che partiremmo."],
-      not_now: ["Oggi l'AI ha poco da fare da voi", "Con poche ore in gioco, o attività tutte diverse tra loro, oggi uno strumento AI difficilmente si ripaga. Nel check-up guardiamo se c'è un punto dove invece conviene, o cosa fare prima."]
+      prepare_first: ["Si può partire, sistemando prima una cosa", "Il tempo in gioco c'è. Prima dello strumento AI sistemiamo quello che trovi qui sotto, insieme, come primo passo."],
+      start_small: ["Si parte in piccolo", "Le ore in gioco sono poche, o le attività cambiano spesso. Conviene partire da un'attività sola, la più ripetitiva: è il modo più rapido per vedere che funziona."]
     },
     potenziale: "Potenziale dell'AI", prontezza: "Prontezza",
-    fasce: { alta: "Alto", media: "Medio", bassa: "Basso" },
-    fascePr: { alta: "Alta", media: "Media", bassa: "Da costruire" },
+    fasce: { molto_alto: "Molto alto", alto: "Alto", medio_alto: "Medio-alto" },
+    fascePr: { molto_alto: "Molto alta", alto: "Alta", medio_alto: "Medio-alta" },
+    spiega: {
+      potenziale: { molto_alto: "Tante ore su attività che si ripetono: è il terreno ideale per l'AI.", alto: "Ci sono ore vere su attività ripetitive: l'AI può toglierne una buona parte.", medio_alto: "Le ore in gioco sono meno, o le attività variano: si parte da una sola, la più ripetitiva." },
+      prontezza: { molto_alto: "Informazioni in ordine e qualcuno che segue: si può partire subito.", alto: "Le basi ci sono: i dettagli si sistemano nelle prime settimane.", medio_alto: "Prima di partire conviene sistemare qualcosa: lo trovi qui sotto." }
+    },
+    come: "Come calcoliamo i punteggi", comeHref: "#come-calcoliamo",
     ore: "Tempo che puoi recuperare",
     oreS: "ore a settimana",
     oreNota: function (da, a) { return "Cioè circa da " + da + " a " + a + " ore in un anno di lavoro. È una stima di massima sulle ore che ci hai indicato, non una promessa."; },
@@ -183,7 +199,7 @@
     },
     riepilogo: function (r, c, L) {
       return "Ho fatto l'AI Wizard sul sito.\n" +
-        "Settore: " + L("sector", r.sector) + " · Persone: " + L("team_size", r.team_size) + "\n" +
+        "Settore: " + settore(r) + " · Persone: " + L("team_size", r.team_size) + "\n" +
         "Attività che portano via tempo: " + r.areas.map(function (a) { return L("areas", a); }).join("; ") + "\n" +
         "Ore a settimana: " + L("hours", r.hours) + " · " + L("repetition", r.repetition) + "\n" +
         "Informazioni: " + L("data", r.data) + " · AI oggi: " + L("ai_today", r.ai_today) + " · Chi segue: " + L("owner", r.owner) + "\n" +
@@ -191,6 +207,8 @@
     }
   };
   function L(q, v) { return T.q[q].o[v]; }
+  // «Altro»: nel riepilogo per il check-up va quello che la persona ha scritto (mai negli eventi)
+  function settore(r) { return r.sector === "other" && r.sector_other ? r.sector_other : L("sector", r.sector); }
   var CHECKUP = isEn ? "/en/ai-check-up/" : "/check-up-ai/";
 
   /* ---- Stato: la domanda corrente e le risposte. */
@@ -249,7 +267,7 @@
     fs.appendChild(titolo);
     if (testi.h) { var aiuto = el("p", "wz-help", testi.h); aiuto.id = id + "-h"; fs.appendChild(aiuto); }
 
-    var lista = el("div", "wz-opts" + (q.opzioni.length > 4 && !piu ? " is-two" : "") + (piu ? " is-many" : ""));
+    var lista = el("div", "wz-opts" + (q.corte ? " is-short" : q.opzioni.length > 4 && !piu ? " is-two" : "") + (piu ? " is-many" : ""));
     var scelti = piu ? (risposte[q.id] || []) : null;
     q.opzioni.forEach(function (v) {
       var lab = el("label", "wz-opt"), inp = document.createElement("input");
@@ -262,6 +280,22 @@
       lista.appendChild(lab);
     });
     fs.appendChild(lista);
+
+    // «Altro»: un campo per dire di cosa si occupa l'impresa, solo quando è scelto
+    var altro = null, campo = null;
+    if (q.altro) {
+      campo = el("div", "ck-field wz-altro");
+      var etichetta = el("label", null, testi.altro);
+      etichetta.htmlFor = "wz-altro";
+      altro = document.createElement("input");
+      altro.type = "text"; altro.id = "wz-altro"; altro.name = q.id + "_other";
+      altro.maxLength = 80; altro.autocomplete = "off"; altro.placeholder = testi.altroEs;
+      altro.value = risposte[q.id + "_other"] || "";
+      campo.appendChild(etichetta);
+      campo.appendChild(altro);
+      campo.hidden = risposte[q.id] !== q.altro;
+      fs.appendChild(campo);
+    }
     f.appendChild(fs);
 
     var stato = el("p", "wz-status");
@@ -293,8 +327,13 @@
         var s = f.querySelector("input:checked");
         if (s) risposte[q.id] = s.value;
       }
+      if (altro) risposte[q.id + "_other"] = altro.value.trim();
     }
-    function risposto() { return piu ? (risposte[q.id] || []).length > 0 : !!risposte[q.id]; }
+    function conAltro() { return !!altro && risposte[q.id] === q.altro; }
+    function risposto() {
+      if (piu) return (risposte[q.id] || []).length > 0;
+      return !!risposte[q.id] && (!conAltro() || risposte[q.id + "_other"].length >= 2);
+    }
 
     // al massimo tre attività: le altre si spengono finché non se ne toglie una
     function limita() {
@@ -313,6 +352,7 @@
       leggi();
       stato.textContent = "";
       limita();
+      if (campo) campo.hidden = !conAltro();
       if (!iniziato && risposto()) { iniziato = true; annuncia("iniziato", {}); }
     });
     // una risposta sola scelta col mouse o col dito: si passa subito alla domanda dopo (anche toccando la
@@ -326,13 +366,19 @@
       f.addEventListener("click", function (ev) {
         if (!ev.target || ev.target.tagName !== "INPUT" || !tocco || !tocco.contains(ev.target)) return;
         tocco = null;
+        // «Altro» non porta avanti: prima si scrive di cosa si occupa l'impresa
+        if (altro && ev.target.value === q.altro) { campo.hidden = false; altro.focus(); return; }
         setTimeout(function () { if (f.isConnected) avanza(); }, fermo ? 0 : 220);
       });
     }
 
     function avanza() {
       leggi();
-      if (!risposto()) { stato.textContent = piu ? T.scegliPiu : T.scegli; return; }
+      if (!risposto()) {
+        stato.textContent = piu ? T.scegliPiu : conAltro() ? T.scegliAltro : T.scegli;
+        if (conAltro()) altro.focus();
+        return;
+      }
       if (ultimo) { risultato(); return; }
       passo++;
       domanda();
@@ -343,7 +389,7 @@
   }
 
   /* ---- Il risultato. */
-  function metro(nome, valore, fasciaTesto) {
+  function metro(nome, valore, fasciaTesto, spiega) {
     var d = el("div", "wz-score");
     d.appendChild(el("p", "wz-score-l", nome));
     var v = el("p", "wz-score-v");
@@ -356,6 +402,7 @@
     pieno.style.width = valore + "%";
     barra.appendChild(pieno);
     d.appendChild(barra);
+    d.appendChild(el("p", "wz-score-n", spiega));
     return d;
   }
 
@@ -371,8 +418,9 @@
     out.appendChild(el("p", "wz-verdict-p", T.profili[c.profilo][1]));
 
     var punti = el("div", "wz-scores");
-    punti.appendChild(metro(T.potenziale, c.potenziale, T.fasce[fascia(c.potenziale, 65, SOGLIA_POTENZIALE)]));
-    punti.appendChild(metro(T.prontezza, c.prontezza, T.fascePr[fascia(c.prontezza, 70, 50)]));
+    var fp = fascia(c.potenziale), fr = fascia(c.prontezza);
+    punti.appendChild(metro(T.potenziale, c.potenziale, T.fasce[fp], T.spiega.potenziale[fp]));
+    punti.appendChild(metro(T.prontezza, c.prontezza, T.fascePr[fr], T.spiega.prontezza[fr]));
     var ore = el("div", "wz-score is-hours");
     ore.appendChild(el("p", "wz-score-l", T.ore));
     var ov = el("p", "wz-score-v");
@@ -382,6 +430,9 @@
     ore.appendChild(el("p", "wz-score-n", T.oreNota(decina(c.oreDa * SETTIMANE_ANNO), decina(c.oreA * SETTIMANE_ANNO))));
     punti.appendChild(ore);
     out.appendChild(punti);
+    var come = el("a", "arrow-link wz-how", T.come + " →");
+    come.href = T.comeHref;
+    out.appendChild(come);
 
     var parti = el("div", "wz-block");
     parti.appendChild(el("h3", "wz-h3", T.partenza));
@@ -397,7 +448,7 @@
     out.appendChild(parti);
 
     var cose = c.blocchi.map(function (b) { return T.gap[b]; });
-    if (r.ai_today === "none" && c.profilo !== "not_now") cose.push(T.gapAi);
+    if (r.ai_today === "none") cose.push(T.gapAi);
     if (cose.length) {
       var prima = el("div", "wz-block");
       prima.appendChild(el("h3", "wz-h3", T.prima));
