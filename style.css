@@ -433,7 +433,7 @@ html.ck-open { overflow: hidden; padding-right: var(--ck-gutter, 0px); }
    GUIDE (/guide/): testo lungo da leggere, prima la risposta, domande come titoli
    ============================================================ */
 /* titoli lunghi: più larghi e più piccoli del titolo delle altre pagine, così stanno in tre righe
-   (quattro classi: motion.css arriva dopo e ha .p-hero.is-page .p-h1) */
+   (tre classi: vince per specificità su .p-hero.is-page .p-h1 di motion.css, che arriva dopo) */
 .p-hero.is-page.is-guide .p-h1 { max-width: 24ch; font-size: clamp(2rem, 3.9vw, 3.5rem); line-height: 1.02; }
 .g-byline { position: relative; z-index: 2; margin-top: clamp(18px, 2.6vh, 28px); }
 .p-sec.g-sec { padding-top: clamp(32px, 5vw, 64px); padding-bottom: clamp(64px, 9vw, 120px); }
