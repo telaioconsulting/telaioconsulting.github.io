@@ -430,6 +430,61 @@ html.ck-open { overflow: hidden; padding-right: var(--ck-gutter, 0px); }
 .p-checkup .arrow-link:hover { color: rgba(255, 255, 255, .8); }
 
 /* ============================================================
+   GUIDE (/guide/): testo lungo da leggere, prima la risposta, domande come titoli
+   ============================================================ */
+/* titoli lunghi: più larghi e più piccoli del titolo delle altre pagine, così stanno in tre righe
+   (tre classi: vince per specificità su .p-hero.is-page .p-h1 di motion.css, che arriva dopo) */
+.p-hero.is-page.is-guide .p-h1 { max-width: 24ch; font-size: clamp(2rem, 3.9vw, 3.5rem); line-height: 1.02; }
+.g-byline { position: relative; z-index: 2; margin-top: clamp(18px, 2.6vh, 28px); }
+.p-sec.g-sec { padding-top: clamp(32px, 5vw, 64px); padding-bottom: clamp(64px, 9vw, 120px); }
+.g-article { max-width: var(--read); margin: 0 auto; }
+.g-article > h2 { font-size: clamp(1.4rem, 2.3vw, 1.85rem); letter-spacing: -.015em; margin: clamp(40px, 5vw, 56px) 0 14px; scroll-margin-top: 96px; }
+.g-article > p, .g-article li { color: var(--muted); line-height: 1.7; }
+.g-article > p { margin-bottom: 14px; }
+.g-article > ul, .g-article > ol { padding-left: 22px; display: grid; gap: 8px; margin: 0 0 18px; }
+.g-article a:not(.btn):not(.arrow-link) { color: var(--weft); }
+.g-answer { font-size: var(--step-1); line-height: 1.55; margin-bottom: 8px; }
+.g-answer p { color: var(--ink); }
+.g-facts { list-style: none; padding: 0; margin: 18px 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.g-facts li { border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); padding: 14px 16px; color: var(--muted); font-size: var(--step--1); line-height: 1.45; }
+.g-facts b { display: block; font-family: var(--f-display); font-size: var(--step-3); color: var(--ink); letter-spacing: -.02em; margin-bottom: 4px; }
+/* tabelle: su telefono scorrono dentro il loro riquadro, mai la pagina */
+.g-table { margin: 6px 0 22px; overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r-md); }
+.g-table table { width: 100%; border-collapse: collapse; font-size: .9375rem; }
+.g-table th, .g-table td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; line-height: 1.45; }
+.g-table thead th { font-family: var(--f-mono); font-size: var(--step--1); font-weight: 500; color: var(--weft); letter-spacing: .03em; background: var(--surface); }
+.g-table td { color: var(--muted); }
+.g-table tbody th { color: var(--ink); font-weight: 600; }
+.g-table tbody tr:last-child td { border-bottom: 0; }
+.g-table .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--ink); }
+.g-table thead th.num { white-space: normal; }   /* «Italia 2024» va a capo, così su telefono le quattro colonne stanno nello schermo */
+.g-table.is-text table { min-width: 560px; }
+@media (max-width: 480px) {
+  .g-table table { font-size: .875rem; }
+  .g-table th, .g-table td { padding: 8px 9px; }
+}
+.g-table caption { caption-side: bottom; text-align: left; padding: 10px 14px; font-family: var(--f-mono); font-size: var(--step--1); color: var(--muted); border-top: 1px solid var(--line); }
+/* l'invito a metà guida e la chiusura */
+.g-cta { margin: 28px 0 8px; display: grid; gap: 14px; justify-items: start; }
+.g-cta p { color: var(--ink); }
+.g-cta .btn { min-height: 48px; }
+.g-end { margin-top: 22px; display: grid; gap: 6px; justify-items: start; }
+.g-end .btn { min-height: 48px; }
+.g-about { margin-top: clamp(40px, 5vw, 56px); padding: 20px 22px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); }
+.g-about p { color: var(--muted); line-height: 1.6; }
+.g-sources { font-size: .9375rem; }
+.g-updated { margin-top: 18px; font-family: var(--f-mono); font-size: var(--step--1); color: var(--muted); }
+/* l'indice delle guide */
+.g-list { list-style: none; margin: 0 auto; padding: 0; max-width: 880px; display: grid; gap: 14px; }
+.g-card { position: relative; display: grid; gap: 8px; padding: clamp(20px, 3vw, 28px); border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); transition: border-color .25s var(--ease); }
+.g-card:hover, .g-card:focus-within { border-color: var(--line-strong); }
+.g-card h2 { font-size: clamp(1.3rem, 2.2vw, 1.7rem); letter-spacing: -.015em; }
+.g-card h2 a { color: var(--ink); text-decoration: none; }
+.g-card h2 a::after { content: ""; position: absolute; inset: 0; }   /* tutta la scheda è il link */
+.g-card p { color: var(--muted); line-height: 1.55; }
+.g-card .p-meta { margin-top: 4px; }
+
+/* ============================================================
    AUTOVALUTAZIONE AI (autovalutazione.js): una domanda per volta, poi il risultato
    ============================================================ */
 .p-sec.av-sec { padding-top: clamp(32px, 5vw, 64px); }
