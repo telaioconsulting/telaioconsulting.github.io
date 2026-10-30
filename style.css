@@ -495,6 +495,7 @@ html.ck-open { overflow: hidden; padding-right: var(--ck-gutter, 0px); }
 /* il risultato */
 .wz-kicker { font-family: var(--f-mono); font-size: var(--step--1); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--weft); }
 .wz-verdict { font-size: var(--step-4); margin-top: 12px; }
+.wz-verdict-p + .wz-verdict-p { margin-top: 8px; }
 .wz-verdict-p { margin-top: 14px; max-width: 62ch; color: var(--muted); font-size: var(--step-1); line-height: 1.55; }
 .wz-scores { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 28px; }
 .wz-score { border: 1px solid var(--line); border-radius: var(--r-md); background: var(--ground); padding: 18px; }

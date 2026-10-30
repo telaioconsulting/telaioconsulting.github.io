@@ -84,7 +84,7 @@
     risultato: "Your result",
     profili: {
       ready: ["You can start now", "You have repetitive activities, real time at stake and the basics to begin. This is the typical case where the first AI tool is in use within 4 weeks."],
-      prepare_first: ["You can start, after sorting out one thing", "The time at stake is there. Before the AI tool we sort out what you’ll find below, together, as a first step."],
+      prepare_first: ["You can start: we’ll lay the groundwork together", "The time at stake is there. To start well, we prepare what you’ll find below together: it’s the first step of the work."],
       start_small: ["Start small", "Few hours are at stake, or the activities change often. It’s best to start from a single activity, the most repetitive one: it’s the quickest way to see that it works."]
     },
     potenziale: "AI potential", prontezza: "Readiness",
@@ -92,19 +92,19 @@
     fascePr: { molto_alto: "Very high", alto: "High", medio_alto: "Medium-high" },
     spiega: {
       potenziale: { molto_alto: "Many hours on activities that repeat: ideal ground for AI.", alto: "Real hours on repetitive activities: AI can take a good share of them off.", medio_alto: "Fewer hours at stake, or varied activities: we start from one, the most repetitive." },
-      prontezza: { molto_alto: "Information in order and someone to follow it: you can start right away.", alto: "The basics are there: the details get sorted in the first weeks.", medio_alto: "Something needs sorting before you start: you’ll find it below." }
+      prontezza: { molto_alto: "Information in order and someone to follow it: you can start right away.", alto: "The basics are there: the details get sorted in the first weeks.", medio_alto: "There’s a base to prepare together before starting: you’ll find it below." }
     },
     come: "How we work out the scores", comeHref: "#how-we-calculate",
     ore: "Time you could win back",
     oreS: "hours a week",
     oreNota: function (da, a) { return "That’s about " + da + " to " + a + " hours over a working year. A rough estimate on the hours you gave us, not a promise."; },
     partenza: "Where we would start",
-    prima: "What to sort out first",
+    prima: "To prepare together",
     gap: {
-      data: "Gather the information you need in one place. A well-kept shared spreadsheet is enough to begin with.",
-      owner: "Find one person who follows the project on your side: we need someone to try the tool in real work and tell us what doesn’t fit."
+      data: "Put the information you need in one place: a well-kept shared spreadsheet is enough to begin with, and we help you set it up.",
+      owner: "Choose one person to follow the project on your side: someone who tries the tool in real work and tells us what doesn’t fit."
     },
-    gapAi: "You don’t use AI yet: no problem. We start from a single activity and try it with your people.",
+    gapAi: "Not using AI yet? No problem: we start from a single activity and try it with your people.",
     ctaH: "Let’s talk about it in the check-up",
     ctaP: "30 minutes, free, with one of the founders. We go through this result together and tell you where we would start, or whether it isn’t worth it today.",
     ctaBtn: "Book your AI check-up",
@@ -154,7 +154,7 @@
     risultato: "Il tuo risultato",
     profili: {
       ready: ["Puoi partire subito", "Hai attività che si ripetono, tempo vero in gioco e le basi per cominciare. È il caso tipico in cui in 4 settimane il primo strumento AI è in uso."],
-      prepare_first: ["Si può partire, sistemando prima una cosa", "Il tempo in gioco c'è. Prima dello strumento AI sistemiamo quello che trovi qui sotto, insieme, come primo passo."],
+      prepare_first: ["Puoi partire: prepariamo insieme la base", "Il tempo in gioco c'è. Per partire bene prepariamo insieme quello che trovi qui sotto: è il primo passo del lavoro."],
       start_small: ["Si parte in piccolo", "Le ore in gioco sono poche, o le attività cambiano spesso. Conviene partire da un'attività sola, la più ripetitiva: è il modo più rapido per vedere che funziona."]
     },
     potenziale: "Potenziale dell'AI", prontezza: "Prontezza",
@@ -162,19 +162,19 @@
     fascePr: { molto_alto: "Molto alta", alto: "Alta", medio_alto: "Medio-alta" },
     spiega: {
       potenziale: { molto_alto: "Tante ore su attività che si ripetono: è il terreno ideale per l'AI.", alto: "Ci sono ore vere su attività ripetitive: l'AI può toglierne una buona parte.", medio_alto: "Le ore in gioco sono meno, o le attività variano: si parte da una sola, la più ripetitiva." },
-      prontezza: { molto_alto: "Informazioni in ordine e qualcuno che segue: si può partire subito.", alto: "Le basi ci sono: i dettagli si sistemano nelle prime settimane.", medio_alto: "Prima di partire conviene sistemare qualcosa: lo trovi qui sotto." }
+      prontezza: { molto_alto: "Informazioni in ordine e qualcuno che segue: si può partire subito.", alto: "Le basi ci sono: i dettagli si sistemano nelle prime settimane.", medio_alto: "C'è una base da preparare insieme prima di partire: la trovi qui sotto." }
     },
     come: "Come calcoliamo i punteggi", comeHref: "#come-calcoliamo",
     ore: "Tempo che puoi recuperare",
     oreS: "ore a settimana",
     oreNota: function (da, a) { return "Cioè circa da " + da + " a " + a + " ore in un anno di lavoro. È una stima di massima sulle ore che ci hai indicato, non una promessa."; },
     partenza: "Da dove partiremmo",
-    prima: "Cosa sistemare prima",
+    prima: "Da preparare insieme",
     gap: {
-      data: "Raccogliere in un posto solo le informazioni che servono. Per cominciare basta anche un foglio condiviso tenuto bene.",
-      owner: "Trovare una persona che segua il progetto da parte vostra: serve qualcuno che provi lo strumento nel lavoro vero e ci dica cosa non torna."
+      data: "Mettere in un posto solo le informazioni che servono: per cominciare basta un foglio condiviso tenuto bene, e ti aiutiamo noi a impostarlo.",
+      owner: "Scegliere una persona che segua il progetto da parte vostra: qualcuno che provi lo strumento nel lavoro vero e ci dica cosa non torna."
     },
-    gapAi: "Non usate ancora l'AI: nessun problema. Si parte da un'attività sola e la proviamo con le tue persone.",
+    gapAi: "Non usate ancora l'AI? Nessun problema: si parte da un'attività sola e la proviamo con le tue persone.",
     ctaH: "Parliamone nel check-up",
     ctaP: "30 minuti, gratuiti, con uno dei fondatori. Guardiamo insieme questo risultato e ti diciamo da dove partiremmo, o se oggi non conviene.",
     ctaBtn: "Prenota il check-up AI",
@@ -416,6 +416,8 @@
     h.setAttribute("data-wz-focus", "");
     out.appendChild(h);
     out.appendChild(el("p", "wz-verdict-p", T.profili[c.profilo][1]));
+    // chi non usa ancora l'AI riceve un incoraggiamento sotto il giudizio, non una cosa da preparare
+    if (r.ai_today === "none") out.appendChild(el("p", "wz-verdict-p", T.gapAi));
 
     var punti = el("div", "wz-scores");
     var fp = fascia(c.potenziale), fr = fascia(c.prontezza);
@@ -448,7 +450,6 @@
     out.appendChild(parti);
 
     var cose = c.blocchi.map(function (b) { return T.gap[b]; });
-    if (r.ai_today === "none") cose.push(T.gapAi);
     if (cose.length) {
       var prima = el("div", "wz-block");
       prima.appendChild(el("h3", "wz-h3", T.prima));
