@@ -2,10 +2,12 @@
    TELAIO — Autovalutazione AI: otto domande sull'impresa, il risultato subito, poi l'invito al check-up.
    Si parte dal nome dell'azienda e dall'email, poi le domande. Quando appare il risultato, azienda,
    email, risposte e punteggi vanno allo script Google del modulo del check-up (TELAIO_MODULO_URL di
-   script.js, pulsante «assessment_result»): una riga nel foglio «Richieste», nessuna email (Dan,
-   30 ottobre 2026: un'email sola per azienda). In fondo al risultato «Contattami» manda di nuovo tutto,
-   col telefono se c'è (pulsante «assessment_contact»): una riga e l'email a info@, la richiesta di
-   essere ricontattati, la conversione del sito.
+   script.js, pulsante «assessment_result»): una riga nel foglio «Richieste» e, se in 30 minuti non arriva
+   «Contattami», l'email «Senza Contattami» a info@. In fondo al risultato «Contattami» manda di nuovo tutto,
+   col telefono se c'è e il valore del tempo scelto (pulsante «assessment_contact»): una riga e subito
+   l'email «Contattami» a info@, la richiesta di essere ricontattati, la conversione del sito. Un'email sola
+   per azienda, con due segnali distinti (Dan, 30 ottobre 2026); l'attesa la fa lo script Google.
+   Sotto i punteggi, «Quanto vale questo tempo?»: le ore all'anno per il costo orario che la persona sceglie.
    misura.js conta l'inizio e la fine (evento «telaio:autovalutazione»), solo con il consenso alle statistiche
    e mai con i dati della persona: solo i codici delle risposte e i due punteggi.
    Il calcolo e le sue ipotesi sono scritti nella pagina, «Come calcoliamo il risultato»: chi cambia
@@ -39,10 +41,12 @@
      che usate già (fino a 30) + chi segue il progetto (fino a 30).
      La scala parte alta di proposito (Dan, 30 ottobre 2026): ogni piccola impresa ha un'attività da cui
      partire, i punteggi dicono quanto c'è da guadagnare e quanto si è pronti, il minimo è circa 50.
-     Ore da recuperare: le ore della fascia scelta per la quota che l'AI può togliere; le quote e gli
-     arrotondamenti per eccesso sono di Dan (30 ottobre 2026: «vai sempre verso il maggior risparmio»). */
-  var ORE = { under_5: { da: 2, a: 5, punti: 25 }, "5_15": { da: 5, a: 15, punti: 35 }, "15_40": { da: 15, a: 40, punti: 45 }, over_40: { da: 40, a: 60, punti: 50 } };
-  var RIPETIZIONE = { high: { da: 0.6, a: 0.8, punti: 30 }, medium: { da: 0.5, a: 0.7, punti: 22 }, low: { da: 0.15, a: 0.3, punti: 15 } };
+     Ore da recuperare: il valore più alto della fascia scelta per la quota che l'AI può togliere (in percento
+     intero, così il conto è esatto); le quote e gli arrotondamenti per eccesso sono di Dan (30 ottobre 2026: «vai
+     sempre verso il maggior risparmio»), il valore più alto anche (la sera stessa: «stringere il range delle ore
+     che si risparmiano mantenendo il limite superiore»: sull'intera fascia andava per esempio da 3 a 11 ore). */
+  var ORE = { under_5: { max: 5, punti: 25 }, "5_15": { max: 15, punti: 35 }, "15_40": { max: 40, punti: 45 }, over_40: { max: 60, punti: 50 } };
+  var RIPETIZIONE = { high: { da: 60, a: 80, punti: 30 }, medium: { da: 50, a: 70, punti: 22 }, low: { da: 15, a: 30, punti: 15 } };
   var PUNTI_ATTIVITA = [0, 14, 17, 20];   // per 0, 1, 2, 3 attività scelte
   var DATI = { system: 40, spreadsheets: 30, scattered: 20 };
   var AI_OGGI = { in_processes: 30, personal: 24, none: 18 };
@@ -50,13 +54,19 @@
   var SETTIMANE_ANNO = 46;                // settimane di lavoro in un anno, per la cifra annua
   var SOGLIA_PICCOLO = 65;                // potenziale sotto: «Si parte in piccolo»
   var FASCE = { molto_alto: 85, alto: 70 }; // da 85 molto alto, da 70 alto, sotto medio-alto
+  /* Quanto vale questo tempo (Dan, 30 ottobre 2026): le ore all'anno del risultato per il costo di un'ora,
+     scelto tra tre cifre indicative o scritto a mano. Per eccesso, come le ore: l'anno alle centinaia di
+     euro, il mese (un dodicesimo dell'anno) alle decine. È il valore del tempo, non un risparmio promesso. */
+  var COSTI = [20, 35, 60];               // €/ora: lavoro operativo, impiegato qualificato, titolare o professionista
+  var COSTO_BASE = 35;                    // quello scelto quando appare il risultato
+  var COSTO_MIN = 5, COSTO_MAX = 500;     // la cifra scritta a mano, in euro interi
 
   function calcola(r) {
     var ore = ORE[r.hours], rip = RIPETIZIONE[r.repetition], n = Math.min(r.areas.length, 3);
     var potenziale = ore.punti + rip.punti + PUNTI_ATTIVITA[n];
     var prontezza = DATI[r.data] + AI_OGGI[r.ai_today] + CHI[r.owner];
-    var da = Math.max(1, Math.ceil(ore.da * rip.da));
-    var a = Math.max(da + 1, Math.ceil(ore.a * rip.a));
+    var da = Math.max(1, Math.ceil(ore.max * rip.da / 100));
+    var a = Math.max(da + 1, Math.ceil(ore.max * rip.a / 100));
     // senza un posto per le informazioni o qualcuno che segua il progetto si parte da lì, qualunque sia il punteggio
     var blocchi = [];
     if (r.data === "scattered") blocchi.push("data");
@@ -65,6 +75,12 @@
     return { potenziale: potenziale, prontezza: prontezza, oreDa: da, oreA: a, profilo: profilo, blocchi: blocchi };
   }
   function decina(n) { return Math.max(10, Math.ceil(n / 10) * 10); }   // le ore di un anno: una cifra tonda, per eccesso
+  function valore(oreAnnoDa, oreAnnoA, costo) {
+    var annoDa = Math.ceil(oreAnnoDa * costo / 100) * 100, annoA = Math.ceil(oreAnnoA * costo / 100) * 100;
+    return { annoDa: annoDa, annoA: annoA, meseDa: Math.ceil(annoDa / 120) * 10, meseA: Math.ceil(annoA / 120) * 10 };
+  }
+  // 13000 → «13.000» (in inglese «13,000»): a mano, uguale in ogni browser
+  function cifra(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, isEn ? "," : "."); }
   function fascia(v) { return v >= FASCE.molto_alto ? "molto_alto" : v >= FASCE.alto ? "alto" : "medio_alto"; }
 
   /* ---- I testi. */
@@ -108,6 +124,18 @@
     ore: "Time you could win back",
     oreS: "hours a week",
     oreNota: function (da, a) { return "That’s about " + da + " to " + a + " hours over a working year. A rough estimate on the hours you gave us, not a promise."; },
+    valore: {
+      h: "What is this time worth?",
+      p: "Choose what an hour of the people doing these activities costs the business today, all-in. The figures are indicative: pick the closest or write your own.",
+      ora: function (v) { return "€" + v + "/h"; },
+      fasce: { 20: "operational work", 35: "skilled employee", 60: "owner or professional" },
+      altra: "Another figure", altraL: "Cost of an hour, in euros", altraR: "my own figure",
+      fuori: "Write an hourly cost between €5 and €500.",
+      soldi: function (da, a) { return "€" + cifra(da) + "–" + cifra(a); },
+      mese: "a month",
+      nota: function (da, a) { return "That’s €" + cifra(da) + " to €" + cifra(a) + " over a working year. It’s the value of the time freed up, not a guaranteed saving."; },
+      riga: function (costo, chi, v) { return "\nValue of the time: €" + costo + "/h (" + chi + "), €" + cifra(v.meseDa) + "–" + cifra(v.meseA) + " a month, €" + cifra(v.annoDa) + "–" + cifra(v.annoA) + " a year."; }
+    },
     partenza: "Where we would start",
     prima: "To prepare together",
     gap: {
@@ -189,6 +217,18 @@
     ore: "Tempo che puoi recuperare",
     oreS: "ore a settimana",
     oreNota: function (da, a) { return "Cioè circa da " + da + " a " + a + " ore in un anno di lavoro. È una stima di massima sulle ore che ci hai indicato, non una promessa."; },
+    valore: {
+      h: "Quanto vale questo tempo?",
+      p: "Scegli quanto costa all'impresa un'ora di chi fa oggi queste attività, contributi compresi. Sono cifre indicative: scegli la più vicina o scrivi la tua.",
+      ora: function (v) { return v + " €/ora"; },
+      fasce: { 20: "lavoro operativo", 35: "impiegato qualificato", 60: "titolare o professionista" },
+      altra: "Un'altra cifra", altraL: "Costo di un'ora, in euro", altraR: "cifra scritta da me",
+      fuori: "Scrivi un costo orario tra 5 e 500 €.",
+      soldi: function (da, a) { return cifra(da) + "–" + cifra(a) + " €"; },
+      mese: "al mese",
+      nota: function (da, a) { return "Cioè da " + cifra(da) + " a " + cifra(a) + " € in un anno di lavoro. È il valore del tempo che tornerebbe libero, non un risparmio garantito."; },
+      riga: function (costo, chi, v) { return "\nValore del tempo: " + costo + " €/ora (" + chi + "), " + cifra(v.meseDa) + "–" + cifra(v.meseA) + " € al mese, " + cifra(v.annoDa) + "–" + cifra(v.annoA) + " € in un anno."; }
+    },
     partenza: "Da dove partiremmo",
     prima: "Da preparare insieme",
     gap: {
@@ -506,6 +546,70 @@
     return d;
   }
 
+  /* «Quanto vale questo tempo?»: tre costi orari e una cifra a mano; il valore si aggiorna a ogni scelta.
+     riga() è la riga per «Contattami» (vuota se la cifra a mano non è valida): il costo scelto arriva solo lì. */
+  function quantoVale(annoDa, annoA) {
+    var t = T.valore, costo = COSTO_BASE, chi = t.fasce[COSTO_BASE];
+    var b = el("div", "av-block av-value");
+    var fs = el("fieldset", "av-fs");
+    fs.setAttribute("aria-labelledby", "av-value-h av-value-p");
+    var h = el("h3", "av-h3", t.h); h.id = "av-value-h";
+    var p = el("p", "av-help", t.p); p.id = "av-value-p";
+    fs.appendChild(h); fs.appendChild(p);
+    var lista = el("div", "av-opts is-short av-rates");
+    COSTI.concat(["altra"]).forEach(function (v) {
+      var lab = el("label", "av-opt"), inp = document.createElement("input");
+      inp.type = "radio"; inp.name = "costo"; inp.value = String(v);
+      inp.checked = v === COSTO_BASE;
+      lab.appendChild(inp);
+      var testo = el("span", "av-opt-t");
+      if (v === "altra") testo.textContent = t.altra;
+      else { testo.appendChild(el("b", null, t.ora(v))); testo.appendChild(el("span", null, t.fasce[v])); }
+      lab.appendChild(testo);
+      lista.appendChild(lab);
+    });
+    fs.appendChild(lista);
+    var campo = el("div", "ck-field av-altro");
+    var l = el("label", null, t.altraL); l.htmlFor = "av-costo";
+    var mano = document.createElement("input");
+    mano.type = "text"; mano.id = "av-costo"; mano.name = "costo_altro";
+    mano.inputMode = "decimal"; mano.maxLength = 6; mano.autocomplete = "off";
+    campo.appendChild(l); campo.appendChild(mano);
+    campo.hidden = true;
+    fs.appendChild(campo);
+    b.appendChild(fs);
+
+    var esito = el("div", "av-value-out");
+    esito.setAttribute("aria-live", "polite");
+    b.appendChild(esito);
+
+    function aggiorna() {
+      var s = lista.querySelector("input:checked"), scelta = s ? s.value : String(COSTO_BASE);
+      campo.hidden = scelta !== "altra";
+      if (scelta === "altra") {
+        var n = Number(mano.value.trim().replace(",", "."));
+        costo = mano.value.trim() && n >= COSTO_MIN && n <= COSTO_MAX ? Math.round(n) : null;
+        chi = t.altraR;
+      } else {
+        costo = Number(scelta); chi = t.fasce[scelta];
+      }
+      esito.textContent = "";
+      if (costo == null) { esito.appendChild(el("p", "av-score-n", mano.value.trim() ? t.fuori : "")); return; }
+      var v = valore(annoDa, annoA, costo), cifre = el("p", "av-score-v");
+      cifre.appendChild(el("b", null, t.soldi(v.meseDa, v.meseA)));
+      cifre.appendChild(el("span", null, " " + t.mese));
+      esito.appendChild(cifre);
+      esito.appendChild(el("p", "av-score-n", t.nota(v.annoDa, v.annoA)));
+    }
+    lista.addEventListener("change", aggiorna);
+    mano.addEventListener("input", aggiorna);
+    aggiorna();
+    return {
+      nodo: b,
+      riga: function () { return costo == null ? "" : t.riga(costo, chi, valore(annoDa, annoA, costo)); }
+    };
+  }
+
   function risultato() {
     var r = risposte, c = calcola(r);
     var out = el("div", "av-result");
@@ -529,12 +633,15 @@
     ov.appendChild(el("b", null, c.oreDa + "–" + c.oreA));
     ov.appendChild(el("span", null, " " + T.oreS));
     ore.appendChild(ov);
-    ore.appendChild(el("p", "av-score-n", T.oreNota(decina(c.oreDa * SETTIMANE_ANNO), decina(c.oreA * SETTIMANE_ANNO))));
+    var annoDa = decina(c.oreDa * SETTIMANE_ANNO), annoA = decina(c.oreA * SETTIMANE_ANNO);
+    ore.appendChild(el("p", "av-score-n", T.oreNota(annoDa, annoA)));
     punti.appendChild(ore);
     out.appendChild(punti);
     var come = el("a", "arrow-link av-how", T.come + " →");
     come.href = T.comeHref;
     out.appendChild(come);
+    var tempo = quantoVale(annoDa, annoA);
+    out.appendChild(tempo.nodo);
 
     var parti = el("div", "av-block");
     parti.appendChild(el("h3", "av-h3", T.partenza));
@@ -590,7 +697,7 @@
       ev.preventDefault();
       if (inVolo) return;
       inVolo = true; btn.disabled = true; etichetta.textContent = T.invio;
-      invia("assessment_contact", T.richiesta + riepilogo, f.elements.telefono.value.trim())
+      invia("assessment_contact", T.richiesta + riepilogo + tempo.riga(), f.elements.telefono.value.trim())
         .then(function () {
           var g = T.grazie(contatto.email), fatto = el("div", "av-done");
           fatto.tabIndex = -1;
@@ -627,7 +734,7 @@
   }
 
   // per le prove nel browser (verifica_autovalutazione.mjs): il calcolo senza passare dalle domande
-  window.__telaioAutovalutazione = { calcola: calcola, domande: DOMANDE };
+  window.__telaioAutovalutazione = { calcola: calcola, valore: valore, domande: DOMANDE };
 
   // il paragrafo per chi non ha JavaScript (dentro [data-autovalutazione]) lascia il posto all'inizio
   inizio(true);

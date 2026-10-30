@@ -572,6 +572,17 @@ html.ck-open { overflow: hidden; padding-right: var(--ck-gutter, 0px); }
 .av-opps h4 { margin: 0; font-family: var(--f-display); font-size: var(--step-1); letter-spacing: -.01em; }
 .av-opps p { margin-top: 6px; color: var(--muted); line-height: 1.55; }
 .av-opps .av-ex { font-size: var(--step--1); color: var(--weft); }
+/* «Quanto vale questo tempo?»: i costi orari (av-opt come nelle domande) e il valore al mese e all'anno */
+.av-value { padding: clamp(18px, 3vw, 24px); border: 1px solid var(--line); border-radius: var(--r-md); background: var(--ground); }
+.av-value .av-opts { margin-top: 16px; }
+.av-rates .av-opt { gap: 10px; padding: 12px; }
+.av-rates .av-opt-t b { display: block; font-weight: 700; white-space: nowrap; }
+.av-rates .av-opt-t span { display: block; margin-top: 2px; font-size: var(--step--1); color: var(--muted); }
+.av-value .av-altro { max-width: 280px; }
+.av-value-out { margin-top: 18px; }
+.av-value-out .av-score-v { margin-top: 0; }
+.av-value-out .av-score-v b { font-size: var(--step-3); }
+.av-value-out .av-score-n:empty { display: none; }
 .av-cta { margin-top: 36px; padding: clamp(22px, 4vw, 36px); border-radius: var(--r-md); background: var(--brand); color: #fff; }
 .av-cta :focus-visible { outline-color: #fff; }
 .av-cta-h { font-size: var(--step-3); color: #fff; }
