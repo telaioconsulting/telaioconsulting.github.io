@@ -208,8 +208,8 @@
   /* ---- 4. I testi del banner. */
   var T = isEn ? {
     consentModal: {
-      title: "Can we measure your visit?",
-      description: "We use PostHog, an analytics service with servers in the European Union, to see which pages help and what to improve. If you accept, we store a cookie in your browser and record how you use the site: pages, clicks and, for one visit in five, a screen recording with form fields hidden. If you reject, we only count the pages viewed, with no cookies and without recognising you from one day to the next.",
+      title: "Will you help us improve the site?",
+      description: "With a PostHog cookie (servers in the EU) we see which pages and buttons work and, for some visits, a screen recording with form fields hidden. No advertising. If you reject, we only count the pages viewed, with no cookies.",
       acceptAllBtn: "Accept",
       acceptNecessaryBtn: "Reject",
       showPreferencesBtn: "Choose",
@@ -232,8 +232,8 @@
     }
   } : {
     consentModal: {
-      title: "Possiamo misurare la tua visita?",
-      description: "Usiamo PostHog, un servizio di statistica con i server nell'Unione europea, per capire quali pagine servono e cosa migliorare. Se accetti, salviamo un cookie nel tuo browser e registriamo come usi il sito: pagine, clic e, per una visita su cinque, una registrazione dello schermo con i campi dei moduli nascosti. Se rifiuti, contiamo solo le pagine viste, senza cookie e senza riconoscerti da un giorno all'altro.",
+      title: "Ci aiuti a migliorare il sito?",
+      description: "Con un cookie di PostHog (server nell'UE) vediamo quali pagine e pulsanti funzionano e, per alcune visite, una registrazione dello schermo con i moduli nascosti. Niente pubblicità. Se rifiuti, contiamo solo le pagine viste, senza cookie.",
       acceptAllBtn: "Accetta",
       acceptNecessaryBtn: "Rifiuta",
       showPreferencesBtn: "Scegli",
@@ -258,6 +258,23 @@
 
   /* ---- 5. Il banner: foglio di stile e script ospitati nel sito, caricati senza bloccare la pagina.
      Parte quando ci sono tutti e due, così non si vede mai senza stile. */
+
+  // CookieConsent disegna la X solo nel riquadro («box»), non nella barra: la mettiamo noi, con la stessa
+  // classe e la stessa icona, e vale come «Rifiuta» (fa clic proprio su quel pulsante, quindi stessa scelta e
+  // stessa riga nel registro dei consensi). Così resta vero quello che dice la pagina Cookie.
+  function mettiX(modal) {
+    var rifiuta = modal.querySelector('[data-role="necessary"]');
+    var corpo = modal.querySelector(".cm__body");
+    if (!rifiuta || !corpo || modal.querySelector(".cm__btn--close")) return;
+    var x = document.createElement("button");
+    x.type = "button";
+    x.className = "cm__btn cm__btn--close";
+    x.setAttribute("aria-label", T.consentModal.closeIconLabel);
+    x.innerHTML = '<svg viewBox="0 0 24 24" stroke-width="1.5" aria-hidden="true"><path d="M 19.5 4.5 L 4.5 19.5 M 4.5 4.501 L 19.5 19.5"/></svg>';
+    x.addEventListener("click", function () { rifiuta.click(); });
+    corpo.insertBefore(x, corpo.firstChild);
+  }
+
   function avviaBanner() {
     var CC = window.CookieConsent;
     if (!CC || !CC.run) return;                          // senza banner vale la scelta salvata, o il conteggio senza cookie
@@ -271,7 +288,9 @@
       manageScriptTags: false,
       cookie: { name: "cc_cookie", expiresAfterDays: GIORNI, sameSite: "Lax" },
       guiOptions: {
-        consentModal: { layout: "box", position: "bottom left", equalWeightButtons: true, flipButtons: false },
+        // una barra bassa in fondo: titolo e pulsante della hero restano visibili (il riquadro di prima copriva il titolo
+        // e, sul telefono, circa il 60% del primo schermo, ed era lui l'elemento più grande che Google misura)
+        consentModal: { layout: "bar inline", position: "bottom", equalWeightButtons: true, flipButtons: false },
         preferencesModal: { layout: "box", equalWeightButtons: true, flipButtons: false }
       },
       categories: {
@@ -281,6 +300,7 @@
       language: { default: lingua, translations: testi },
       onModalReady: function (e) {                       // dentro il banner scorre il browser, non Lenis (motion.js)
         if (e && e.modal) e.modal.setAttribute("data-lenis-prevent", "");
+        if (e && e.modalName === "consentModal" && e.modal) mettiX(e.modal);
       },
       onFirstConsent: function () { registraConsenso("first"); },
       onConsent: function () { applica(); },
