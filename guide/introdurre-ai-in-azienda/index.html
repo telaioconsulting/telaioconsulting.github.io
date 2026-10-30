@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Come introdurre l'intelligenza artificiale in una piccola impresa | Telaio</title>
+  <meta name="description" content="Si parte da un problema, non da uno strumento: come scegliere la prima attività, controllare i dati, fare una prova e misurare cosa cambia.">
+  <meta name="theme-color" content="#090C08">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://telaioconsulting.com/guide/introdurre-ai-in-azienda/">
+
+  <meta property="og:title" content="Come introdurre l'intelligenza artificiale in una piccola impresa: da dove partire">
+  <meta property="og:description" content="Si parte da un problema, non da uno strumento: come scegliere la prima attività, controllare i dati, fare una prova e misurare cosa cambia.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://telaioconsulting.com/guide/introdurre-ai-in-azienda/">
+  <meta property="og:locale" content="it_IT">
+  <meta property="og:site_name" content="Telaio">
+  <meta property="og:image" content="https://telaioconsulting.com/assets/og-telaio.png">
+  <meta property="article:published_time" content="2026-10-30">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Come introdurre l'intelligenza artificiale in una piccola impresa">
+  <meta name="twitter:description" content="Si parte da un problema, non da uno strumento: la prima attività, i dati, la prova, la misura.">
+  <meta name="twitter:image" content="https://telaioconsulting.com/assets/og-telaio.png">
+
+  <link rel="preload" href="/assets/fonts/bricolage-grotesque-500-700-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/ibm-plex-sans-400-600-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <!-- cambio pagina col filo (motion.css): la richiesta al browser sta in cima, prima di ogni script,
+       altrimenti la pagina nuova può controllarla prima che arrivino i fogli di stile e annullare il passaggio -->
+  <style>@media (prefers-reduced-motion: no-preference) { @view-transition { navigation: auto; types: p-filo; } }</style>
+  <script>
+    (function (r) {
+      r.classList.add("js");
+      // cambio pagina col filo (motion.css): «pagereveal» dice, prima del primo disegno, se la pagina arriva con la transizione
+      addEventListener("pagereveal", function (e) { r.classList.add(e.viewTransition ? "p-filo-arrivo" : "p-rivelata"); });
+      // tema chiaro salvato: subito, prima del primo disegno (niente passaggio dal buio al chiaro)
+      try { if (localStorage.getItem("telaio-theme") === "light") { r.setAttribute("data-theme", "light"); document.querySelector('meta[name="theme-color"]').content = "#F4F5F8"; } } catch (e) {}
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) r.classList.add("motion");
+      // Se gli script non partono, si torna alla pagina statica (tutto visibile).
+      setTimeout(function () {
+        if (!window.__telaio) r.classList.remove("js");
+        if (!window.__motion) r.classList.remove("motion");
+      }, 4000);
+    })(document.documentElement);
+  </script>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/motion.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        "@id": "https://telaioconsulting.com/guide/introdurre-ai-in-azienda/#article",
+        "headline": "Come introdurre l'intelligenza artificiale in una piccola impresa: da dove partire",
+        "description": "Si parte da un problema, non da uno strumento: come scegliere la prima attività, controllare i dati, fare una prova e misurare cosa cambia.",
+        "inLanguage": "it",
+        "datePublished": "2026-10-30",
+        "dateModified": "2026-10-30",
+        "author": { "@id": "https://telaioconsulting.com/#organization" },
+        "publisher": { "@id": "https://telaioconsulting.com/#organization" },
+        "mainEntityOfPage": { "@id": "https://telaioconsulting.com/guide/introdurre-ai-in-azienda/#webpage" },
+        "image": "https://telaioconsulting.com/assets/og-telaio.png",
+        "citation": [
+          "https://www.istat.it/comunicato-stampa/imprese-e-ict-anno-2025/",
+          "https://eur-lex.europa.eu/eli/reg/2024/1689/oj",
+          "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:legge:2025-09-23;132"
+        ]
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://telaioconsulting.com/guide/introdurre-ai-in-azienda/#webpage",
+        "url": "https://telaioconsulting.com/guide/introdurre-ai-in-azienda/",
+        "name": "Come introdurre l'intelligenza artificiale in una piccola impresa | Telaio",
+        "description": "Si parte da un problema, non da uno strumento: come scegliere la prima attività, controllare i dati, fare una prova e misurare cosa cambia.",
+        "inLanguage": "it",
+        "isPartOf": { "@id": "https://telaioconsulting.com/#website" },
+        "publisher": { "@id": "https://telaioconsulting.com/#organization" },
+        "breadcrumb": { "@id": "https://telaioconsulting.com/guide/introdurre-ai-in-azienda/#breadcrumb" },
+        "dateModified": "2026-10-30"
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://telaioconsulting.com/#organization",
+        "name": "Telaio",
+        "alternateName": "Telaio Consulting",
+        "url": "https://telaioconsulting.com/",
+        "logo": "https://telaioconsulting.com/assets/telaio-logo-512.png",
+        "email": "info@telaioconsulting.com"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://telaioconsulting.com/guide/introdurre-ai-in-azienda/#breadcrumb",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://telaioconsulting.com/" },
+          { "@type": "ListItem", "position": 2, "name": "Guide", "item": "https://telaioconsulting.com/guide/" },
+          { "@type": "ListItem", "position": 3, "name": "Come introdurre l'intelligenza artificiale in una piccola impresa" }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body data-page-type="guide">
+  <a class="skip" href="#top">Vai al contenuto</a>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="mk" viewBox="0 0 64 64">
+      <g fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round">
+        <path d="M24 10 V32 M24 48 V54"></path>
+        <path d="M40 10 V16 M40 32 V54"></path>
+        <path d="M10 24 H16 M32 24 H54"></path>
+        <path d="M10 40 H32 M48 40 H54"></path>
+      </g>
+    </symbol>
+  </svg>
+
+  <div class="grain" aria-hidden="true"></div>
+  <div class="p-progress" aria-hidden="true"></div>
+
+  <header class="top">
+    <div class="wrap top-in">
+      <a class="brand" href="/" aria-label="Telaio — home">
+        <svg class="mk" viewBox="0 0 64 64" aria-hidden="true"><use href="#mk"></use></svg>
+        <span class="wm">Telaio</span>
+      </a>
+      <nav class="nav" id="nav" aria-label="Navigazione principale">
+        <a href="/cosa-facciamo/">Cosa facciamo</a>
+        <a href="/come-lavoriamo/">Come lavoriamo</a>
+        <a href="/consulenza-strategica/">Strategia</a>
+        <a href="/chi-siamo/">Chi siamo</a>
+        <a href="/domande-frequenti/">FAQ</a>
+        <a href="/check-up-ai/#prenota">Contatti</a>
+        <a class="btn btn-primary nav-cta" href="/autovalutazione-ai/" data-cta="assessment" data-placement="menu">Fai l'autovalutazione AI</a>
+      </nav>
+      <div class="top-actions">
+        <div class="lang" aria-label="Lingua" data-lang-switch>
+          <a href="/guide/introdurre-ai-in-azienda/" class="lang-link is-active" aria-current="page">IT</a>
+          <a href="/en/" class="lang-link" hreflang="en">EN</a>
+        </div>
+        <button class="icon-btn" id="themeBtn" type="button" aria-label="Passa al tema chiaro">◐</button>
+        <a class="btn btn-primary btn-sm" href="/autovalutazione-ai/" data-cta="assessment" data-placement="nav">Fai l'autovalutazione AI</a>
+        <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Apri il menu" aria-expanded="false" aria-controls="nav">≡</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <section class="p-hero is-page is-compact is-guide">
+      <canvas class="p-weave" id="weave" aria-hidden="true"></canvas>
+      <div class="p-hero-veil" aria-hidden="true"></div>
+      <div class="wrap p-hero-in">
+        <nav class="crumbs" aria-label="Percorso" data-hero-item><a href="/">Home</a> <span aria-hidden="true">›</span> <a href="/guide/">Guide</a> <span aria-hidden="true">›</span> <span aria-current="page">Introdurre l'AI</span></nav>
+        <h1 class="p-h1">Come introdurre l'intelligenza artificiale in una piccola impresa: da dove partire</h1>
+        <p class="p-hero-lede" data-hero-item>Come usare l'intelligenza artificiale in azienda quando sei una piccola impresa: scegliere la prima attività, controllare i dati, fare una prova e misurare cosa cambia.</p>
+        <ul class="p-meta g-byline" data-hero-item>
+          <li>A cura di Telaio Consulting</li>
+          <li>Pubblicata il <time datetime="2026-10-30">30 ottobre 2026</time></li>
+          <li>6 minuti di lettura</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="p-sec g-sec">
+      <div class="wrap">
+        <article class="g-article">
+          <div class="callout g-answer">
+            <p><strong>In breve.</strong> Si parte da un problema, non da uno strumento. Scegli un'attività che si ripete ogni settimana e porta via tempo, verifica di avere i dati che servono, prova uno strumento solo su quella con le persone che la fanno, misura cosa cambia e solo allora allarga ad altre attività.</p>
+          </div>
+
+          <h2 id="problema">Perché partire da un problema e non da uno strumento?</h2>
+          <p>Partire da un problema conta perché uno strumento senza un lavoro preciso da fare resta una prova che nessuno usa. Nel 2025, tra le imprese italiane con almeno 10 addetti che usano l'AI, una su tre non indica nessuna attività aziendale per cui la usa (33,4%, Istat); più di otto su dieci di queste hanno tra 10 e 49 addetti. Comprare abbonamenti per tutti e «vedere cosa succede» di solito finisce così.</p>
+          <p>Partire da un problema vuol dire partire da una frase come «ogni settimana perdiamo sei ore a copiare gli ordini dalle email al gestionale». Una frase così dice già cosa misurare, chi coinvolgere e quando la prova è riuscita.</p>
+
+          <h2 id="quale-attivita">Quale attività scegliere per prima?</h2>
+          <p>Una buona prima attività ha quasi sempre queste caratteristiche:</p>
+          <ul>
+            <li>si ripete ogni settimana, o ogni giorno;</li>
+            <li>segue regole abbastanza chiare, che sapresti spiegare a un collega appena arrivato;</li>
+            <li>oggi richiede di leggere, copiare o riscrivere informazioni da un posto all'altro;</li>
+            <li>c'è una persona che la conosce bene e ha voglia di provare;</li>
+            <li>se lo strumento sbaglia, l'errore si vede e si corregge prima che arrivi al cliente.</li>
+          </ul>
+          <p><strong>Buone prime attività:</strong> rispondere alle domande che i clienti fanno sempre uguali; preparare bozze di preventivo da un listino ordinato; registrare ordini e fatture che arrivano per email; scrivere o sistemare le schede prodotto; riassumere documenti, contratti e verbali; preparare il riepilogo dei numeri della settimana.</p>
+          <p><strong>Meglio non partire da qui:</strong> attività che capitano due volte l'anno; lavori in cui un errore non si vede subito e costa caro; processi che nessuno sa descrivere, nemmeno chi li fa; decisioni sulle persone, come la selezione del personale, che per l'AI Act sono usi «ad alto rischio», con regole più severe.</p>
+          <p>Un modo semplice per scegliere: per una settimana chiedi a ognuno di annotare le attività ripetitive e quanto tempo prendono. Di solito due o tre spiccano subito.</p>
+
+          <aside class="callout g-cta" aria-label="Autovalutazione AI">
+            <p><strong>Non sai quale attività scegliere?</strong> L'autovalutazione AI te lo dice in due minuti: otto domande sulla tua impresa e le attività da cui partiremmo.</p>
+            <a class="btn btn-primary" href="/autovalutazione-ai/" data-cta="assessment" data-placement="guide_mid">Fai l'autovalutazione AI <span class="p-arr" aria-hidden="true">→</span></a>
+          </aside>
+
+          <h2 id="dati">Quali dati servono, e come capisci se li hai?</h2>
+          <p>L'AI lavora su quello che le dai: email, documenti, listini, storico degli ordini, schede prodotto. Prima di scegliere uno strumento, rispondi a tre domande.</p>
+          <ol>
+            <li><strong>Dove stanno oggi le informazioni che servono?</strong> Gestionale, fogli di calcolo, caselle email, cartelle condivise, carta.</li>
+            <li><strong>Sono abbastanza ordinate?</strong> Un listino aggiornato in un file solo va bene; tre versioni diverse su tre computer no.</li>
+            <li><strong>Chi può vederle, e possono uscire dall'azienda?</strong> Se ci sono dati personali di clienti o dipendenti, devi sapere dove lo strumento li conserva e chi li tratta, come per qualsiasi fornitore.</li>
+          </ol>
+          <p>Se i dati sono in disordine, il primo passo non è l'AI: è mettere ordine. Spesso basta poco, e conviene comunque.</p>
+
+          <h2 id="strumento">Quale strumento usare?</h2>
+          <p>Per la maggior parte delle prime attività bastano strumenti che esistono già: un assistente come ChatGPT, Copilot, Gemini o Claude, oppure le funzioni di AI dei programmi che usi ogni giorno (posta, gestionale, negozio online). Uno strumento su misura serve quando l'attività deve collegare più sistemi o andare avanti da sola, senza che qualcuno copi e incolli.</p>
+          <p>Due regole valgono sempre:</p>
+          <ul>
+            <li><strong>usa la versione pensata per le aziende</strong>, non l'account personale di un collaboratore: di solito dà all'azienda il controllo degli account e regole più chiare sull'uso dei dati (controllale nelle condizioni del fornitore);</li>
+            <li><strong>parti dagli strumenti che le persone usano già</strong>: uno strumento in più da aprire è uno strumento in più da dimenticare.</li>
+          </ul>
+
+          <h2 id="prova">Come fai la prova senza fermare il lavoro?</h2>
+          <p>La prova si fa in piccolo: una sola attività, con le persone che la fanno davvero.</p>
+          <ul>
+            <li>Dura qualche settimana, non mesi.</li>
+            <li>Il vecchio modo resta disponibile finché il nuovo non è affidabile.</li>
+            <li>Una persona controlla sempre il risultato prima che esca: nella prova il controllo è la regola, non l'eccezione.</li>
+            <li>Ogni settimana, un quarto d'ora per dirsi cosa funziona e cosa no.</li>
+          </ul>
+          <p>Coinvolgi le persone dall'inizio: sono loro a sapere dove il lavoro si inceppa, e sono loro che useranno lo strumento. Spiega cosa cambia per loro, e cosa no.</p>
+
+          <h2 id="misura">Come capisci se funziona?</h2>
+          <p>Funziona se i numeri cambiano: misura prima e dopo, con numeri semplici.</p>
+          <ul>
+            <li>Quanto tempo prende l'attività in una settimana normale.</li>
+            <li>Quanti errori o ripassaggi ci sono.</li>
+            <li>Quanto aspetta il cliente una risposta, un preventivo, una consegna.</li>
+          </ul>
+          <p>A fine prova le strade sono tre. <strong>Allargare:</strong> lo strumento funziona, si passa ad altre persone o a un'altra attività. <strong>Correggere:</strong> funziona a metà, si cambia una cosa e si riprova. <strong>Fermarsi:</strong> non funziona, hai speso poco e sai cosa non fare. Anche la terza è un risultato.</p>
+
+          <h2 id="errori">Quali sono gli errori più comuni?</h2>
+          <ul>
+            <li>Partire da tutto insieme, con un progetto che dura un anno.</li>
+            <li>Comprare licenze per tutti senza un'attività precisa da migliorare.</li>
+            <li>Lasciare che ognuno usi il proprio strumento con i dati dell'azienda, senza regole.</li>
+            <li>Non dire alle persone cosa cambia, e perché.</li>
+            <li>Fidarsi del risultato senza controllarlo.</li>
+            <li>Dimenticare le regole: chi usa l'AI in azienda ha anche qualche obbligo, per esempio sulla formazione delle persone (AI Act) e sull'informazione ai lavoratori nei casi previsti (legge 132/2025). Ne parliamo in breve nelle <a href="/domande-frequenti/#ai-act">domande frequenti</a>.</li>
+          </ul>
+
+          <h2 id="consulente">Serve un consulente, o puoi fare da solo?</h2>
+          <p>Puoi fare da solo se hai una persona con tempo e curiosità, un'attività chiara e dati in ordine. Un aiuto esterno serve quando non sai da dove partire, quando hai già provato senza risultati stabili, o quando lo strumento deve collegarsi ai tuoi sistemi. Ne parliamo nella guida <a href="/guide/consulente-ai/">Cosa fa un consulente AI e quando serve a una piccola impresa</a>.</p>
+
+          <h2 id="quante-imprese">Quante imprese lo stanno già facendo?</h2>
+          <p>Lo fanno ancora poche imprese, ma il numero cresce in fretta. Nel 2025 usava almeno una tecnologia di AI il 16,4% delle imprese italiane con almeno 10 addetti, il doppio dell'anno prima (Istat). Tra le PMI la quota è al 15,7%, tra le grandi imprese al 53,1%. Tutti i numeri sono nella guida <a href="/guide/ai-imprese-italiane-dati/">L'AI nelle imprese italiane: i dati spiegati semplici</a>.</p>
+
+          <h2 id="cosa-fare-adesso">Cosa fare adesso</h2>
+          <ol>
+            <li>Questa settimana, fai la lista delle attività ripetitive e del tempo che prendono.</li>
+            <li>Scegline una, con i criteri sopra.</li>
+            <li>Controlla dove stanno i dati che servono e se sono in ordine.</li>
+            <li>Decidi chi fa la prova, per quante settimane e cosa misuri.</li>
+          </ol>
+          <p>Vuoi un punto di partenza più preciso? Fai l'autovalutazione AI: otto domande, due minuti, gratuita. Ti dice quanto può fare l'AI nella tua impresa, quanto tempo puoi recuperare e da dove partiremmo.</p>
+          <div class="g-end">
+            <a class="btn btn-primary p-btn-xl" data-magnetic href="/autovalutazione-ai/" data-cta="assessment" data-placement="guide_end">Fai l'autovalutazione AI <span class="p-arr" aria-hidden="true">→</span></a>
+            <a class="arrow-link" href="/check-up-ai/" data-cta="checkup" data-placement="guide_end">Preferisci parlarne subito? Prenota il check-up gratuito →</a>
+          </div>
+
+          <aside class="g-about" aria-label="Chi siamo">
+            <p><strong>Chi siamo.</strong> Telaio Consulting aiuta le piccole e medie imprese a mettere l'intelligenza artificiale al lavoro: partiamo da un problema reale e portiamo il primo strumento AI in uso in 4 settimane.</p>
+            <a class="arrow-link" href="/chi-siamo/">Chi siamo →</a>
+          </aside>
+
+          <h2 id="fonti">Fonti</h2>
+          <ul class="g-sources">
+            <li>Istat, <a href="https://www.istat.it/comunicato-stampa/imprese-e-ict-anno-2025/" target="_blank" rel="noopener">Imprese e ICT, anno 2025</a>, comunicato stampa e Statistiche Report, 15 dicembre 2025.</li>
+            <li>Regolamento (UE) 2024/1689, <a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj" target="_blank" rel="noopener">AI Act</a>, allegato III (usi ad alto rischio).</li>
+            <li>Legge 23 settembre 2025, n. 132, <a href="https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:legge:2025-09-23;132" target="_blank" rel="noopener">Disposizioni e deleghe al Governo in materia di intelligenza artificiale</a>, art. 11.</li>
+          </ul>
+          <p class="g-updated">Fonti consultate il 30 ottobre 2026.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <div class="mobile-bar"><a class="btn btn-primary btn-block" href="/autovalutazione-ai/" data-cta="assessment" data-placement="mobile_bar">Fai l'autovalutazione AI</a></div>
+
+  <footer class="p-footer">
+    <div class="wrap foot-in foot-grid">
+      <div class="foot-col">
+        <div class="foot-brand">
+          <svg class="mk" viewBox="0 0 64 64" aria-hidden="true"><use href="#mk"></use></svg>
+          <span class="wm">Telaio</span>
+        </div>
+        <span class="foot-tag">Dall'AI al valore.</span>
+        <span>Consulenza strategica e AI per piccole e medie imprese.</span>
+      </div>
+      <nav class="foot-col" aria-label="Pagine">
+        <a href="/come-lavoriamo/">Come lavoriamo</a>
+        <a href="/cosa-facciamo/">Cosa facciamo</a>
+        <a href="/consulenza-strategica/">Strategia</a>
+        <a href="/chi-siamo/">Chi siamo</a>
+        <a href="/domande-frequenti/">Domande frequenti</a>
+        <a href="/guide/">Guide</a>
+        <a href="/check-up-ai/">Check-up AI</a>
+        <a href="/autovalutazione-ai/" data-cta="assessment" data-placement="footer">Autovalutazione AI</a>
+      </nav>
+      <div class="foot-col">
+        <a href="mailto:info@telaioconsulting.com" data-email-link>info@telaioconsulting.com</a>
+        <a href="/privacy/">Informativa privacy</a>
+        <a href="/cookie/">Cookie</a>
+        <a href="/cookie/#scelte" data-cc="show-preferencesModal">Preferenze cookie</a>
+        <!-- TODO(conferma): link a LinkedIn e Instagram di Telaio quando esistono (e "sameAs" nell'Organization dei dati strutturati) -->
+        <span>© 2026 Telaio</span>
+      </div>
+    </div>
+    <div class="p-bigword" aria-hidden="true"><span>T</span><span>e</span><span>l</span><span>a</span><span>i</span><span>o</span></div>
+  </footer>
+
+  <!-- Librerie di animazione, ospitate nel sito (vedi assets/vendor/README.md) -->
+  <script src="/assets/vendor/gsap.min.js"></script>
+  <script src="/assets/vendor/ScrollTrigger.min.js"></script>
+  <script src="/assets/vendor/SplitText.min.js"></script>
+  <script src="/assets/vendor/lenis.min.js"></script>
+  <script src="/script.js"></script>
+  <script src="/misura.js"></script>
+  <script src="/motion.js"></script>
+</body>
+</html>

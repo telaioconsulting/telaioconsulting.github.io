@@ -17,13 +17,22 @@ In breve:
 
 - [Home](https://telaioconsulting.com/): consulenza AI per PMI, il primo strumento in 4 settimane
 - [Check-up AI](https://telaioconsulting.com/check-up-ai/): cosa succede nei 30 minuti gratuiti, cosa ti porti a casa, per chi è, prenotazione
-- [Autovalutazione AI](https://telaioconsulting.com/autovalutazione-ai/): otto domande in due minuti, senza email, per capire quanto può fare l'AI per la propria impresa (potenziale, prontezza, ore da recuperare, da dove partire), con le regole del calcolo scritte nella pagina
+- [Autovalutazione AI](https://telaioconsulting.com/autovalutazione-ai/): nome dell'azienda ed email, poi otto domande in due minuti, per capire quanto può fare l'AI per la propria impresa (potenziale, prontezza, ore da recuperare, da dove partire), con le regole del calcolo scritte nella pagina
 - [Come lavoriamo](https://telaioconsulting.com/come-lavoriamo/): i 4 passi, cosa cambia lavorando con Telaio, cosa trovi sempre per iscritto, cosa non facciamo
 - [Cosa facciamo](https://telaioconsulting.com/cosa-facciamo/): le attività da cui partire, divise per area (vendite e negozio online, clienti e assistenza, amministrazione e documenti, direzione)
 - [Consulenza strategica](https://telaioconsulting.com/consulenza-strategica/): le scelte di fondo dell'impresa mentre l'AI cambia il mercato
 - [E-commerce su Shopify](https://telaioconsulting.com/cosa-facciamo/e-commerce/): automazioni con l'AI per clienti, spedizioni, magazzino e conti; i servizi sono descritti sul sito [Telaio - Ecommerce Automations](https://telaioconsulting.com/ecommerce-automations/)
 - [Chi siamo](https://telaioconsulting.com/chi-siamo/): i tre fondatori e perché esiste Telaio
 - [Domande frequenti](https://telaioconsulting.com/domande-frequenti/): costi, tempi, dati, AI Act, strumenti che usi già
+
+## Guide
+
+Guide pratiche per le piccole e medie imprese, a cura di Telaio Consulting: ognuna apre con la risposta in breve, ha i titoli a forma di domanda e chiude con le fonti.
+
+- [Tutte le guide](https://telaioconsulting.com/guide/)
+- [Come introdurre l'intelligenza artificiale in una piccola impresa: da dove partire](https://telaioconsulting.com/guide/introdurre-ai-in-azienda/): partire da un problema e non da uno strumento; come scegliere la prima attività, controllare i dati, fare una prova di qualche settimana e misurare cosa cambia; gli errori più comuni
+- [Cosa fa un consulente AI e quando serve a una piccola impresa](https://telaioconsulting.com/guide/consulente-ai/): differenza da formatore, software house e rivenditore di licenze; quando serve e quando no; come si fa pagare; le otto domande da fargli prima di sceglierlo; Milano e il lavoro a distanza
+- [L'AI nelle imprese italiane: i dati spiegati semplici](https://telaioconsulting.com/guide/ai-imprese-italiane-dati/): nel 2025 usa l'AI il 16,4% delle imprese italiane con almeno 10 addetti (8,2% nel 2024), il 53,1% delle grandi e il 15,7% delle PMI; media UE 19,95%, Italia 18ª su 27; settori, zone, usi e freni (prima la mancanza di competenze, 58,6%); microimprese dalla Banca d'Italia. Dati Istat ed Eurostat con le fonti
 
 ## English
 
