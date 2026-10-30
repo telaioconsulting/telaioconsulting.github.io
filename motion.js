@@ -23,6 +23,7 @@
   // Arrivo diretto su una sezione (es. /en/#faq): l'ingresso del titolo si salta.
   var deepLink = null;
   try { deepLink = location.hash.length > 1 ? document.querySelector(location.hash) : null; } catch (e) {}
+  if (deepLink) root.classList.add("p-arrivo-sezione");   // anche l'evidenziatore del titolo (motion.css) parte già pieno
 
   // Si parte a font caricati (SplitText misura le righe).
   var booted = false;
@@ -81,26 +82,16 @@
     gsap.to(".p-progress", { scaleX: 1, ease: "none", scrollTrigger: { start: 0, end: "max", scrub: 0.3 } });
 
     /* ============================================================
-       INGRESSO DEL TITOLO: il tessuto si stende, le righe del titolo salgono, entra il resto della hero.
+       INGRESSO DELLA HERO: il tessuto si stende, entra il resto della hero. Il titolo è già fermo al suo posto
+       dal primo disegno (motion.css): Google misura la pagina da lui (Largest Contentful Paint), e con le righe
+       che salivano dopo i font arrivava a circa 3 s. L'evidenziatore sotto «4 settimane» è in motion.css.
        ============================================================ */
     (function () {
-      var h1 = document.querySelector(".p-h1");
-      if (!h1) return;
-      var h1Split = Split ? Split.create(h1, { type: "lines", mask: "lines", linesClass: "p-line" }) : null;
-      var accent = h1.querySelector(".p-accent");
-      gsap.set(h1, { visibility: "visible" });
-      if (h1Split) gsap.set(h1Split.lines, { yPercent: 112 });
-      if (accent) gsap.set(accent, { "--mark": 0 });
+      if (!document.querySelector(".p-hero")) return;
 
       var tl = gsap.timeline({ defaults: { ease: "expo.out" } });
-      tl.to(weave, { weave: 1, duration: 2.4, ease: "power2.out" }, 0)
-        .to(h1Split ? h1Split.lines : h1, { yPercent: 0, duration: 1.2, stagger: 0.08 }, 0.1);
-      if (accent) tl.to(accent, { "--mark": 1, duration: 1, ease: "expo.inOut" }, 0.6);
+      tl.to(weave, { weave: 1, duration: 2.4, ease: "power2.out" }, 0);
       tl.fromTo("[data-hero-item]", { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 1, stagger: 0.07 }, 0.05);
-      // le righe tornano testo normale appena il titolo è entrato (e l'evidenziatore è passato), non alla fine
-      // del tessuto: Google misura il titolo da quel momento (Largest Contentful Paint), prima arrivava a 2,4 s
-      var linesEnd = 1.3 + 0.08 * ((h1Split ? h1Split.lines.length : 1) - 1);
-      tl.add(function () { if (h1Split) h1Split.revert(); }, Math.max(linesEnd, accent ? 1.6 : 0));
       if (deepLink) tl.progress(1);
 
       heroExit();
