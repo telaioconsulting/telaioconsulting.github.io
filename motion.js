@@ -23,6 +23,7 @@
   // Arrivo diretto su una sezione (es. /en/#faq): l'ingresso del titolo si salta.
   var deepLink = null;
   try { deepLink = location.hash.length > 1 ? document.querySelector(location.hash) : null; } catch (e) {}
+  if (deepLink) root.classList.add("p-arrivo-sezione");   // anche l'evidenziatore del titolo (motion.css) parte già pieno
 
   // Si parte a font caricati (SplitText misura le righe).
   var booted = false;
@@ -86,7 +87,7 @@
        che salivano dopo i font arrivava a circa 3 s. L'evidenziatore sotto «4 settimane» è in motion.css.
        ============================================================ */
     (function () {
-      if (!document.querySelector(".p-h1")) return;
+      if (!document.querySelector(".p-hero")) return;
 
       var tl = gsap.timeline({ defaults: { ease: "expo.out" } });
       tl.to(weave, { weave: 1, duration: 2.4, ease: "power2.out" }, 0);

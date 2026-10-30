@@ -269,7 +269,7 @@
     var x = document.createElement("button");
     x.type = "button";
     x.className = "cm__btn cm__btn--close";
-    x.setAttribute("aria-label", T.consentModal.closeIconLabel);
+    x.setAttribute("aria-label", T.consentModal.closeIconLabel || T.consentModal.acceptNecessaryBtn);
     x.innerHTML = '<svg viewBox="0 0 24 24" stroke-width="1.5" aria-hidden="true"><path d="M 19.5 4.5 L 4.5 19.5 M 4.5 4.501 L 19.5 19.5"/></svg>';
     x.addEventListener("click", function () { rifiuta.click(); });
     corpo.insertBefore(x, corpo.firstChild);

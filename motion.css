@@ -73,7 +73,8 @@ html:not(.motion) .p-progress { display: none; }
   font-size: clamp(2.6rem, 6.2vw, 6rem); line-height: .98; letter-spacing: -.045em;
 }
 /* "4 settimane": evidenziatore blu che passa sotto la parola. L'animazione è CSS e parte col primo disegno,
-   senza aspettare font e script; arrivando col filo (.p-filo-arrivo) l'evidenziatore è già pieno */
+   senza aspettare font e script; arrivando col filo (.p-filo-arrivo) o su una sezione (/#faq: .p-arrivo-sezione,
+   da motion.js) l'evidenziatore è già pieno, come il resto della hero */
 .p-accent { position: relative; display: inline-block; color: #fff; padding: 0 .08em; margin: 0 -.04em; }
 .p-accent::before {
   content: ""; position: absolute; z-index: -1; left: 0; right: 0; top: .12em; bottom: .02em;
@@ -81,7 +82,7 @@ html:not(.motion) .p-progress { display: none; }
   transform-origin: 0 50%;
   box-shadow: 0 18px 50px -14px rgba(19, 7, 237, .9);
 }
-.motion:not(.p-filo-arrivo) .p-accent::before { animation: p-segna 1s cubic-bezier(.87, 0, .13, 1) .5s both; }
+.motion:not(.p-filo-arrivo):not(.p-arrivo-sezione) .p-accent::before { animation: p-segna 1s cubic-bezier(.87, 0, .13, 1) .5s both; }
 @keyframes p-segna { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
 .p-hero-row {

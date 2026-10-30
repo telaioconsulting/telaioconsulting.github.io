@@ -722,7 +722,8 @@ footer { border-top: 1px solid var(--line); padding: 48px 0; background: var(--s
 #cc-main .cm.cm--bar { border-width: 1px 0 0; --cc-modal-transition-duration: .25s; }
 #cc-main .cm--bar .cm__body { position: static; }   /* la X va nell'angolo della barra, non sopra i pulsanti */
 #cc-main .cm--bar .cm__btn--close { display: block; }
-#cc-main .cm--bar .cm__btn--close + .cm__texts .cm__title { padding-right: 3rem; }
+/* !important: sotto i 640 px il foglio della libreria rimette 1.1rem con !important, e il titolo finirebbe sotto la X */
+#cc-main .cm--bar .cm__btn--close + .cm__texts .cm__title { padding-right: 3rem !important; }
 /* telefono: i tre pulsanti su una riga, sempre dello stesso peso, e il testo un po' più piccolo:
    la barra resta sotto un terzo dello schermo invece di coprire sottotitolo e pulsante */
 @media screen and (max-width: 640px) {
