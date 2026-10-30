@@ -267,9 +267,9 @@
   (function () {
     var bar = document.querySelector(".mobile-bar");
     if (!bar) return;
-    // La barra si nasconde quando sullo schermo c'è già un pulsante del check-up, il riquadro
-    // di prenotazione o il fondo della pagina: mai due pulsanti uguali uno sopra l'altro.
-    var hiders = [].slice.call(document.querySelectorAll("[data-booking], .booking-box, a[data-cta='checkup'], .p-final, footer"))
+    // La barra si nasconde quando sullo schermo c'è già un pulsante dell'autovalutazione o del check-up,
+    // il riquadro di prenotazione o il fondo della pagina: mai due pulsanti uguali uno sopra l'altro.
+    var hiders = [].slice.call(document.querySelectorAll("[data-booking], .booking-box, a[data-cta='assessment'], a[data-cta='checkup'], .p-final, footer"))
       .filter(function (el) { return !bar.contains(el) && !(el.closest && el.closest(".top")); });
     var inView = 0;
     function update() {

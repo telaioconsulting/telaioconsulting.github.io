@@ -7,8 +7,8 @@
      che PostHog calcola sui suoi server. Nel browser non resta niente.
    - Dopo «Accetta» sulle statistiche: PostHog con il suo cookie, i clic, le mappe di calore, i tempi
      della pagina, la registrazione di una parte delle visite (i campi dei moduli sempre nascosti)
-     e gli eventi del piano: checkup_clicked, checkup_requested, wizard_clicked, wizard_started e
-     wizard_completed.
+     e gli eventi del piano: checkup_clicked, checkup_requested, assessment_clicked, assessment_started e
+     assessment_completed.
    - Ritirando il consenso: cookie e chiavi di PostHog si cancellano e la pagina si ricarica pulita.
    - Ogni scelta sul banner va nel registro dei consensi (rules.consent_log del piano): la scheda
      «Consensi» del foglio dello script Google che riceve il modulo (MODULO_URL di script.js).
@@ -146,9 +146,9 @@
 
   function punto(v) { return /^[a-z0-9_]{1,40}$/.test(v || "") ? v : "other"; }   // i valori di data-placement
 
-  // un clic su un pulsante del check-up o su un link all'AI Wizard: anche quando lo si apre in una
+  // un clic su un pulsante del check-up o su un link all'autovalutazione AI: anche quando lo si apre in una
   // scheda nuova (Ctrl, rotella)
-  var CTA = { checkup: "checkup_clicked", wizard: "wizard_clicked" };
+  var CTA = { checkup: "checkup_clicked", assessment: "assessment_clicked" };
   function suPulsante(ev) {
     var a = ev.target && ev.target.closest ? ev.target.closest("a[data-cta]") : null;
     var nome = a && CTA[a.getAttribute("data-cta")];
@@ -162,15 +162,15 @@
     evento("checkup_requested", { placement: punto(ev.detail && ev.detail.pulsante) });
   });
 
-  // l'AI Wizard (wizard.js): la prima risposta e il risultato. Solo i codici delle risposte e i due
+  // l'autovalutazione AI (autovalutazione.js): la prima risposta e il risultato. Solo i codici delle risposte e i due
   // punteggi, mai i dati della persona; un valore fuori dal piano diventa «other» (o niente, i numeri)
   function codice(v) { return /^[a-z0-9_]{1,40}$/.test(v || "") ? v : "other"; }
   function codici(v) { return /^[a-z0-9_]{1,40}(,[a-z0-9_]{1,40}){0,5}$/.test(v || "") ? v : "other"; }
   function punteggio(v) { return typeof v === "number" && v >= 0 && v <= 100 ? Math.round(v) : null; }
-  document.addEventListener("telaio:wizard", function (ev) {
+  document.addEventListener("telaio:autovalutazione", function (ev) {
     var d = ev.detail || {};
-    if (d.fase === "iniziato") evento("wizard_started", {});
-    else if (d.fase === "finito") evento("wizard_completed", {
+    if (d.fase === "iniziato") evento("assessment_started", {});
+    else if (d.fase === "finito") evento("assessment_completed", {
       profile: codice(d.profile), potential: punteggio(d.potential), readiness: punteggio(d.readiness),
       sector: codice(d.sector), team_size: codice(d.team_size), hours: codice(d.hours), areas: codici(d.areas)
     });

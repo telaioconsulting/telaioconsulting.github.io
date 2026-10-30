@@ -1,23 +1,25 @@
 /* ============================================================
-   TELAIO — AI Wizard: otto domande sull'impresa, il risultato subito, poi l'invito al check-up.
-   Gira tutto nel browser: le risposte non partono verso nessun server. Se dal risultato la persona
-   prenota il check-up, il riepilogo entra nel messaggio del modulo (data-messaggio, script.js),
-   dove lo vede e lo può cambiare prima di inviare.
-   misura.js conta l'inizio e la fine (evento «telaio:wizard»), solo con il consenso alle statistiche
+   TELAIO — Autovalutazione AI: otto domande sull'impresa, il risultato subito, poi l'invito al check-up.
+   Si parte dal nome dell'azienda e dall'email, poi le domande. Quando appare il risultato, azienda,
+   email, risposte e punteggi vanno allo script Google del modulo del check-up (TELAIO_MODULO_URL di
+   script.js, pulsante «assessment_result»): una riga nel foglio «Richieste» e un'email a info@ (Dan,
+   30 ottobre 2026). In fondo al risultato «Contattami» manda di nuovo tutto, col telefono se c'è
+   (pulsante «assessment_contact»): è la richiesta di essere ricontattati, la conversione del sito.
+   misura.js conta l'inizio e la fine (evento «telaio:autovalutazione»), solo con il consenso alle statistiche
    e mai con i dati della persona: solo i codici delle risposte e i due punteggi.
    Il calcolo e le sue ipotesi sono scritti nella pagina, «Come calcoliamo il risultato»: chi cambia
    un numero qui cambia anche quella sezione, in italiano e in inglese.
-   Vanilla JS, nessuna libreria/build. Parte solo dove la pagina ha [data-wizard].
+   Vanilla JS, nessuna libreria/build. Parte solo dove la pagina ha [data-autovalutazione].
    ============================================================ */
 (function () {
   "use strict";
-  var box = document.querySelector("[data-wizard]");
+  var box = document.querySelector("[data-autovalutazione]");
   if (!box) return;
   var root = document.documentElement;
   var isEn = (root.lang || "it").toLowerCase().indexOf("en") === 0;
   var fermo = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ---- Le domande. I codici sono quelli del piano di tracciamento (wizard_completed): non cambiarli
+  /* ---- Le domande. I codici sono quelli del piano di tracciamento (assessment_completed): non cambiarli
      senza cambiare anche company/event-tracking/tracking-plan.json nel repository telaio. */
   var DOMANDE = [
     { id: "sector", altro: "other", opzioni: ["manufacturing", "retail", "professional_services", "hospitality", "construction", "other"] },
@@ -67,6 +69,13 @@
   /* ---- I testi. */
   var T = isEn ? {
     domanda: function (i, n) { return "Question " + i + " of " + n; },
+    inizio: {
+      kicker: "Before we start", titolo: "Let’s start with your business",
+      azienda: "Company name", email: "Email", via: "Start",
+      nota: "When you see the result, your company name, email and answers reach us too, so we can get back to you about this result.",
+      privacy: "Read our privacy notice.", privacyHref: "/en/privacy/",
+      noAzienda: "Write your company name.", noEmail: "Write a valid email, for example name@company.com."
+    },
     avanti: "Next", vedi: "See my result", indietro: "Back",
     scegli: "Choose an answer to go on.", scegliPiu: "Choose at least one activity to go on.",
     scegliAltro: "Tell us in a few words what your business does.",
@@ -105,11 +114,15 @@
       owner: "Choose one person to follow the project on your side: someone who tries the tool in real work and tells us what doesn’t fit."
     },
     gapAi: "Not using AI yet? No problem: we start from a single activity and try it with your people.",
-    ctaH: "Let’s talk about it in the check-up",
-    ctaP: "30 minutes, free, with one of the founders. We go through this result together and tell you where we would start, or whether it isn’t worth it today.",
-    ctaBtn: "Book your AI check-up",
-    ctaNota: "A summary of your answers goes into the message: you can see and change it before sending.",
-    ancora: "Start the wizard again",
+    ctaH: "Want to talk it through?",
+    ctaP: "We get back to you within 48 hours for the free 30-minute check-up with one of the founders: we go through this result together and tell you where we would start.",
+    ctaTel: "Phone", facoltativo: "optional",
+    ctaBtn: "Contact me", invio: "Sending…",
+    ctaNota: function (e) { return "We’ll write to " + e + "."; },
+    grazie: function (e) { return ["Thank you.", "We’ll get back to you within 48 hours at " + e + "."]; },
+    errore: "The request could not be sent. Please try again in a moment, or write to us at ",
+    richiesta: "Request: please contact me for the free check-up.\n",
+    ancora: "Start the self-assessment again",
     att: {
       customer_requests: { t: "Customer requests", p: "The questions you get every day find a draft reply ready, with the right information. You check and send." },
       quotes: { t: "Quotes", p: "From the customer’s request to a draft quote, with your price lists and your terms." },
@@ -128,7 +141,7 @@
       reporting: { retail: "sales and stock every Monday", manufacturing: "production, orders and margins", hospitality: "bookings, occupancy and takings", construction: "site progress and costs", professional_services: "hours, billing and collections" }
     },
     riepilogo: function (r, c, L) {
-      return "I did the AI Wizard on the site.\n" +
+      return "I took the AI self-assessment on the site.\n" +
         "Sector: " + settore(r) + " · People: " + L("team_size", r.team_size) + "\n" +
         "Activities that take time: " + r.areas.map(function (a) { return L("areas", a); }).join("; ") + "\n" +
         "Hours a week: " + L("hours", r.hours) + " · " + L("repetition", r.repetition) + "\n" +
@@ -137,6 +150,13 @@
     }
   } : {
     domanda: function (i, n) { return "Domanda " + i + " di " + n; },
+    inizio: {
+      kicker: "Prima di cominciare", titolo: "Iniziamo dalla tua impresa",
+      azienda: "Nome dell'azienda", email: "Email", via: "Inizia",
+      nota: "Quando vedi il risultato, il nome dell'azienda, l'email e le risposte arrivano anche a noi, per poterti ricontattare su questo risultato.",
+      privacy: "Leggi l'informativa privacy.", privacyHref: "/privacy/",
+      noAzienda: "Scrivi il nome dell'azienda.", noEmail: "Scrivi un'email valida, per esempio nome@azienda.it."
+    },
     avanti: "Avanti", vedi: "Vedi il risultato", indietro: "Indietro",
     scegli: "Scegli una risposta per andare avanti.", scegliPiu: "Scegli almeno un'attività per andare avanti.",
     scegliAltro: "Scrivi in poche parole di cosa si occupa la tua impresa.",
@@ -175,11 +195,15 @@
       owner: "Scegliere una persona che segua il progetto da parte vostra: qualcuno che provi lo strumento nel lavoro vero e ci dica cosa non torna."
     },
     gapAi: "Non usate ancora l'AI? Nessun problema: si parte da un'attività sola e la proviamo con le tue persone.",
-    ctaH: "Parliamone nel check-up",
-    ctaP: "30 minuti, gratuiti, con uno dei fondatori. Guardiamo insieme questo risultato e ti diciamo da dove partiremmo, o se oggi non conviene.",
-    ctaBtn: "Prenota il check-up AI",
-    ctaNota: "Il riepilogo delle tue risposte entra nel messaggio: lo vedi e lo puoi cambiare prima di inviare.",
-    ancora: "Rifai il wizard",
+    ctaH: "Vuoi parlarne con noi?",
+    ctaP: "Ti ricontattiamo entro 48 ore per il check-up gratuito di 30 minuti con uno dei fondatori: guardiamo insieme questo risultato e ti diciamo da dove partiremmo.",
+    ctaTel: "Telefono", facoltativo: "facoltativo",
+    ctaBtn: "Contattami", invio: "Invio in corso…",
+    ctaNota: function (e) { return "Ti scriviamo a " + e + "."; },
+    grazie: function (e) { return ["Grazie.", "Ti ricontattiamo entro 48 ore a " + e + "."]; },
+    errore: "La richiesta non è partita. Riprova tra poco, oppure scrivici a ",
+    richiesta: "Richiesta: contattatemi per il check-up gratuito.\n",
+    ancora: "Rifai l'autovalutazione",
     att: {
       customer_requests: { t: "Richieste dei clienti", p: "Le domande che ricevi ogni giorno trovano una bozza di risposta già pronta, con le informazioni giuste. Tu controlli e invii." },
       quotes: { t: "Preventivi", p: "Dalla richiesta del cliente alla bozza di preventivo, con i tuoi listini e le tue condizioni." },
@@ -198,7 +222,7 @@
       reporting: { retail: "vendite e magazzino ogni lunedì", manufacturing: "produzione, ordini e margini", hospitality: "prenotazioni, occupazione e incassi", construction: "avanzamento dei cantieri e costi", professional_services: "ore, fatturato e incassi" }
     },
     riepilogo: function (r, c, L) {
-      return "Ho fatto l'AI Wizard sul sito.\n" +
+      return "Ho fatto l'autovalutazione AI sul sito.\n" +
         "Settore: " + settore(r) + " · Persone: " + L("team_size", r.team_size) + "\n" +
         "Attività che portano via tempo: " + r.areas.map(function (a) { return L("areas", a); }).join("; ") + "\n" +
         "Ore a settimana: " + L("hours", r.hours) + " · " + L("repetition", r.repetition) + "\n" +
@@ -209,14 +233,37 @@
   function L(q, v) { return T.q[q].o[v]; }
   // «Altro»: nel riepilogo per il check-up va quello che la persona ha scritto (mai negli eventi)
   function settore(r) { return r.sector === "other" && r.sector_other ? r.sector_other : L("sector", r.sector); }
-  var CHECKUP = isEn ? "/en/ai-check-up/" : "/check-up-ai/";
+  var EMAIL = "info@telaioconsulting.com";
+  var EMAIL_RE = /^[^\s@<>()",;:]+@[^\s@<>()",;:]+\.[^\s@<>()",;:]+$/;   // la stessa regola dello script Google
 
   /* ---- Stato: la domanda corrente e le risposte. */
-  var passo = 0, risposte = {}, iniziato = false;
+  var passo = 0, risposte = {}, contatto = null;
   function annuncia(fase, dati) {
     var d = { fase: fase };
     for (var k in dati) if (Object.prototype.hasOwnProperty.call(dati, k)) d[k] = dati[k];
-    document.dispatchEvent(new CustomEvent("telaio:wizard", { detail: d }));
+    document.dispatchEvent(new CustomEvent("telaio:autovalutazione", { detail: d }));
+  }
+
+  /* ---- L'invio allo script Google del modulo (lo stesso del check-up): azienda nel campo «nome»,
+     il riepilogo nel messaggio, «pulsante» dice se è il risultato o «Contattami». Risponde {ok: true}. */
+  function invia(pulsante, messaggio, telefono) {
+    var url = window.TELAIO_MODULO_URL;
+    if (!url || !window.fetch || !window.URLSearchParams) return Promise.reject(new Error("senza modulo"));
+    var dati = new URLSearchParams();
+    dati.set("nome", contatto.azienda);
+    dati.set("email", contatto.email);
+    dati.set("telefono", telefono || "");
+    dati.set("messaggio", messaggio);
+    dati.set("lingua", isEn ? "en" : "it");
+    dati.set("pagina", location.pathname);
+    dati.set("pulsante", pulsante);
+    if (contatto.trappola) dati.set("sito_web", contatto.trappola);   // lo script risponde sì e non tiene niente
+    var ctrl = window.AbortController ? new AbortController() : null;
+    var attesa = setTimeout(function () { if (ctrl) ctrl.abort(); }, 20000);
+    return fetch(url, { method: "POST", body: dati, credentials: "omit", signal: ctrl ? ctrl.signal : undefined })
+      .then(function (r) { return r.json(); })
+      .then(function (res) { clearTimeout(attesa); if (!res || !res.ok) throw new Error((res && res.errore) || "risposta"); return res; },
+            function (e) { clearTimeout(attesa); throw e; });
   }
 
   function el(tag, cls, testo) {
@@ -236,47 +283,102 @@
   function mostra(nodo, primo) {
     box.textContent = "";
     box.appendChild(nodo);
-    if (!fermo) { nodo.classList.add("wz-in"); }
+    if (!fermo) { nodo.classList.add("av-in"); }
     if (primo) return;
-    var h = nodo.querySelector("[data-wz-focus]");
+    var h = nodo.querySelector("[data-av-focus]");
     if (h) h.focus({ preventScroll: true });
     inVista();
+  }
+
+  /* ---- Prima di cominciare: nome dell'azienda ed email. */
+  function campo(id, nome, etichetta, tipo, extra) {
+    var c = el("div", "ck-field"), l = el("label", null, etichetta), i = document.createElement("input");
+    l.htmlFor = id;
+    i.id = id; i.name = nome; i.type = tipo;
+    for (var k in extra) if (Object.prototype.hasOwnProperty.call(extra, k)) i[k] = extra[k];
+    c.appendChild(l); c.appendChild(i);
+    return c;
+  }
+  function inizio(primo) {
+    var t = T.inizio, f = el("form", "av-step av-start");
+    f.noValidate = true;
+    var prog = el("div", "av-prog");
+    prog.appendChild(el("span", "av-prog-t", t.kicker));
+    f.appendChild(prog);
+    var h = el("h2", "av-q", t.titolo);
+    h.id = "av-q-start"; h.tabIndex = -1; h.setAttribute("data-av-focus", "");
+    f.appendChild(h);
+    var campi = el("div", "av-fields");
+    campi.appendChild(campo("av-azienda", "azienda", t.azienda, "text", { autocomplete: "organization", maxLength: 100, required: true, value: contatto ? contatto.azienda : "" }));
+    campi.appendChild(campo("av-email", "email", t.email, "email", { autocomplete: "email", maxLength: 200, required: true, spellcheck: false, value: contatto ? contatto.email : "" }));
+    f.appendChild(campi);
+    // campo trappola: invisibile alle persone, lo riempiono solo i programmi che mandano spam (come nel modulo del check-up)
+    var hp = el("div", "ck-hp");
+    hp.setAttribute("aria-hidden", "true");
+    var hpl = el("label", null, "Lascia vuoto "), hpi = document.createElement("input");
+    hpi.name = "sito_web"; hpi.type = "text"; hpi.tabIndex = -1; hpi.autocomplete = "off";
+    hpl.appendChild(hpi); hp.appendChild(hpl); f.appendChild(hp);
+    var nota = el("p", "av-note", t.nota + " ");
+    var pl = el("a", null, t.privacy);
+    pl.href = t.privacyHref; pl.target = "_blank"; pl.rel = "noopener";
+    nota.appendChild(pl);
+    f.appendChild(nota);
+    var stato = el("p", "av-status");
+    stato.setAttribute("role", "status"); stato.setAttribute("aria-live", "polite");
+    f.appendChild(stato);
+    var nav = el("div", "av-nav"), via = el("button", "btn btn-primary av-next");
+    via.type = "submit";
+    via.appendChild(document.createTextNode(t.via + " "));
+    var fr = el("span", "p-arr", "→"); fr.setAttribute("aria-hidden", "true"); via.appendChild(fr);
+    nav.appendChild(via); f.appendChild(nav);
+    f.addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      var a = f.elements.azienda, e = f.elements.email, az = a.value.trim(), em = e.value.trim();
+      if (az.length < 2) { stato.textContent = t.noAzienda; a.focus(); return; }
+      if (!EMAIL_RE.test(em)) { stato.textContent = t.noEmail; e.focus(); return; }
+      var nuovo = !contatto;
+      contatto = { azienda: az, email: em, trappola: hpi.value };
+      if (nuovo) annuncia("iniziato", {});
+      passo = 0;
+      domanda();
+    });
+    mostra(f, primo);
   }
 
   /* ---- Una domanda. */
   function domanda(primo) {
     var q = DOMANDE[passo], testi = T.q[q.id], piu = !!q.piu;
-    var f = el("form", "wz-step");
+    var f = el("form", "av-step");
     f.noValidate = true;
 
-    var prog = el("div", "wz-prog");
-    prog.appendChild(el("span", "wz-prog-t", T.domanda(passo + 1, DOMANDE.length)));
-    var barra = el("i", "wz-prog-bar"), pieno = el("i");
+    var prog = el("div", "av-prog");
+    prog.appendChild(el("span", "av-prog-t", T.domanda(passo + 1, DOMANDE.length)));
+    var barra = el("i", "av-prog-bar"), pieno = el("i");
     pieno.style.width = Math.round(passo / DOMANDE.length * 100) + "%";
     barra.appendChild(pieno);
     barra.setAttribute("aria-hidden", "true");
     prog.appendChild(barra);
     f.appendChild(prog);
 
-    var fs = el("fieldset", "wz-fs"), id = "wz-q-" + q.id;
+    var fs = el("fieldset", "av-fs"), id = "av-q-" + q.id;
     fs.setAttribute("aria-labelledby", id + (testi.h ? " " + id + "-h" : ""));
-    var titolo = el("h2", "wz-q", testi.t);
+    var titolo = el("h2", "av-q", testi.t);
     titolo.id = id;
     titolo.tabIndex = -1;
-    titolo.setAttribute("data-wz-focus", "");
+    titolo.setAttribute("data-av-focus", "");
     fs.appendChild(titolo);
-    if (testi.h) { var aiuto = el("p", "wz-help", testi.h); aiuto.id = id + "-h"; fs.appendChild(aiuto); }
+    if (testi.h) { var aiuto = el("p", "av-help", testi.h); aiuto.id = id + "-h"; fs.appendChild(aiuto); }
 
-    var lista = el("div", "wz-opts" + (q.corte ? " is-short" : q.opzioni.length > 4 && !piu ? " is-two" : "") + (piu ? " is-many" : ""));
+    var lista = el("div", "av-opts" + (q.corte ? " is-short" : q.opzioni.length > 4 && !piu ? " is-two" : "") + (piu ? " is-many" : ""));
     var scelti = piu ? (risposte[q.id] || []) : null;
     q.opzioni.forEach(function (v) {
-      var lab = el("label", "wz-opt"), inp = document.createElement("input");
+      var lab = el("label", "av-opt"), inp = document.createElement("input");
       inp.type = piu ? "checkbox" : "radio";
       inp.name = q.id;
       inp.value = v;
       inp.checked = piu ? scelti.indexOf(v) >= 0 : risposte[q.id] === v;
       lab.appendChild(inp);
-      lab.appendChild(el("span", "wz-opt-t", testi.o[v]));
+      lab.appendChild(el("span", "av-opt-t", testi.o[v]));
       lista.appendChild(lab);
     });
     fs.appendChild(lista);
@@ -284,11 +386,11 @@
     // «Altro»: un campo per dire di cosa si occupa l'impresa, solo quando è scelto
     var altro = null, campo = null;
     if (q.altro) {
-      campo = el("div", "ck-field wz-altro");
+      campo = el("div", "ck-field av-altro");
       var etichetta = el("label", null, testi.altro);
-      etichetta.htmlFor = "wz-altro";
+      etichetta.htmlFor = "av-altro";
       altro = document.createElement("input");
-      altro.type = "text"; altro.id = "wz-altro"; altro.name = q.id + "_other";
+      altro.type = "text"; altro.id = "av-altro"; altro.name = q.id + "_other";
       altro.maxLength = 80; altro.autocomplete = "off"; altro.placeholder = testi.altroEs;
       altro.value = risposte[q.id + "_other"] || "";
       campo.appendChild(etichetta);
@@ -298,20 +400,18 @@
     }
     f.appendChild(fs);
 
-    var stato = el("p", "wz-status");
+    var stato = el("p", "av-status");
     stato.setAttribute("role", "status");
     stato.setAttribute("aria-live", "polite");
     f.appendChild(stato);
 
-    var nav = el("div", "wz-nav");
-    if (passo > 0) {
-      var indietro = el("button", "wz-back", "← " + T.indietro);
-      indietro.type = "button";
-      indietro.addEventListener("click", function () { leggi(); passo--; domanda(); });
-      nav.appendChild(indietro);
-    }
+    var nav = el("div", "av-nav");
+    var indietro = el("button", "av-back", "← " + T.indietro);
+    indietro.type = "button";
+    indietro.addEventListener("click", function () { leggi(); if (passo > 0) { passo--; domanda(); } else inizio(); });
+    nav.appendChild(indietro);
     var ultimo = passo === DOMANDE.length - 1;
-    var avanti = el("button", "btn btn-primary wz-next");
+    var avanti = el("button", "btn btn-primary av-next");
     avanti.type = "submit";
     avanti.appendChild(document.createTextNode((ultimo ? T.vedi : T.avanti) + " "));
     var freccia = el("span", "p-arr", "→");
@@ -353,7 +453,6 @@
       stato.textContent = "";
       limita();
       if (campo) campo.hidden = !conAltro();
-      if (!iniziato && risposto()) { iniziato = true; annuncia("iniziato", {}); }
     });
     // una risposta sola scelta col mouse o col dito: si passa subito alla domanda dopo (anche toccando la
     // risposta già scelta, tornando indietro). Con la tastiera no: le frecce e lo spazio cambiano la scelta,
@@ -361,7 +460,7 @@
     // o «Indietro» non deve far avanzare la scelta fatta dopo con la tastiera
     if (!piu) {
       var tocco = null;
-      f.addEventListener("pointerdown", function (ev) { tocco = ev.target && ev.target.closest ? ev.target.closest(".wz-opt") : null; });
+      f.addEventListener("pointerdown", function (ev) { tocco = ev.target && ev.target.closest ? ev.target.closest(".av-opt") : null; });
       f.addEventListener("keydown", function () { tocco = null; });
       f.addEventListener("click", function (ev) {
         if (!ev.target || ev.target.tagName !== "INPUT" || !tocco || !tocco.contains(ev.target)) return;
@@ -390,60 +489,60 @@
 
   /* ---- Il risultato. */
   function metro(nome, valore, fasciaTesto, spiega) {
-    var d = el("div", "wz-score");
-    d.appendChild(el("p", "wz-score-l", nome));
-    var v = el("p", "wz-score-v");
+    var d = el("div", "av-score");
+    d.appendChild(el("p", "av-score-l", nome));
+    var v = el("p", "av-score-v");
     v.appendChild(el("b", null, String(valore)));
     v.appendChild(el("span", null, " / 100"));
     d.appendChild(v);
-    d.appendChild(el("p", "wz-score-b", fasciaTesto));
-    var barra = el("i", "wz-bar"), pieno = el("i");
+    d.appendChild(el("p", "av-score-b", fasciaTesto));
+    var barra = el("i", "av-bar"), pieno = el("i");
     barra.setAttribute("aria-hidden", "true");
     pieno.style.width = valore + "%";
     barra.appendChild(pieno);
     d.appendChild(barra);
-    d.appendChild(el("p", "wz-score-n", spiega));
+    d.appendChild(el("p", "av-score-n", spiega));
     return d;
   }
 
   function risultato() {
     var r = risposte, c = calcola(r);
-    var out = el("div", "wz-result");
+    var out = el("div", "av-result");
 
-    out.appendChild(el("p", "wz-kicker", T.risultato));
-    var h = el("h2", "wz-verdict", T.profili[c.profilo][0]);
+    out.appendChild(el("p", "av-kicker", T.risultato));
+    var h = el("h2", "av-verdict", T.profili[c.profilo][0]);
     h.tabIndex = -1;
-    h.setAttribute("data-wz-focus", "");
+    h.setAttribute("data-av-focus", "");
     out.appendChild(h);
-    out.appendChild(el("p", "wz-verdict-p", T.profili[c.profilo][1]));
+    out.appendChild(el("p", "av-verdict-p", T.profili[c.profilo][1]));
     // chi non usa ancora l'AI riceve un incoraggiamento sotto il giudizio, non una cosa da preparare
-    if (r.ai_today === "none") out.appendChild(el("p", "wz-verdict-p", T.gapAi));
+    if (r.ai_today === "none") out.appendChild(el("p", "av-verdict-p", T.gapAi));
 
-    var punti = el("div", "wz-scores");
+    var punti = el("div", "av-scores");
     var fp = fascia(c.potenziale), fr = fascia(c.prontezza);
     punti.appendChild(metro(T.potenziale, c.potenziale, T.fasce[fp], T.spiega.potenziale[fp]));
     punti.appendChild(metro(T.prontezza, c.prontezza, T.fascePr[fr], T.spiega.prontezza[fr]));
-    var ore = el("div", "wz-score is-hours");
-    ore.appendChild(el("p", "wz-score-l", T.ore));
-    var ov = el("p", "wz-score-v");
+    var ore = el("div", "av-score is-hours");
+    ore.appendChild(el("p", "av-score-l", T.ore));
+    var ov = el("p", "av-score-v");
     ov.appendChild(el("b", null, c.oreDa + "–" + c.oreA));
     ov.appendChild(el("span", null, " " + T.oreS));
     ore.appendChild(ov);
-    ore.appendChild(el("p", "wz-score-n", T.oreNota(decina(c.oreDa * SETTIMANE_ANNO), decina(c.oreA * SETTIMANE_ANNO))));
+    ore.appendChild(el("p", "av-score-n", T.oreNota(decina(c.oreDa * SETTIMANE_ANNO), decina(c.oreA * SETTIMANE_ANNO))));
     punti.appendChild(ore);
     out.appendChild(punti);
-    var come = el("a", "arrow-link wz-how", T.come + " →");
+    var come = el("a", "arrow-link av-how", T.come + " →");
     come.href = T.comeHref;
     out.appendChild(come);
 
-    var parti = el("div", "wz-block");
-    parti.appendChild(el("h3", "wz-h3", T.partenza));
-    var ol = el("ol", "wz-opps");
+    var parti = el("div", "av-block");
+    parti.appendChild(el("h3", "av-h3", T.partenza));
+    var ol = el("ol", "av-opps");
     r.areas.forEach(function (a) {
       var li = el("li"), att = T.att[a], es = T.es[a][r.sector];
       li.appendChild(el("h4", null, att.t));
       li.appendChild(el("p", null, att.p));
-      if (es) li.appendChild(el("p", "wz-ex", T.esempio + es + "."));
+      if (es) li.appendChild(el("p", "av-ex", T.esempio + es + "."));
       ol.appendChild(li);
     });
     parti.appendChild(ol);
@@ -451,34 +550,72 @@
 
     var cose = c.blocchi.map(function (b) { return T.gap[b]; });
     if (cose.length) {
-      var prima = el("div", "wz-block");
-      prima.appendChild(el("h3", "wz-h3", T.prima));
+      var prima = el("div", "av-block");
+      prima.appendChild(el("h3", "av-h3", T.prima));
       var ul = el("ul", "ticks");
       cose.forEach(function (t) { ul.appendChild(el("li", null, t)); });
       prima.appendChild(ul);
       out.appendChild(prima);
     }
 
-    // l'invito: il pulsante apre il modulo del check-up (script.js) col riepilogo già scritto nel messaggio
-    var cta = el("div", "wz-cta");
-    cta.appendChild(el("h3", "wz-cta-h", T.ctaH));
-    cta.appendChild(el("p", "wz-cta-p", T.ctaP));
-    var btn = el("a", "btn btn-primary p-btn-xl p-btn-inv");
-    btn.href = CHECKUP;
-    btn.setAttribute("data-cta", "checkup");
-    btn.setAttribute("data-placement", "wizard_result");
-    btn.setAttribute("data-messaggio", T.riepilogo(r, c, L));
-    btn.appendChild(document.createTextNode(T.ctaBtn + " "));
+    // il risultato arriva subito a noi; se l'invio non riesce, «Contattami» rimanda comunque tutto
+    var riepilogo = T.riepilogo(r, c, L);
+    invia("assessment_result", riepilogo)["catch"](function () { /* la persona vede comunque il risultato */ });
+
+    // l'invito: «Contattami», col telefono se vuole lasciarlo
+    var cta = el("div", "av-cta");
+    cta.appendChild(el("h3", "av-cta-h", T.ctaH));
+    cta.appendChild(el("p", "av-cta-p", T.ctaP));
+    var f = el("form", "av-contact");
+    f.noValidate = true;
+    var tel = campo("av-tel", "telefono", T.ctaTel, "tel", { autocomplete: "tel", maxLength: 40 });
+    tel.firstChild.appendChild(el("span", "ck-opt", " (" + T.facoltativo + ")"));
+    f.appendChild(tel);
+    var btn = el("button", "btn btn-primary p-btn-xl p-btn-inv");
+    btn.type = "submit";
+    var etichetta = el("span", null, T.ctaBtn);
+    btn.appendChild(etichetta);
     var fr = el("span", "p-arr", "→");
     fr.setAttribute("aria-hidden", "true");
+    btn.appendChild(document.createTextNode(" "));
     btn.appendChild(fr);
-    cta.appendChild(btn);
-    cta.appendChild(el("p", "wz-cta-n", T.ctaNota));
+    f.appendChild(btn);
+    var stato = el("p", "av-cta-n");
+    stato.setAttribute("role", "status"); stato.setAttribute("aria-live", "polite");
+    stato.textContent = T.ctaNota(contatto.email);
+    f.appendChild(stato);
+    var inVolo = false;
+    f.addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      if (inVolo) return;
+      inVolo = true; btn.disabled = true; etichetta.textContent = T.invio;
+      invia("assessment_contact", T.richiesta + riepilogo, f.elements.telefono.value.trim())
+        .then(function () {
+          var g = T.grazie(contatto.email), fatto = el("div", "av-done");
+          fatto.tabIndex = -1;
+          fatto.appendChild(el("p", "av-done-h", g[0]));
+          fatto.appendChild(el("p", null, g[1]));
+          f.parentNode.replaceChild(fatto, f);
+          fatto.focus();
+          // per misura.js: la richiesta è arrivata (checkup_requested), mai i dati della persona
+          document.dispatchEvent(new CustomEvent("telaio:checkup-inviato", { detail: { pulsante: "assessment_contact" } }));
+        }, function () {
+          stato.textContent = T.errore;
+          var m = el("a", null, EMAIL);
+          m.href = "mailto:" + EMAIL;
+          stato.appendChild(m);
+          stato.appendChild(document.createTextNode("."));
+          stato.classList.add("is-error");
+          inVolo = false; btn.disabled = false; etichetta.textContent = T.ctaBtn;
+        });
+    });
+    cta.appendChild(f);
     out.appendChild(cta);
 
-    var ancora = el("button", "wz-again", "↺ " + T.ancora);
+    // si rifà con la stessa azienda e la stessa email
+    var ancora = el("button", "av-again", "↺ " + T.ancora);
     ancora.type = "button";
-    ancora.addEventListener("click", function () { passo = 0; risposte = {}; iniziato = false; domanda(); });
+    ancora.addEventListener("click", function () { passo = 0; risposte = {}; domanda(); });
     out.appendChild(ancora);
 
     mostra(out);
@@ -488,9 +625,9 @@
     });
   }
 
-  // per le prove nel browser (verifica_wizard.mjs): il calcolo senza passare dalle domande
-  window.__telaioWizard = { calcola: calcola, domande: DOMANDE };
+  // per le prove nel browser (verifica_autovalutazione.mjs): il calcolo senza passare dalle domande
+  window.__telaioAutovalutazione = { calcola: calcola, domande: DOMANDE };
 
-  // il paragrafo per chi non ha JavaScript (dentro [data-wizard]) lascia il posto alla prima domanda
-  domanda(true);
+  // il paragrafo per chi non ha JavaScript (dentro [data-autovalutazione]) lascia il posto all'inizio
+  inizio(true);
 })();
