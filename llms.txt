@@ -1,6 +1,6 @@
 # Telaio
 
-> Telaio (Telaio Consulting) è un team di consulenza per le piccole e medie imprese italiane: le affianca nella strategia d'impresa e mette l'intelligenza artificiale al lavoro, partendo da un problema reale e portando il primo strumento AI in uso in 4 settimane. Il primo passo è un check-up AI gratuito di 30 minuti in videochiamata con uno dei fondatori.
+> Telaio (Telaio Consulting) è un team di consulenza per le piccole e medie imprese italiane: le affianca nella strategia d'impresa e mette l'intelligenza artificiale al lavoro, partendo da un problema reale e portando il primo strumento AI in uso in 4 settimane. Il primo passo è un'autovalutazione AI gratuita sul sito (otto domande, due minuti); alla fine, se si vuole, un check-up gratuito di 30 minuti in videochiamata con uno dei fondatori.
 
 In breve:
 
@@ -17,6 +17,7 @@ In breve:
 
 - [Home](https://telaioconsulting.com/): consulenza AI per PMI, il primo strumento in 4 settimane
 - [Check-up AI](https://telaioconsulting.com/check-up-ai/): cosa succede nei 30 minuti gratuiti, cosa ti porti a casa, per chi è, prenotazione
+- [Autovalutazione AI](https://telaioconsulting.com/autovalutazione-ai/): otto domande in due minuti, senza email, per capire quanto può fare l'AI per la propria impresa (potenziale, prontezza, ore da recuperare, da dove partire), con le regole del calcolo scritte nella pagina
 - [Come lavoriamo](https://telaioconsulting.com/come-lavoriamo/): i 4 passi, cosa cambia lavorando con Telaio, cosa trovi sempre per iscritto, cosa non facciamo
 - [Cosa facciamo](https://telaioconsulting.com/cosa-facciamo/): le attività da cui partire, divise per area (vendite e negozio online, clienti e assistenza, amministrazione e documenti, direzione)
 - [Consulenza strategica](https://telaioconsulting.com/consulenza-strategica/): le scelte di fondo dell'impresa mentre l'AI cambia il mercato
@@ -28,6 +29,7 @@ In breve:
 
 - [Home](https://telaioconsulting.com/en/): AI consulting for small and mid-sized businesses, first AI tool in use in 4 weeks
 - [AI check-up](https://telaioconsulting.com/en/ai-check-up/): a free 30-minute video call with a Telaio founder, in English or Italian
+- [AI self-assessment](https://telaioconsulting.com/en/ai-self-assessment/): eight questions, two minutes, no email: how much AI can do for your business, with the scoring rules on the page
 
 ## Optional
 
