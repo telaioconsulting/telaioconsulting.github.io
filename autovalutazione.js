@@ -39,10 +39,10 @@
      che usate già (fino a 30) + chi segue il progetto (fino a 30).
      La scala parte alta di proposito (Dan, 30 ottobre 2026): ogni piccola impresa ha un'attività da cui
      partire, i punteggi dicono quanto c'è da guadagnare e quanto si è pronti, il minimo è circa 50.
-     Ore da recuperare: le ore della fascia scelta per la quota che l'AI può togliere, prudente; questa
-     resta una stima onesta, non segue la scala dei punteggi. */
+     Ore da recuperare: le ore della fascia scelta per la quota che l'AI può togliere; le quote e gli
+     arrotondamenti per eccesso sono di Dan (30 ottobre 2026: «vai sempre verso il maggior risparmio»). */
   var ORE = { under_5: { da: 2, a: 5, punti: 25 }, "5_15": { da: 5, a: 15, punti: 35 }, "15_40": { da: 15, a: 40, punti: 45 }, over_40: { da: 40, a: 60, punti: 50 } };
-  var RIPETIZIONE = { high: { da: 0.3, a: 0.5, punti: 30 }, medium: { da: 0.2, a: 0.35, punti: 22 }, low: { da: 0.05, a: 0.15, punti: 15 } };
+  var RIPETIZIONE = { high: { da: 0.6, a: 0.8, punti: 30 }, medium: { da: 0.5, a: 0.7, punti: 22 }, low: { da: 0.15, a: 0.3, punti: 15 } };
   var PUNTI_ATTIVITA = [0, 14, 17, 20];   // per 0, 1, 2, 3 attività scelte
   var DATI = { system: 40, spreadsheets: 30, scattered: 20 };
   var AI_OGGI = { in_processes: 30, personal: 24, none: 18 };
@@ -55,8 +55,8 @@
     var ore = ORE[r.hours], rip = RIPETIZIONE[r.repetition], n = Math.min(r.areas.length, 3);
     var potenziale = ore.punti + rip.punti + PUNTI_ATTIVITA[n];
     var prontezza = DATI[r.data] + AI_OGGI[r.ai_today] + CHI[r.owner];
-    var da = Math.max(1, Math.round(ore.da * rip.da));
-    var a = Math.max(da + 1, Math.round(ore.a * rip.a));
+    var da = Math.max(1, Math.ceil(ore.da * rip.da));
+    var a = Math.max(da + 1, Math.ceil(ore.a * rip.a));
     // senza un posto per le informazioni o qualcuno che segua il progetto si parte da lì, qualunque sia il punteggio
     var blocchi = [];
     if (r.data === "scattered") blocchi.push("data");
@@ -64,7 +64,7 @@
     var profilo = blocchi.length ? "prepare_first" : potenziale < SOGLIA_PICCOLO ? "start_small" : "ready";
     return { potenziale: potenziale, prontezza: prontezza, oreDa: da, oreA: a, profilo: profilo, blocchi: blocchi };
   }
-  function decina(n) { return Math.max(10, Math.round(n / 10) * 10); }   // le ore di un anno: una cifra tonda, non una falsa precisione
+  function decina(n) { return Math.max(10, Math.ceil(n / 10) * 10); }   // le ore di un anno: una cifra tonda, per eccesso
   function fascia(v) { return v >= FASCE.molto_alto ? "molto_alto" : v >= FASCE.alto ? "alto" : "medio_alto"; }
 
   /* ---- I testi. */
