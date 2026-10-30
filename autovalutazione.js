@@ -2,9 +2,10 @@
    TELAIO — Autovalutazione AI: otto domande sull'impresa, il risultato subito, poi l'invito al check-up.
    Si parte dal nome dell'azienda e dall'email, poi le domande. Quando appare il risultato, azienda,
    email, risposte e punteggi vanno allo script Google del modulo del check-up (TELAIO_MODULO_URL di
-   script.js, pulsante «assessment_result»): una riga nel foglio «Richieste» e un'email a info@ (Dan,
-   30 ottobre 2026). In fondo al risultato «Contattami» manda di nuovo tutto, col telefono se c'è
-   (pulsante «assessment_contact»): è la richiesta di essere ricontattati, la conversione del sito.
+   script.js, pulsante «assessment_result»): una riga nel foglio «Richieste», nessuna email (Dan,
+   30 ottobre 2026: un'email sola per azienda). In fondo al risultato «Contattami» manda di nuovo tutto,
+   col telefono se c'è (pulsante «assessment_contact»): una riga e l'email a info@, la richiesta di
+   essere ricontattati, la conversione del sito.
    misura.js conta l'inizio e la fine (evento «telaio:autovalutazione»), solo con il consenso alle statistiche
    e mai con i dati della persona: solo i codici delle risposte e i due punteggi.
    Il calcolo e le sue ipotesi sono scritti nella pagina, «Come calcoliamo il risultato»: chi cambia
