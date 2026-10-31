@@ -477,6 +477,8 @@ html.ck-open { overflow: hidden; padding-right: var(--ck-gutter, 0px); }
 .g-path b { display: block; font-family: var(--f-display); font-size: 1.1rem; letter-spacing: -.01em; color: var(--ink); }
 .g-path span { display: block; margin-top: 4px; font-size: .9rem; color: var(--muted); }
 .g-path li:first-child, .g-path li:last-child { border-color: color-mix(in srgb, var(--brand) 55%, var(--line)); }
+/* a tre voci (le voci di costo): su telefono una colonna, non due con una scheda orfana */
+@media (max-width: 560px) { .g-article .g-path-3 { grid-template-columns: 1fr; } }
 .g-article .g-decide { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 .g-decide li { display: grid; grid-template-columns: 1fr minmax(0, 15rem); gap: 10px; align-items: stretch; line-height: 1.4; }
 .g-decide .q { border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); padding: 12px 14px; color: var(--ink); font-weight: 600; }
