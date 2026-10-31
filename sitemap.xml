@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://telaioconsulting.com/</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://telaioconsulting.com/"/>
@@ -87,7 +88,7 @@
   </url>
   <url>
     <loc>https://telaioconsulting.com/guide/introdurre-ai-in-azienda/</loc>
-    <lastmod>2026-10-30</lastmod>
+    <lastmod>2026-10-31</lastmod>
   </url>
   <url>
     <loc>https://telaioconsulting.com/guide/consulente-ai/</loc>
@@ -95,7 +96,10 @@
   </url>
   <url>
     <loc>https://telaioconsulting.com/guide/ai-imprese-italiane-dati/</loc>
-    <lastmod>2026-10-30</lastmod>
+    <image:image>
+      <image:loc>https://telaioconsulting.com/guide/ai-imprese-italiane-dati/ai-imprese-italiane-per-dimensione-2025.png</image:loc>
+    </image:image>
+    <lastmod>2026-10-31</lastmod>
   </url>
   <url>
     <loc>https://telaioconsulting.com/privacy/</loc>
