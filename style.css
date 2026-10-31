@@ -684,6 +684,8 @@ footer { border-top: 1px solid var(--line); padding: 48px 0; background: var(--s
 .foot-col a { color: var(--muted); text-decoration: none; }
 .foot-col a:hover { color: var(--ink); }
 .foot-tag { font-family: var(--f-display); font-weight: 600; color: var(--ink); font-size: var(--step-1); }
+/* la riga che misura.js aggiunge nel piè di pagina di un browser segnato da /interno/ (chi lavora in Telaio) */
+.foot-col a.foot-interno { color: var(--ink); font-family: var(--f-mono); }
 
 /* ============================================================
    RESPONSIVE

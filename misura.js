@@ -12,6 +12,7 @@
    - Ritirando il consenso: cookie e chiavi di PostHog si cancellano e la pagina si ricarica pulita.
    - Ogni scelta sul banner va nel registro dei consensi (rules.consent_log del piano): la scheda
      «Consensi» del foglio dello script Google che riceve il modulo (MODULO_URL di script.js).
+   - Un browser di chi lavora in Telaio, segnato dalla pagina /interno/, non si misura affatto (sezione 0).
    Nessun tag di Google o di Meta. Il banner (CookieConsent 3.1.0) è in assets/vendor/.
    Per spegnere tutto: togliere <script src="/misura.js"> dalle pagine.
    ============================================================ */
@@ -19,6 +20,80 @@
   "use strict";
   if (window.__telaioMisura) return;
   window.__telaioMisura = true;
+
+  /* ---- 0. I browser di chi lavora in Telaio. Dalla pagina /interno/ ognuno di noi segna i suoi browser: su un
+     browser segnato il sito non carica PostHog, non mostra il banner e non scrive nel registro dei consensi, così
+     le nostre visite e le nostre prove restano fuori dalle statistiche e dal cruscotto. Il segno è la voce
+     «telaio-interno» della memoria del browser (la data in cui lo si è messo) e vale solo per quel browser.
+     La pagina /interno/ non si misura mai, segnata o no. */
+  var isEn = (document.documentElement.lang || "it").toLowerCase().indexOf("en") === 0;
+  var SEGNO = "telaio-interno";
+  var paginaInterna = /^\/interno\/(index\.html)?$/.test(location.pathname);
+
+  function segnoInterno() {
+    try { return window.localStorage.getItem(SEGNO); } catch (e) { return null; }   // memoria bloccata: si conta
+  }
+
+  function oggi() {                                      // la data locale, non quella di Greenwich
+    var d = new Date();
+    return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2);
+  }
+
+  // su un browser segnato, una riga in fondo a ogni pagina lo dice e porta a /interno/: così lo si vede a colpo
+  // d'occhio, senza andare a controllare. Si aggiunge o si toglie seguendo il segno (anche dal pulsante di /interno/).
+  function rigaInterna(segnato) {
+    var riga = document.querySelector(".foot-interno");
+    if (!segnato) { if (riga) riga.parentNode.removeChild(riga); return; }
+    if (riga) return;
+    var colonna = document.querySelector(".p-footer .foot-col:last-child");
+    if (!colonna) return;
+    riga = document.createElement("a");
+    riga.className = "foot-interno";
+    riga.href = "/interno/";
+    riga.textContent = isEn ? "Telaio browser: this visit is not counted · change" : "Browser di Telaio: questa visita non si conta · cambia";
+    colonna.appendChild(riga);
+  }
+
+  // il pulsante della pagina /interno/: mette o toglie il segno e dice com'è questo browser
+  function interruttoreInterno() {
+    var stato = document.querySelector("[data-interno-stato]");
+    var azione = document.querySelector("[data-interno-azione]");
+    var pulsante = azione && azione.querySelector("button");
+    if (!stato || !pulsante) return;
+    function mostra() {
+      var data;
+      try { data = window.localStorage.getItem(SEGNO); } catch (e) {
+        stato.textContent = "Questo browser non lascia salvare il segno: le sue visite restano contate.";
+        azione.hidden = true;
+        return;
+      }
+      stato.textContent = data
+        ? "Questo browser non viene contato, dal " + data.split("-").reverse().join("/") + "."
+        : "Questo browser viene contato nelle statistiche del sito.";
+      pulsante.textContent = data ? "Torna a contarlo" : "Non contare questo browser";
+      azione.hidden = false;
+      rigaInterna(!!data);
+    }
+    pulsante.addEventListener("click", function () {
+      try {
+        if (window.localStorage.getItem(SEGNO)) window.localStorage.removeItem(SEGNO);
+        else window.localStorage.setItem(SEGNO, oggi());
+      } catch (e) { /* memoria piena o bloccata: mostra() dice com'è rimasta */ }
+      mostra();
+    });
+    mostra();
+  }
+
+  var segnato = !!segnoInterno();
+  function avvioInterno() {
+    if (paginaInterna) interruttoreInterno();            // mostra() mette anche la riga, se il browser è segnato
+    else if (segnato) rigaInterna(true);
+  }
+  if (paginaInterna || segnato) {
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", avvioInterno);
+    else avvioInterno();
+    return;                                              // niente PostHog, niente banner, niente registro
+  }
 
   // la chiave del progetto PostHog «telaioconsulting.com» (organizzazione Telaio, id 312302):
   // è pubblica per natura, compare nel codice di ogni pagina
@@ -34,7 +109,6 @@
   // si misura solo sul sito vero (env prod) e in locale per le prove (env test)
   var host = location.hostname;
   var ENV = host === "telaioconsulting.com" ? "prod" : (host === "localhost" || host === "127.0.0.1") ? "test" : "";
-  var isEn = (document.documentElement.lang || "it").toLowerCase().indexOf("en") === 0;
 
   /* ---- 1. La scelta di chi visita. Si legge dal cookie del banner prima che il banner arrivi,
      così già la prima pagina vista la rispetta. Una scelta fatta con una revisione vecchia non vale. */
