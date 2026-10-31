@@ -38,6 +38,22 @@
     return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2);
   }
 
+  // su un browser segnato, una riga in fondo a ogni pagina lo dice e porta a /interno/: così lo si vede a colpo
+  // d'occhio, senza andare a controllare. Si aggiunge o si toglie seguendo il segno (anche dal pulsante di /interno/).
+  function rigaInterna(segnato) {
+    var riga = document.querySelector(".foot-interno");
+    if (!segnato) { if (riga) riga.parentNode.removeChild(riga); return; }
+    if (riga) return;
+    var colonna = document.querySelector(".p-footer .foot-col:last-child");
+    if (!colonna) return;
+    var inglese = (document.documentElement.lang || "it").toLowerCase().indexOf("en") === 0;
+    riga = document.createElement("a");
+    riga.className = "foot-interno";
+    riga.href = "/interno/";
+    riga.textContent = inglese ? "Telaio browser: this visit is not counted · change" : "Browser di Telaio: questa visita non si conta · cambia";
+    colonna.appendChild(riga);
+  }
+
   // il pulsante della pagina /interno/: mette o toglie il segno e dice com'è questo browser
   function interruttoreInterno() {
     var stato = document.querySelector("[data-interno-stato]");
@@ -56,6 +72,7 @@
         : "Questo browser viene contato nelle statistiche del sito.";
       pulsante.textContent = data ? "Torna a contarlo" : "Non contare questo browser";
       azione.hidden = false;
+      rigaInterna(!!data);
     }
     pulsante.addEventListener("click", function () {
       try {
@@ -67,11 +84,16 @@
     mostra();
   }
 
-  if (paginaInterna) {
-    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", interruttoreInterno);
-    else interruttoreInterno();
+  var segnato = !!segnoInterno();
+  function avvioInterno() {
+    if (paginaInterna) interruttoreInterno();            // mostra() mette anche la riga, se il browser è segnato
+    else if (segnato) rigaInterna(true);
   }
-  if (paginaInterna || segnoInterno()) return;          // niente PostHog, niente banner, niente registro
+  if (paginaInterna || segnato) {
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", avvioInterno);
+    else avvioInterno();
+    return;                                              // niente PostHog, niente banner, niente registro
+  }
 
   // la chiave del progetto PostHog «telaioconsulting.com» (organizzazione Telaio, id 312302):
   // è pubblica per natura, compare nel codice di ogni pagina
