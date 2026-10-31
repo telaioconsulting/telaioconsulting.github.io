@@ -445,9 +445,31 @@ html.ck-open { overflow: hidden; padding-right: var(--ck-gutter, 0px); }
 .g-article a:not(.btn):not(.arrow-link) { color: var(--weft); }
 .g-answer { font-size: var(--step-1); line-height: 1.55; margin-bottom: 8px; }
 .g-answer p { color: var(--ink); }
-.g-facts { list-style: none; padding: 0; margin: 18px 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
-.g-facts li { border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); padding: 14px 16px; color: var(--muted); font-size: var(--step--1); line-height: 1.45; }
-.g-facts b { display: block; font-family: var(--f-display); font-size: var(--step-3); color: var(--ink); letter-spacing: -.02em; margin-bottom: 4px; }
+/* «In breve» delle guide: tre o quattro righe, una per fatto (la parte che gli assistenti AI riprendono) */
+.g-answer ul { margin: 8px 0 0; padding-left: 20px; display: grid; gap: 6px; font-size: 1.0625rem; }
+.g-answer li { color: var(--ink); line-height: 1.5; }
+/* grafici: SVG nella pagina, colori dai token del tema; i dati restano in tabella sotto */
+.g-fig { margin: 8px 0 24px; }
+.g-chart { display: block; width: 100%; max-width: 560px; height: auto; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); }
+.g-chart text { font-family: var(--f-body); font-size: 15px; fill: var(--ink); }
+.g-chart .lab-b { font-weight: 600; }
+.g-chart .val { font-family: var(--f-mono); font-size: 13px; fill: var(--ink); }
+.g-chart .val-m { fill: var(--muted); }
+.g-chart .leg { font-size: 13px; fill: var(--muted); }
+.g-chart .sep { stroke: var(--line); stroke-width: 1; }
+.g-chart .b-now { fill: var(--brand); }
+.g-chart .b-before { fill: var(--line-strong); }
+.g-chart .b-eu { fill: none; stroke: var(--weft); stroke-width: 1.5; }
+/* su telefono il grafico si stringe a circa 330 px: caratteri più grandi nel disegno, così restano sopra i 11 px veri */
+@media (max-width: 480px) {
+  .g-chart text { font-size: 19px; }
+  .g-chart .val, .g-chart .leg { font-size: 16px; }
+}
+.g-fig figcaption { margin-top: 10px; font-size: .9375rem; color: var(--muted); line-height: 1.5; }
+.g-fig figcaption b { color: var(--ink); }
+.g-data { margin-top: 10px; }
+.g-data > summary { cursor: pointer; padding: 10px 0; font-family: var(--f-mono); font-size: var(--step--1); color: var(--weft); letter-spacing: .03em; }
+.g-data .g-table { margin-top: 10px; }
 /* tabelle: su telefono scorrono dentro il loro riquadro, mai la pagina */
 .g-table { margin: 6px 0 22px; overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r-md); }
 .g-table table { width: 100%; border-collapse: collapse; font-size: .9375rem; }
