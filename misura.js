@@ -26,6 +26,7 @@
      le nostre visite e le nostre prove restano fuori dalle statistiche e dal cruscotto. Il segno è la voce
      «telaio-interno» della memoria del browser (la data in cui lo si è messo) e vale solo per quel browser.
      La pagina /interno/ non si misura mai, segnata o no. */
+  var isEn = (document.documentElement.lang || "it").toLowerCase().indexOf("en") === 0;
   var SEGNO = "telaio-interno";
   var paginaInterna = /^\/interno\/(index\.html)?$/.test(location.pathname);
 
@@ -46,11 +47,10 @@
     if (riga) return;
     var colonna = document.querySelector(".p-footer .foot-col:last-child");
     if (!colonna) return;
-    var inglese = (document.documentElement.lang || "it").toLowerCase().indexOf("en") === 0;
     riga = document.createElement("a");
     riga.className = "foot-interno";
     riga.href = "/interno/";
-    riga.textContent = inglese ? "Telaio browser: this visit is not counted · change" : "Browser di Telaio: questa visita non si conta · cambia";
+    riga.textContent = isEn ? "Telaio browser: this visit is not counted · change" : "Browser di Telaio: questa visita non si conta · cambia";
     colonna.appendChild(riga);
   }
 
@@ -109,7 +109,6 @@
   // si misura solo sul sito vero (env prod) e in locale per le prove (env test)
   var host = location.hostname;
   var ENV = host === "telaioconsulting.com" ? "prod" : (host === "localhost" || host === "127.0.0.1") ? "test" : "";
-  var isEn = (document.documentElement.lang || "it").toLowerCase().indexOf("en") === 0;
 
   /* ---- 1. La scelta di chi visita. Si legge dal cookie del banner prima che il banner arrivi,
      così già la prima pagina vista la rispetta. Una scelta fatta con una revisione vecchia non vale. */
