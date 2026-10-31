@@ -25,6 +25,7 @@ Public marketing website for **Telaio Consulting**, served via GitHub Pages.
 | Strategy consulting | `/consulenza-strategica/` | — |
 | About us | `/chi-siamo/` | — |
 | FAQ | `/domande-frequenti/` | — |
+| AI consulting in Milan (one page for the searches with the city, no page per city) | `/consulenza-ai-milano/` | `/en/ai-consulting-milan/` |
 | Guides (index) | `/guide/` | — |
 | Guide: introducing AI in a small business | `/guide/introdurre-ai-in-azienda/` | — |
 | Guide: what an AI consultant does | `/guide/consulente-ai/` | — |
@@ -37,6 +38,7 @@ Public marketing website for **Telaio Consulting**, served via GitHub Pages.
 
 - Every page has a title, description, canonical URL, Open Graph tags and JSON-LD (`WebPage` or a subtype, the `Organization`, the breadcrumb; services, FAQ and people where the page has them). `dateModified` in the JSON-LD and `lastmod` in `sitemap.xml` follow the last content change: update both when a page's text changes.
 - **Guides** (`/guide/…`, since 30 Oct 2026, styles under «GUIDE» in `style.css`): Italian articles that answer one real search each. Every guide opens with a 40–60-word answer (`.g-answer`), uses question-shaped H2s, puts numbers with their source and year in the sentence, ends with «Cosa fare adesso», the closing buttons (`data-cta="assessment"` and a «Prenota il check-up» link, both `data-placement="guide_end"`), the «Chi siamo» box and the sources. A mid-guide invitation (`.g-cta`) has `data-placement="guide_mid"`; the index's closing button `guide_index`. Signed by the company, «Telaio Consulting»: in the JSON-LD `Article` the `author` and the `publisher` are the Organization (`https://telaioconsulting.com/#organization`), never a person. A new guide is a folder under `guide/` copied from an existing one, plus a card on `/guide/` (and its `ItemList`), a line in `sitemap.xml` and in `llms.txt`.
+- **Where Telaio is** (since 31 Oct 2026, Dan: «Siamo a Milano ma serviamo tutta Italia ed anche europa»): based in Milan, working with businesses across Italy and Europe by video call. Every footer has the line «Da Milano, per imprese di tutta Italia e d'Europa.» / «From Milan, for businesses across Italy and Europe.», linking the Milan page; the `Organization` on the homes and on the Milan pages has `address` (city and country only, no street until the company is registered) and `areaServed` Italy and Europe. In-person meetings are not promised anywhere until the founders confirm them. The Milan pages' buttons have `data-placement` `milan_top` (hero: the self-assessment button and the check-up link under it) and `milan` (closing).
 - `llms.txt`: a plain summary of Telaio and its key pages for AI assistants. Keep it in line with the site when services, prices or contacts change.
 - `robots.txt` lets every crawler in (AI search crawlers included) and lists both sitemaps (this site and `/ecommerce-automations/`, which lives on the same host).
 - Both sitemaps are registered in Google Search Console and Bing Webmaster Tools (account info@telaioconsulting.com).

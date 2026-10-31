@@ -4,7 +4,7 @@
 
 In breve:
 
-- Per chi: piccole e medie imprese (PMI) di tutta Italia; in inglese anche clienti all'estero. Si lavora in videochiamata.
+- Sede: Milano. Per chi: piccole e medie imprese (PMI) di Milano, di tutta Italia e d'Europa, in italiano o in inglese. Si lavora in videochiamata.
 - Cosa fa: individua le attività ripetitive che l'AI può togliere dalla settimana (schede prodotto, preventivi, richieste dei clienti, ordini, fatture, email, contratti, numeri della settimana, procedure), sceglie lo strumento giusto, lo mette al lavoro con gli strumenti che l'impresa usa già e resta finché produce risultati. Si occupa anche di consulenza strategica: mercati e clienti, offerta, organizzazione, crescita.
 - Come lavora, in 4 passi: 1) check-up AI gratuito di 30 minuti; 2) un breve questionario e una proposta scritta con tre strade, quella che Telaio sceglierebbe, tempi, costi e limiti; 3) le 4 settimane in cui il primo strumento AI entra in uso; 4) dopo il lancio Telaio resta: controlla i risultati e sistema quello che serve.
 - Un solo referente, dall'analisi alla soluzione che funziona. Non tiene corsi sull'AI e non vende pacchetti uguali per tutti.
@@ -24,6 +24,7 @@ In breve:
 - [E-commerce su Shopify](https://telaioconsulting.com/cosa-facciamo/e-commerce/): automazioni con l'AI per clienti, spedizioni, magazzino e conti; i servizi sono descritti sul sito [Telaio - Ecommerce Automations](https://telaioconsulting.com/ecommerce-automations/)
 - [Chi siamo](https://telaioconsulting.com/chi-siamo/): i tre fondatori e perché esiste Telaio
 - [Domande frequenti](https://telaioconsulting.com/domande-frequenti/): costi, tempi, dati, AI Act, strumenti che usi già
+- [Consulenza AI a Milano](https://telaioconsulting.com/consulenza-ai-milano/): Telaio ha sede a Milano e lavora con piccole e medie imprese di Milano, della Lombardia, di tutta Italia e d'Europa; cosa fa, come lavora, le domande su sede, lingua e costi
 
 ## Guide
 
@@ -31,14 +32,15 @@ Guide pratiche per le piccole e medie imprese, a cura di Telaio Consulting: ognu
 
 - [Tutte le guide](https://telaioconsulting.com/guide/)
 - [Come introdurre l'intelligenza artificiale in una piccola impresa: da dove partire](https://telaioconsulting.com/guide/introdurre-ai-in-azienda/): partire da un problema e non da uno strumento; come scegliere la prima attività, controllare i dati, fare una prova di qualche settimana e misurare cosa cambia; gli errori più comuni
-- [Cosa fa un consulente AI e quando serve a una piccola impresa](https://telaioconsulting.com/guide/consulente-ai/): differenza da formatore, software house e rivenditore di licenze; quando serve e quando no; come si fa pagare; le otto domande da fargli prima di sceglierlo; Milano e il lavoro a distanza
+- [Cosa fa un consulente AI e quando serve a una piccola impresa](https://telaioconsulting.com/guide/consulente-ai/): differenza da formatore, software house e rivenditore di licenze; quando serve e quando no; come si fa pagare; le otto domande da fargli prima di sceglierlo; Milano (dove Telaio ha sede) e il lavoro a distanza
 - [L'AI nelle imprese italiane: i dati spiegati semplici](https://telaioconsulting.com/guide/ai-imprese-italiane-dati/): nel 2025 usa l'AI il 16,4% delle imprese italiane con almeno 10 addetti (8,2% nel 2024), il 53,1% delle grandi e il 15,7% delle PMI; media UE 19,95%, Italia 18ª su 27; settori, zone, usi e freni (prima la mancanza di competenze, 58,6%); microimprese dalla Banca d'Italia. Dati Istat ed Eurostat con le fonti
 
 ## English
 
 - [Home](https://telaioconsulting.com/en/): AI consulting for small and mid-sized businesses, first AI tool in use in 4 weeks
 - [AI check-up](https://telaioconsulting.com/en/ai-check-up/): a free 30-minute video call with a Telaio founder, in English or Italian
-- [AI self-assessment](https://telaioconsulting.com/en/ai-self-assessment/): eight questions, two minutes, no email: how much AI can do for your business, with the scoring rules on the page
+- [AI self-assessment](https://telaioconsulting.com/en/ai-self-assessment/): company name and e-mail, then eight questions in two minutes: how much AI can do for your business, with the scoring rules on the page
+- [AI consulting in Milan](https://telaioconsulting.com/en/ai-consulting-milan/): Telaio is based in Milan, Italy, and works with small and mid-sized businesses across Italy and Europe, in English or Italian
 
 ## Optional
 
