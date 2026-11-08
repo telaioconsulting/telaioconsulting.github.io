@@ -738,4 +738,17 @@
 
   // il paragrafo per chi non ha JavaScript (dentro [data-autovalutazione]) lascia il posto all'inizio
   inizio(true);
+
+  /* ---- Si arriva dritti al modulo. I pulsanti del sito portano all'ancora della scheda (#autovalutazione,
+     #self-assessment: la pagina si apre lì) e anche «Inizia l'autovalutazione» scende alla scheda. La scheda ha
+     tabindex="-1": così, arrivando all'ancora, il browser mette a fuoco lei (prima, non potendo, toglieva il fuoco
+     da tutto, anche dal campo) e qui il fuoco passa al nome dell'azienda. Con mouse e tastiera il cursore è
+     subito lì; sul telefono no, la tastiera coprirebbe la scheda. */
+  var mouse = window.matchMedia("(pointer: fine)").matches;
+  function alNome() {
+    var a = box.querySelector("#av-azienda");
+    if (a && mouse) a.focus({ preventScroll: true });
+  }
+  if (location.hash === "#" + box.id) alNome();
+  box.addEventListener("focus", alNome); // «focus» non risale dai figli: arriva solo quando è la scheda a prendere il fuoco
 })();

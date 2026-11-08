@@ -531,8 +531,10 @@ html.ck-open { overflow: hidden; padding-right: var(--ck-gutter, 0px); }
    AUTOVALUTAZIONE AI (autovalutazione.js): una domanda per volta, poi il risultato
    ============================================================ */
 .p-sec.av-sec { padding-top: clamp(32px, 5vw, 64px); }
+/* niente scroll-margin: la distanza dalla testata la dà già scroll-padding-top (82 px) su html; sommata, la scheda
+   si posava a 178 px dall'alto e l'arrivo dai pulsanti cambiava posizione a seconda di chi scorreva per ultimo */
 .av-card {
-  max-width: 880px; margin: 0 auto; min-height: 460px; scroll-margin-top: 96px;
+  max-width: 880px; margin: 0 auto; min-height: 460px;
   border: 1px solid var(--line-strong); border-radius: var(--r-lg); background: var(--surface);
   padding: clamp(22px, 4vw, 44px);
 }
