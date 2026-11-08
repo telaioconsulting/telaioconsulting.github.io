@@ -750,5 +750,5 @@
     if (a && mouse) a.focus({ preventScroll: true });
   }
   if (location.hash === "#" + box.id) alNome();
-  box.addEventListener("focus", function (ev) { if (ev.target === box) alNome(); });
+  box.addEventListener("focus", alNome); // «focus» non risale dai figli: arriva solo quando è la scheda a prendere il fuoco
 })();
